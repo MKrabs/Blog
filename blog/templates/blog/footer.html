@@ -1,0 +1,22 @@
+<!-- footer -->
+
+
+<div class="container text-center">
+    <div class="row">
+        <div class="col align-self-start">
+            bottom text
+        </div>
+        <div class="col align-self-center">
+            <span class="text-muted">version 1.0.0</span>
+        </div>
+        <div class="col align-self-end">
+            {% if user.is_authenticated %}
+                Hi {{ user.username }}! 👉
+                <a href="{% url 'logout' %}">Log Out</a>
+            {% else %}
+                <a href="{% url 'login' %}">👉 Log In</a>
+                <a href="{% url 'register' %}">👉 Register</a>
+            {% endif %}
+        </div>
+    </div>
+</div>

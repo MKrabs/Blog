@@ -1,0 +1,60 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}
+    Login
+{% endblock %}
+
+{% block header_info %}
+    <div class="col-md-12 text-center py-5">
+        <span class="display-1">Hi, you're ____ ?</span>
+    </div>
+{% endblock %}
+
+{% block main_body %}
+    <div class="text-center">
+        {% for message in messages %}
+            <span class="d-inline-flex mb-3 px-2 py-1 fw-semibold text-{{ message.tags }} bg-{{ message.tags }} bg-opacity-10 border border-{{ message.tags }} border-opacity-10 rounded-2">
+                {{ message | safe }}
+            </span>
+        {% endfor %}
+
+        {% if form.errors %}
+            {% for error in form.non_field_errors %}
+                <div class="d-inline-flex mb-3 px-2 py-1 text-danger bg-danger bg-opacity-10 border border-2 border-danger border-opacity-10 rounded-2">
+                    {{ error|escape }}
+                </div>
+            {% endfor %}
+
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <div class="d-inline-flex mb-3 px-2 py-1 text-danger bg-danger bg-opacity-10 border border-2 border-danger border-opacity-10 rounded-2">
+                        {{ error|escape }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="container">
+                <div class="row p-2 justify-content-center">
+                    <div class="col-12 col-sm-2">
+                        {{ form.username.label }}
+                    </div>
+                    <div class="col-12 col-sm-2">
+                        {{ form.username }}
+                    </div>
+                </div>
+                <div class="row p-2 justify-content-center">
+                    <div class="col-12 col-sm-2">
+                        {{ form.password.label }}
+                    </div>
+                    <div class="col-12 col-sm-2">
+                        {{ form.password }}
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-outline-dark" type="submit">Log In</button>
+        </form>
+    </div>
+{% endblock %}

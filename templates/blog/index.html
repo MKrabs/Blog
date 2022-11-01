@@ -1,26 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8"/>
-    <link rel="icon" href="img/favicon.ico"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
-    <title>Welcome !</title>
-</head>
+{% extends 'blog/base.html' %}
 
-<body>
+{% block title %}
+    Welcome !
+{% endblock %}
 
-<div class="container" style="background: whitesmoke; border-radius: 50px">
-    <div class="row justify-content-md-center my-5 g-3 text-center">
-        <div class="col-md-12 text-center">
-            <iframe src='https://my.spline.design/untitled-cb3dbee671ea78a49cbe1d65eba08a0d/' width='100%'
-                    height='100%'></iframe>
-        </div>
-        <div class="col-md-12 text-center py-5">
-            <span class="display-1">Hi, I'm Marc</span>
-        </div>
+{% block header_info %}
+    <div class="col-md-12 text-center py-5">
+        <span class="display-1">Hi, I'm Marc</span>
     </div>
 
     {% if tags %}
@@ -50,52 +36,63 @@
             </div>
         </div>
     {% endif %}
+{% endblock %}
 
+{% block main_body %}
+    <div class="container">
+        {% if latest_posts %}
+            {% for post in latest_posts %}
 
-    {% if latest_posts %}
+                <div class="row justify-content-{% if forloop.counter|divisibleby:2 %}start{% else %}end{% endif %} my-5">
 
-        {% for post in latest_posts %}
+                    {% if forloop.counter|divisibleby:2 %}
+                        <div class="col-6 col-lg-3 rounded-end">
+                            <a href="https://github.com/13TRIS/13TRIS/" target="_blank" rel="noopener noreferrer">
+                                <iframe src='https://my.spline.design/untitled-be1185907b99941c1efeff28500c41d2/'
+                                        width='100%'
+                                        height='100%'></iframe>
+                            </a>
+                        </div>
+                    {% endif %}
 
-            <div class="row justify-content-{% if forloop.counter|divisibleby:2 %}start{% else %}end{% endif %} my-5">
-                {% if forloop.counter|divisibleby:2 %}
-                    <div class="col-6 col-lg-3 rounded-end">
-                        <a href="https://github.com/13TRIS/13TRIS/" target="_blank" rel="noopener noreferrer">
-                            <iframe src='https://my.spline.design/untitled-be1185907b99941c1efeff28500c41d2/'
-                                    width='100%'
-                                    height='100%'></iframe>
-                        </a>
+                    <div class="col-lg-7 col-6 bg-dark bg-opacity-10 rounded-start p-3 shadow">
+                        <a target="_blank" rel="noopener noreferrer" href="https://github.com/13TRIS/13TRIS/"
+                           class="display-6 text-decoration-none">{{ post.title }}</a>
+                        <div> {{ post.body }} </div>
+                        <p class="card-text"><small class="text-muted">Last updated {{ post.pub_date }}</small></p>
                     </div>
-                {% endif %}
-                <div class="col-lg-7 col-6 bg-dark bg-opacity-10 rounded-start p-3 shadow">
-                    <a target="_blank" rel="noopener noreferrer" href="https://github.com/13TRIS/13TRIS/"
-                       class="display-6 text-decoration-none">{{ post.title }}</a>
 
-                    <div> {{ post.body }} </div>
+                    {% if not forloop.counter|divisibleby:2 %}
+                        <div class="col-6 col-lg-3 rounded-end">
+                            <a href="https://github.com/13TRIS/13TRIS/" target="_blank" rel="noopener noreferrer">
+                                <iframe src='https://my.spline.design/untitled-be1185907b99941c1efeff28500c41d2/'
+                                        width='100%'
+                                        height='100%'></iframe>
+                            </a>
+                        </div>
+                    {% endif %}
 
-                    <p class="card-text"><small class="text-muted">Last updated {{ post.pub_date }}</small></p>
                 </div>
+            {% endfor %}
+        {% else %}
 
-                {% if not forloop.counter|divisibleby:2 %}
-                    <div class="col-6 col-lg-3 rounded-end">
-                        <a href="https://github.com/13TRIS/13TRIS/" target="_blank" rel="noopener noreferrer">
-                            <iframe src='https://my.spline.design/untitled-be1185907b99941c1efeff28500c41d2/'
-                                    width='100%'
-                                    height='100%'></iframe>
-                        </a>
-                    </div>
-                {% endif %}
-
+            <div class="container text-center p-5">
+                <p>There seem to be no posts here 🤔.</p>
             </div>
-        {% endfor %}
-    {% else %}
-        <div class="container text-center p-5">
-            <p>There seem to be no posts here 🤔.</p>
-        </div>
-    {% endif %}
 
-    <div class="container w-100 text-center my-5">bottom text</div>
-</div>
+        {% endif %}
+    </div>
+{% endblock %}
 
-</body>
-</html>
 
+{% block pagination %}
+    <div class="text-center fw-semibold">
+        {% if page.has_previous %}
+            <a href="{% url 'home' %}{{ page.current|add:"-1" }}"><span class="bi-chevron-left"></span></a>
+        {% endif %}
+        <span>{{ page.current }}</span>
+        {% if page.has_next %}
+            <a href="{% url 'home' %}{{ page.current|add:"1" }}"><span class="bi-chevron-right"></span></a>
+        {% endif %}
+    </div>
+{% endblock %}

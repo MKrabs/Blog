@@ -1,0 +1,80 @@
+{% extends 'blog/base.html' %}
+
+
+{% block title %}Sign Up{% endblock %}
+
+{% block header_info %}
+    <div class="col-md-12 text-center py-5">
+        <span class="display-1">Register</span>
+    </div>
+{% endblock %}
+
+{% block main_body %}
+    <div class="text-center">
+        {% if form.errors %}
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <div class="d-inline-flex mb-3 px-2 py-1 text-danger bg-danger bg-opacity-10 border border-2 border-danger border-opacity-10 rounded-2">
+                        {{ error|escape }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <div class="d-inline-flex mb-3 px-2 py-1 text-danger bg-danger bg-opacity-10 border border-2 border-danger border-opacity-10 rounded-2">
+                    {{ error|escape }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="container">
+                <div class="row p-2 justify-content-center">
+                    <div class="col-12 col-sm-3">
+                        {{ form.username.label }}
+                    </div>
+                    <div class="col-12 col-sm-3">
+                        {{ form.username }}
+                    </div>
+                </div>
+                <div class="row p-2 justify-content-center">
+                    <div class="col-12 col-sm-3">
+                        {{ form.email.label }}
+                    </div>
+                    <div class="col-12 col-sm-3">
+                        {{ form.email }}
+                    </div>
+                </div>
+                <div class="row p-2 justify-content-center">
+                    <div class="col-12 col-sm-3">
+                        <span>
+                            <a class="text-decoration-none text-reset" data-bs-toggle="collapse" href="#collapseExample"
+                               role="button" aria-expanded="false" aria-controls="collapseExample">
+                                {{ form.password1.label }} <span class="bi-question-circle-fill text-primary"></span>
+                            </a>
+                        </span>
+                    </div>
+                    <div class="col-12 col-sm-3">
+                        {{ form.password1 }}
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-12 col-md-10 col-lg-6 collapse" id="collapseExample">
+                        <div class="card card-body">
+                            {{ form.password1.help_text }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row p-2 justify-content-center">
+                    <div class="col-12 col-sm-3">
+                        {{ form.password2.label }}
+                    </div>
+                    <div class="col-12 col-sm-3">
+                        {{ form.password2 }}
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-dark" type="submit">Sign Up</button>
+        </form>
+    </div>
+{% endblock %}
