@@ -52,7 +52,20 @@ def index(request, page=1):
 
 
 def post(request, post_id):
-    return HttpResponse("Hello, world. You're at the polls index.")
+    post = Post.objects.get(post_id)
+
+    context = {
+        'page': {
+            'current': page_obj.number,
+            'has_next': page_obj.has_next(),
+            'has_previous': page_obj.has_previous(),
+            'total': p.num_pages,
+        },
+        'latest_posts': page_obj.object_list,
+        'tags': tags,
+    }
+
+    return render(request, 'blog/index.html', context)
 
 
 def create_post(request):

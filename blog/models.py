@@ -41,6 +41,7 @@ class Tag(models.Model):
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default=None, null=True)
     title = models.CharField(max_length=200)
+    short = models.CharField(max_length=255)
     body = models.TextField(max_length=20000)
     pub_date = models.DateTimeField('date published')
 
