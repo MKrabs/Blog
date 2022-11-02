@@ -3,7 +3,11 @@
 <div class="container text-center">
     <div class="row">
         <div class="col align-self-start">
-            bottom text
+            {% if request.path == "/" %}
+                bottom text
+            {% else %}
+                <a href="{% url 'home' %}" class="text-decoration-none"><span class="bi-caret-left-fill"></span>Home</a>
+            {% endif %}
         </div>
         <div class="col align-self-center">
             <span class="text-muted">version 1.0.0</span>

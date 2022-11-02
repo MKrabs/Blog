@@ -15,7 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls import handler404
 
+import blog.views
 from blog import views
 
 urlpatterns = [
@@ -25,6 +27,7 @@ urlpatterns = [
 
     # ex: /blog/
     path('', views.index, name='home'),
+    path('<int:page>', views.index),
     path('<int:page>/', views.index),
 
     # ex: /blog/
@@ -33,4 +36,6 @@ urlpatterns = [
     path('post/<int:post_id>/', views.post, name='post'),
     # ex: /blog/5/
     path('create/', views.create_post, name='create'),
+
+    path('<str:pattern>', views.page_not_found, name='404'),
 ]

@@ -1,3 +1,4 @@
+import markdown
 from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -5,7 +6,7 @@ from django.core.paginator import Paginator, EmptyPage
 from django.contrib.auth.forms import UserCreationForm
 from blog.forms import CreateUserForm
 
-from .models import Post, Tag
+from .models import Post, Tag, Comment
 
 
 def registerPage(request):
@@ -30,7 +31,7 @@ def registerPage(request):
 def index(request, page=1):
     tags = Tag.objects.all()
     latest_posts = Post.objects.order_by('-pub_date')
-    p = Paginator(latest_posts, 3)
+    p = Paginator(latest_posts, 4)
 
     try:
         page_obj = p.get_page(page)
@@ -52,21 +53,24 @@ def index(request, page=1):
 
 
 def post(request, post_id):
-    post = Post.objects.get(post_id)
+    blog_post = Post.objects.get(pk=post_id)
+    comments = Comment.objects.all()
+
+    body = markdown.markdown(blog_post.body, extensions=['tables'])
 
     context = {
-        'page': {
-            'current': page_obj.number,
-            'has_next': page_obj.has_next(),
-            'has_previous': page_obj.has_previous(),
-            'total': p.num_pages,
-        },
-        'latest_posts': page_obj.object_list,
-        'tags': tags,
+        'post': blog_post,
+        'body_html': body,
+        'comments': comments,
     }
 
-    return render(request, 'blog/index.html', context)
+    return render(request, 'blog/post.html', context)
 
 
 def create_post(request):
     return HttpResponse("You're looking to create a new post.")
+
+
+def page_not_found(request, pattern):
+    context = {'broken': pattern}
+    return render(request, 'blog/404.html', context)
