@@ -6,7 +6,7 @@
 
 {% block header_info %}
     <div class="col-md-12 text-center py-5">
-        <span class="display-1">Hi, I'm Marc</span>
+        <span class="display-1">Hi, I'm <span class="wavy">Marc</span></span>
     </div>
 
     {% if tags %}
@@ -59,7 +59,7 @@
                         </div>
                     {% endif %}
 
-                    <div class="col-lg-7 col-8 bg-dark bg-opacity-10 rounded p-3 shadow">
+                    <div class="col-lg-7 col-8 bg-body rounded p-3 shadow">
                         <a target="_self" rel="noopener noreferrer" href="{% url 'post' post_id=post.id %}"
                            class="display-6 text-decoration-none">{{ post.title }}</a>
                         <div> {{ post.short }} </div>
