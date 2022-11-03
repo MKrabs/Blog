@@ -16,9 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import handler404
-
+from django.conf.urls.static import static
 import blog.views
 from blog import views
+from djangoProject import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,13 +30,10 @@ urlpatterns = [
     path('', views.index, name='home'),
     path('<int:page>', views.index),
     path('<int:page>/', views.index),
-
-    # ex: /blog/
-    path('new/', views.index, name='new'),
-    # ex: /blog/5/
     path('post/<int:post_id>/', views.post, name='post'),
-    # ex: /blog/5/
+
+    path('new/', views.index, name='new'),
     path('create/', views.create_post, name='create'),
 
     path('<str:pattern>', views.page_not_found, name='404'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

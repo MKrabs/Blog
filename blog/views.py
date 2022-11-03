@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage
 from django.contrib.auth.forms import UserCreationForm
 from blog.forms import CreateUserForm
-
+import bleach
 from .models import Post, Tag, Comment
 
 
@@ -54,9 +54,12 @@ def index(request, page=1):
 
 def post(request, post_id):
     blog_post = Post.objects.get(pk=post_id)
-    comments = Comment.objects.all()
+    comments = Comment.objects.filter(post_id=post_id)
 
-    body = markdown.markdown(blog_post.body, extensions=['tables'])
+    body = marker(blog_post.body)
+
+    for c in comments:
+        c.body = marker(c.body)
 
     context = {
         'post': blog_post,
@@ -74,3 +77,18 @@ def create_post(request):
 def page_not_found(request, pattern):
     context = {'broken': pattern}
     return render(request, 'blog/404.html', context)
+
+
+def marker(text):
+    return markdown.markdown(
+        bleacher(text),
+        extensions=['tables']
+    )
+
+
+def bleacher(text):
+    return bleach.clean(
+        text,
+        tags=['b', 'img', 'iframe'],
+        attributes=['class', 'href', 'src', 'style', 'width', 'height']
+    )

@@ -15,4 +15,7 @@
     <div class="container px-5 text-decoration-none">
         {{ body_html | safe }}
     </div>
+            {% for co in comments %}
+                {% include 'blog/comment.html' with comment=co %}
+            {% endfor %}
 {% endblock %}
