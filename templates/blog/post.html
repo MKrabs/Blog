@@ -6,13 +6,11 @@
 {% endblock %}
 
 {% block header_info %}
-    <div class="col-md-12 text-center py-5">
-        <span class="display-1">Hi, I'm <span class="wavy">{{ post.title }}</span></span>
-    </div>
+    Hi, I'm <span class="wavy">{{ post.title }}</span>
 {% endblock %}
 
 {% block main_body %}
-    <div class="container px-5 text-decoration-none">
+    <div class="container p-3 p-md-4 rounded-5 border border-dark border-opacity-10 text-decoration-none bg-body">
         {{ body_html | safe }}
     </div>
             {% for co in comments %}

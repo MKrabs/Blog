@@ -1,6 +1,6 @@
 <!-- footer -->
 
-<div class="container text-center bg-body">
+<div class="container text-center bg-body mt-5 p-2 rounded border border-dark border-opacity-10">
     <div class="row">
         <div class="col align-self-start">
             {% if request.path == "/" %}
@@ -15,10 +15,10 @@
         <div class="col align-self-end">
             {% if user.is_authenticated %}
                 Hi {{ user.username }}! 👉
-                <a href="{% url 'logout' %}">Log Out</a>
+                <a href="{% url 'logout' %}" class="text-decoration-none">Log Out</a>
             {% else %}
-                <a href="{% url 'login' %}">👉 Log In</a>
-                <a href="{% url 'register' %}">👉 Register</a>
+                <a href="{% url 'login' %}" class="text-decoration-none">👉 Log In</a>
+                <a href="{% url 'register' %}" class="text-decoration-none">👉 Register</a>
             {% endif %}
         </div>
     </div>

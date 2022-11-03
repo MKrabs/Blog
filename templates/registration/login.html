@@ -1,13 +1,12 @@
 {% extends 'blog/base.html' %}
+{% load static %}
 
 {% block title %}
     Login
 {% endblock %}
 
 {% block header_info %}
-    <div class="col-md-12 text-center py-5">
-        <span class="display-1">Hi, you're ____ ?</span>
-    </div>
+    Welcome, <span class="wavy" id="name">_____</span>!
 {% endblock %}
 
 {% block main_body %}
@@ -20,14 +19,14 @@
 
         {% if form.errors %}
             {% for error in form.non_field_errors %}
-                <div class="d-inline-flex mb-3 px-2 py-1 text-danger bg-danger bg-opacity-10 border border-2 border-danger border-opacity-10 rounded-2">
+                <div class="d-inline-flex mb-3 px-2 py-1 bg-danger bg-opacity-10 border border-2 border-danger border-opacity-10 rounded-2">
                     {{ error|escape }}
                 </div>
             {% endfor %}
 
             {% for field in form %}
                 {% for error in field.errors %}
-                    <div class="d-inline-flex mb-3 px-2 py-1 text-danger bg-danger bg-opacity-10 border border-2 border-danger border-opacity-10 rounded-2">
+                    <div class="d-inline-flex mb-3 px-2 py-1 bg-danger bg-opacity-10 border border-2 border-danger border-opacity-10 rounded-2">
                         {{ error|escape }}
                     </div>
                 {% endfor %}
@@ -38,7 +37,7 @@
             {% csrf_token %}
             <div class="container">
                 <div class="row p-2 justify-content-center">
-                    <div class="col-12 col-sm-2">
+                    <div class="col-12 col-sm-2 bg-body border border-opacity-10">
                         {{ form.username.label }}
                     </div>
                     <div class="col-12 col-sm-2">
@@ -46,7 +45,7 @@
                     </div>
                 </div>
                 <div class="row p-2 justify-content-center">
-                    <div class="col-12 col-sm-2">
+                    <div class="col-12 col-sm-2 bg-body border border-opacity-10">
                         {{ form.password.label }}
                     </div>
                     <div class="col-12 col-sm-2">
@@ -57,4 +56,8 @@
             <button class="btn btn-outline-dark" type="submit">Log In</button>
         </form>
     </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/login_register.js' %}" defer></script>
 {% endblock %}

@@ -1,12 +1,12 @@
 let resizeReset = function() {
-	w = canvasBody.width = document.documentElement.getBoundingClientRect().width;
-	h = canvasBody.height = document.documentElement.getBoundingClientRect().height;
+	w = canvasBody.width = Math.max(document.documentElement.getBoundingClientRect().width, window.innerWidth);
+	h = canvasBody.height = Math.max(document.documentElement.getBoundingClientRect().height, window.innerHeight);
 }
 
 const opts = {
 	particleColor: "rgb(200,200,200)",
 	lineColor: "rgb(200,200,200)",
-	particleAmount: 100,
+	particleAmount: Math.ceil(100 / Math.max(window.devicePixelRatio, 0)) ,
 	defaultSpeed: 0.05,
 	variantSpeed: 0.05,
 	defaultRadius: 2,
@@ -103,6 +103,7 @@ function loop(){
 	}
 }
 
+console.log(opts.particleAmount);
 const canvasBody = document.getElementById("canvas"),
 drawArea = canvasBody.getContext("2d");
 let delay = 200, tid,

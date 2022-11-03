@@ -1,12 +1,11 @@
 {% extends 'blog/base.html' %}
+{% load static %}
 
 
 {% block title %}Sign Up{% endblock %}
 
 {% block header_info %}
-    <div class="col-md-12 text-center py-5">
-        <span class="display-1">Register</span>
-    </div>
+    Hi, you're <span class="wavy" id="name">_____</span>?
 {% endblock %}
 
 {% block main_body %}
@@ -14,13 +13,13 @@
         {% if form.errors %}
             {% for field in form %}
                 {% for error in field.errors %}
-                    <div class="d-inline-flex mb-3 px-2 py-1 text-danger bg-danger bg-opacity-10 border border-2 border-danger border-opacity-10 rounded-2">
+                    <div class="d-inline-flex mb-3 px-2 py-1 bg-danger bg-opacity-10 border border-2 border-danger border-opacity-10 rounded-2">
                         {{ error|escape }}
                     </div>
                 {% endfor %}
             {% endfor %}
             {% for error in form.non_field_errors %}
-                <div class="d-inline-flex mb-3 px-2 py-1 text-danger bg-danger bg-opacity-10 border border-2 border-danger border-opacity-10 rounded-2">
+                <div class="d-inline-flex mb-3 px-2 py-1 bg-danger bg-opacity-10 border border-2 border-danger border-opacity-10 rounded-2">
                     {{ error|escape }}
                 </div>
             {% endfor %}
@@ -30,7 +29,7 @@
             {% csrf_token %}
             <div class="container">
                 <div class="row p-2 justify-content-center">
-                    <div class="col-12 col-sm-3">
+                    <div class="col-12 col-sm-3 bg-body border border-opacity-10">
                         {{ form.username.label }}
                     </div>
                     <div class="col-12 col-sm-3">
@@ -38,7 +37,7 @@
                     </div>
                 </div>
                 <div class="row p-2 justify-content-center">
-                    <div class="col-12 col-sm-3">
+                    <div class="col-12 col-sm-3 bg-body border border-opacity-10">
                         {{ form.email.label }}
                     </div>
                     <div class="col-12 col-sm-3">
@@ -46,7 +45,7 @@
                     </div>
                 </div>
                 <div class="row p-2 justify-content-center">
-                    <div class="col-12 col-sm-3">
+                    <div class="col-12 col-sm-3 bg-body border border-opacity-10">
                         <span>
                             <a class="text-decoration-none text-reset" data-bs-toggle="collapse" href="#collapseExample"
                                role="button" aria-expanded="false" aria-controls="collapseExample">
@@ -66,7 +65,7 @@
                     </div>
                 </div>
                 <div class="row p-2 justify-content-center">
-                    <div class="col-12 col-sm-3">
+                    <div class="col-12 col-sm-3 bg-body border border-opacity-10">
                         {{ form.password2.label }}
                     </div>
                     <div class="col-12 col-sm-3">
@@ -77,4 +76,8 @@
             <button class="btn btn-dark" type="submit">Sign Up</button>
         </form>
     </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/login_register.js' %}" defer></script>
 {% endblock %}
