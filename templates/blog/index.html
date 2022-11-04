@@ -15,24 +15,14 @@
             <div class="row row-cols-2 row-cols-md-3 row-cols-xl-6 row-cols-lg-4 g-1 g-md-3">
                 {% for tag in tags %}
                     <div class="col">
+                        <a target="_blank" rel="noopener noreferrer" href="{{ tag.link | default_if_none:'' }}"
+                           class="text-decoration-none overflow-hidden">
 
-                        {% if tag.link %}
-                            <a target="_blank" rel="noopener noreferrer" href="{{ tag.link }}"
-                               class="text-decoration-none text-reset overflow-hidden">
-                        {% endif %}
-
-                        <div class="p-1 p-md-2 rounded bg-{{ tag.color }}">
-
-                            {% if tag.icon %}
-                                <i class="bi bi-{{ tag.icon }}" style="color: {{ tag.icon_colour }}"></i>
-                            {% endif %}
-
-                            {{ tag.name }}
-                        </div>
-
-                        {% if tag.link %}
-                            </a>
-                        {% endif %}
+                            <div class="btn btn-{{ tag.color }} w-100">
+                                <i class="bi bi-{{ tag.icon }}"></i>
+                                {{ tag.name }}
+                            </div>
+                        </a>
                     </div>
                 {% endfor %}
             </div>

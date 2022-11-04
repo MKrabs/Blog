@@ -1,18 +1,11 @@
 <!-- Comment {{ comment.author }} -->
 
-{% load static %}
-
 <div class="row d-flex justify-content-center m-3">
     <div class="col-12 col-md-2 text-lg-end text-center">
-
-        <img src="{{ comment.author.profile.picture.url }}" class="img-fluid rounded-circle p-3" style="max-height: 100px">
-
+        <img src="{{ comment.author.profile.picture.url | default:'/media/profile_pictures/anonymous.jpg' }}" class="img-fluid rounded-circle p-3" style="max-height: 100px">
     </div>
     <div class="col-12 col-md-6 bg-body rounded-4 p-3 shadow">
-
-        <span class="fs-4">{{ comment.author }}</span> - <small class="text-muted pb-0">{{ comment.time }}</small>
+        <span class="fs-4">{{ comment.author | default:'[Deleted]' }}</span> - <small class="text-muted pb-0">{{ comment.time }}</small>
         <div>{{ comment.body | safe }}</div>
-
-
     </div>
 </div>

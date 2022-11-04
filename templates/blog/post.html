@@ -10,10 +10,21 @@
 {% endblock %}
 
 {% block main_body %}
+
+    <div class="row">
+        <div class="col-12 col-md-2 text-lg-end text-center">
+            <img src="{{ post.author.profile.picture.url | default:'/media/profile_pictures/anonymous.jpg' }}"
+                 class="img-fluid rounded-circle p-3" style="max-height: 100px">
+        </div>
+        <div class="col-12 col-md-10 text-md-start my-auto text-center">
+            <span class="fs-1">{{ post.author | default:'Deleted' }}</span> <small class="text-muted pb-0">Posted {{ post.pub_date|timesince }} ago</small>
+        </div>
+    </div>
+
     <div class="container p-3 p-md-4 rounded-5 border border-dark border-opacity-10 text-decoration-none bg-body">
         {{ body_html | safe }}
     </div>
-            {% for co in comments %}
-                {% include 'blog/comment.html' with comment=co %}
-            {% endfor %}
+    {% for co in comments %}
+        {% include 'blog/comment.html' with comment=co %}
+    {% endfor %}
 {% endblock %}
