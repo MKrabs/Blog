@@ -6,7 +6,7 @@ from django.core.paginator import Paginator, EmptyPage
 from django.contrib.auth.forms import UserCreationForm
 from blog.forms import CreateUserForm
 import bleach
-from .models import Post, Tag, Comment
+from .models import Post, Tag, Comment, Like
 
 
 def registerPage(request):
@@ -34,6 +34,8 @@ def index(request, page=1):
 
     for p in latest_posts:
         p.comments = Comment.objects.filter(post_id=p.id).count()
+        p.likes = Like.objects.filter(post_id=p.id).count()
+        p.liked = True if Like.objects.filter(post_id=p.id, author=request.user.id) else False
 
     p = Paginator(latest_posts, 4)
 
