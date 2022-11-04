@@ -59,11 +59,23 @@
                         </div>
                     {% endif %}
 
-                    <div class="col-lg-7 col-8 bg-body rounded p-3 shadow">
-                        <a target="_self" rel="noopener noreferrer" href="{% url 'post' post_id=post.id %}"
-                           class="display-6 text-decoration-none">{{ post.title }}</a>
-                        <div> {{ post.short }} </div>
-                        <p class="card-text"><small class="text-muted">Last updated {{ post.pub_date }}</small></p>
+                    <div class="col-lg-7 col-8 bg-body rounded p-3 shadow position-relative">
+                        <div class="row">
+                            <a target="_self" rel="noopener noreferrer" href="{% url 'post' post_id=post.id %}"
+                               class="display-6 text-decoration-none stretched-link">{{ post.title }}</a>
+                        </div>
+                        <div class="row">
+                            <p>{{ post.short }}</p>
+                        </div>
+                        <div class="row pt-2">
+                            <div class="col-4 align-self-start">
+                                <span class="bi bi-chat-left"></span> {{ post.comments }}
+                            </div>
+                            <div class="col-8 align-self-end text-end">
+                                <p class="card-text"><small class="text-muted">Last
+                                    updated {{ post.pub_date }}</small></p>
+                            </div>
+                        </div>
                     </div>
 
                     {% if not forloop.counter|divisibleby:2 %}

@@ -31,6 +31,10 @@ def registerPage(request):
 def index(request, page=1):
     tags = Tag.objects.all()
     latest_posts = Post.objects.order_by('-pub_date')
+
+    for p in latest_posts:
+        p.comments = Comment.objects.filter(post_id=p.id).count()
+
     p = Paginator(latest_posts, 4)
 
     try:
