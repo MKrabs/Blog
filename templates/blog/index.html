@@ -59,7 +59,9 @@
                         </div>
                         <div class="row pt-2">
                             <div class="col align-self-start">
-                                <span class="bi bi-chat-left"></span> {{ post.comments }}
+                                <a href="{% url 'post' post_id=post.id %}#comments" class="text-decoration-none position-relative stretched-link">
+                                    <span class="bi bi-chat-left"></span> {{ post.comments }}
+                                </a>
                                 <span class="bi bi-heart{% if post.liked %}-fill text-danger{% endif %}"></span> {{ post.likes }}
                             </div>
                             <div class="col align-self-end text-end">

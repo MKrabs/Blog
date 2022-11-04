@@ -62,14 +62,16 @@ def post(request, post_id):
     blog_post = Post.objects.get(pk=post_id)
     comments = Comment.objects.filter(post_id=post_id)
 
-    body = marker(blog_post.body)
+    blog_post.likes = Like.objects.filter(post_id=blog_post.id).count()
+    blog_post.liked = True if Like.objects.filter(post_id=blog_post.id, author=request.user.id) else False
+
+    blog_post.body = marker(blog_post.body)
 
     for c in comments:
         c.body = marker(c.body)
 
     context = {
         'post': blog_post,
-        'body_html': body,
         'comments': comments,
     }
 

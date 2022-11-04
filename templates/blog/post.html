@@ -16,13 +16,20 @@
             <img src="{{ post.author.profile.picture.url | default:'/media/profile_pictures/anonymous.jpg' }}"
                  class="img-fluid rounded-circle p-3" style="max-height: 100px">
         </div>
-        <div class="col-12 col-md-10 text-md-start my-auto text-center">
-            <span class="fs-1">{{ post.author | default:'Deleted' }}</span> <small class="text-muted pb-0">Posted {{ post.pub_date|timesince }} ago</small>
+        <div class="col-10 col-md-8 text-md-start my-auto text-center">
+            <span class="fs-1">{{ post.author | default:'Deleted' }}</span> <small
+                class="text-muted pb-0">Posted {{ post.pub_date|timesince }} ago</small>
+        </div>
+        <div class="col-2 text-md-start mt-auto mb-1 align-self-start">
+            <a href="#comments" class="text-decoration-none">
+                <span class="bi bi-chat-right"></span> {{ comments|length }}
+            </a>
+            <span class="bi bi-heart{% if post.liked %}-fill text-danger{% endif %}"></span> {{ post.likes }}
         </div>
     </div>
 
     <div class="container p-3 p-md-4 rounded-5 border border-dark border-opacity-10 text-decoration-none bg-body">
-        {{ body_html | safe }}
+        {{ post.body | safe }}
     </div>
     {% for co in comments %}
         {% include 'blog/comment.html' with comment=co %}
