@@ -1,3 +1,5 @@
+from random import randint
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
@@ -14,7 +16,7 @@ class Profile(models.Model):
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.create(user=instance)
+        Profile.objects.create(user=instance, picture=f'profile_pictures/d{randint(1, 10)}.jpg')
 
 
 @receiver(post_save, sender=User)
@@ -78,6 +80,12 @@ class Comment(models.Model):
     post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
     time = models.DateTimeField('posted on')
     body = models.TextField(blank=False, null=False)
+
+
+class Like(models.Model):
+    author = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default=None, null=True)
+    post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
+    time = models.DateTimeField('liked on')
 
 
 class Project(models.Model):
