@@ -24,7 +24,10 @@
             <a href="#comments" class="text-decoration-none">
                 <span class="bi bi-chat-right"></span> {{ comments|length }}
             </a>
-            <span class="bi bi-heart{% if post.liked %}-fill text-danger{% endif %}"></span> {{ post.likes }}
+            <a href="{% url 'post' post_id=post.id %}liked"
+               class="text-decoration-none position-relative stretched-link text-reset">
+                <span class="bi bi-heart{% if post.liked %}-fill text-danger{% endif %}"></span> {{ post.likes }}
+            </a>
         </div>
     </div>
 

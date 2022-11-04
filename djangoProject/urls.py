@@ -31,6 +31,7 @@ urlpatterns = [
     path('<int:page>', views.index),
     path('<int:page>/', views.index),
     path('post/<int:post_id>/', views.post, name='post'),
+    path('post/<int:post_id>/liked', views.liked),
 
     path('new/', views.index, name='new'),
     path('create/', views.create_post, name='create'),
