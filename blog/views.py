@@ -4,6 +4,8 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage
 from django.contrib.auth.forms import UserCreationForm
+from django.urls import reverse
+
 from blog.forms import CreateUserForm
 import bleach
 from .models import Post, Tag, Comment, Like
@@ -115,14 +117,16 @@ def liked(request, post_id):
 
 
 def comment(request, post_id):
-    if request.method == 'POST':
+    if request.method == 'POST' and len(request.POST['commentBody']) > 0:
         comm = Comment()
         comm.author = request.user if request.user.is_authenticated and not request.POST.get('anonymous') else None
         comm.post_id = Post.objects.get(id=post_id)
         comm.body = request.POST['commentBody']
         comm.save()
+    else:
+        messages.warning(request, 'Error: Message can not be empty.')
 
-    return redirect('post', post_id)
+    return redirect(reverse('post', kwargs={'post_id': post_id}) + '#comments')
 
 
 def comment_delete(request, post_id, comm_id):
