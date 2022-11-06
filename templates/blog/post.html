@@ -33,9 +33,67 @@
         </div>
     </div>
 
-    <div class="container p-3 p-md-4 rounded-5 border border-dark border-opacity-10 text-decoration-none bg-body">
+    <div class="row p-3 p-md-4 my-3 rounded-5 border border-dark border-opacity-10 text-decoration-none bg-body">
         {{ post.body | safe }}
     </div>
+
+    <div class="row d-flex justify-content-center" id="comments">
+        <div class="col-8 align-self-center">
+            <div class="row justify-content-center d-flex">
+                <div class="col col-sm-8 col-md-4 position-relative rounded shadow-sm bg-body p-2 m-2 text-center btn">
+                    <a class="stretched-link text-reset text-decoration-none"
+                       data-bs-toggle="collapse" href="#collapseExample" role="button"
+                       aria-expanded="false" aria-controls="collapseExample">
+                        Add a comment <i class="bi bi-paragraph"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="collapse" id="collapseExample">
+                <form action="{% url 'post' post_id=post.id %}comment" method="post">
+                    {% csrf_token %}
+                    <div class="row mb-3 rounded shadow-sm bg-body p-2 p-md-1">
+                        <div class="col-6 col-md-auto text-end">
+                            <label for="staticUser" class="col-form-label">
+                                Comment as
+                            </label>
+                        </div>
+                        <div class="col-auto pe-0 m-auto">
+                            <img class="img-fluid rounded-circle" style="max-height: 30px"
+                                 src="{{ user.profile.picture.url | default:'/media/profile_pictures/anonymous.jpg' }}">
+                        </div>
+                        <div class="col">
+                            <input type="text" readonly class="form-control-plaintext" id="staticUser"
+                                   value="{{ user }}">
+                        </div>
+                        <div class="col-12 col-sm-auto align-self-end m-auto text-center">
+                            <input type="checkbox" class="form-check-input"
+                                   id="exampleCheck1" {% if not user.is_authenticated %} checked disabled {% endif %}>
+                            <label class="form-check-label" for="exampleCheck1">Post anonymously</label>
+                        </div>
+                    </div>
+
+                    <div class="form-floating">
+                    <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"
+                              style="height: 200px" aria-describedby="markdownHelpBlock"></textarea>
+                        <label for="floatingTextarea2">Comments</label>
+                    </div>
+
+                    <div class="row m-2 ">
+                        <div class="col-12 col-sm-8 align-content-start">
+                            {% include 'blog/markdownHelp.html' %}
+                        </div>
+                        <div class="col-auto ms-auto align-content-end">
+                            <button type="submit" class="btn btn-outline-success border-0">
+                                Submit <i class="bi bi-send"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     {% for co in comments %}
         {% include 'blog/comment.html' with comment=co %}
     {% endfor %}
