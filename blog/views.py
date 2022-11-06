@@ -1,5 +1,6 @@
 import markdown
 from django.contrib import messages
+from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage
@@ -22,6 +23,7 @@ def registerPage(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Success!')
+
             return redirect('login')
 
     context = {
@@ -62,7 +64,7 @@ def index(request, page=1):
 
 def post(request, post_id):
     blog_post = Post.objects.get(pk=post_id)
-    comments = Comment.objects.filter(post_id=post_id)
+    comments = Comment.objects.filter(post_id=post_id).order_by('-time')
 
     blog_post.likes = Like.objects.filter(post_id=blog_post.id).count()
     blog_post.liked = True if Like.objects.filter(post_id=blog_post.id, author=request.user.id) else False
@@ -123,13 +125,27 @@ def comment(request, post_id):
         comm.post_id = Post.objects.get(id=post_id)
         comm.body = request.POST['commentBody']
         comm.save()
+        messages.success(request, f'Comment "{comm.body[:10]}..." was posted.')
     else:
-        messages.warning(request, 'Error: Message can not be empty.')
+        messages.warning(request, 'Warning: Message can not be empty.')
 
     return redirect(reverse('post', kwargs={'post_id': post_id}) + '#comments')
 
 
 def comment_delete(request, post_id, comm_id):
     if request.method == 'POST' and request.user.is_authenticated:
-        Comment.objects.get(id=comm_id).delete()
-    return redirect('post', post_id)
+        comm = Comment.objects.get(id=comm_id)
+        if request.user == comm.author:
+            comm.delete()
+            messages.info(request, f'Comment "{comm.body[:10]}..." was deleted.')
+    else:
+        messages.error(request, f'Comment n°{comm_id} could not be deleted.')
+
+    return redirect(reverse('post', kwargs={'post_id': post_id}) + '#comments')
+
+
+def user_profile(request, user_name):
+    profile = User.objects.get(username=user_name)
+    profile.profile.bio = marker(profile.profile.bio)
+    context = {'profile': profile}
+    return render(request, 'blog/userprofile.html', context)

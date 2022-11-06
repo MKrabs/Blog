@@ -41,9 +41,9 @@
         <div class="col-8 align-self-center">
             <div class="row justify-content-center d-flex">
                 {% for message in messages %}
-                    <div class="col position-relative rounded shadow-sm p-2 m-2 text-center fw-semibold rounded-2
-                    text-{{ message.tags }} bg-{{ message.tags }} border border-{{ message.tags }} bg-opacity-10">
-                        {{ message | safe }}
+                    <div class="col alert alert-{{ message.tags }} alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 {% endfor %}
             </div>
