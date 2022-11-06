@@ -15,21 +15,25 @@
             <span class="text-muted">version 1.0.2</span>
         </div>
         <div class="col align-self-end p-2 bg-body rounded shadow-sm">
-            {% if user.is_authenticated %}
-                Hi {{ user.username }}! 👉
-                <a href="{% url 'logout' %}" class="text-decoration-none">Log Out</a>
-            {% else %}
-                <div class="row">
-                    <div class="col-12 col-md align-self-start position-relative">
+
+            <div class="row">
+                <div class="col-12 col-md align-self-start position-relative">
+                    {% if user.is_authenticated %}
+                        Hi {{ user.username }}!
+                    {% else %}
                         <a href="{% url 'login' %}" class="text-decoration-none stretched-link">👉 Log In</a>
-                    </div>
-                    <div class="vr d-none d-md-block p-0"></div>
-                    <hr class="d-block d-md-none mt-2 mb-1 p-0 w-75 mx-auto">
-                    <div class="col-12 col-md align-self-end position-relative">
-                        <a href="{% url 'register' %}" class="text-decoration-none stretched-link">👉 Register</a>
-                    </div>
+                    {% endif %}
                 </div>
-            {% endif %}
+                <div class="vr d-none d-md-block p-0"></div>
+                <hr class="d-block d-md-none mt-2 mb-1 p-0 w-75 mx-auto">
+                <div class="col-12 col-md align-self-end position-relative">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'logout' %}" class="text-decoration-none">👉 Log Out</a>
+                    {% else %}
+                        <a href="{% url 'register' %}" class="text-decoration-none stretched-link">👉 Register</a>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
 </div>

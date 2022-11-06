@@ -83,7 +83,7 @@ class Comment(models.Model):
 
 
 class Like(models.Model):
-    author = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default=None, null=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
     time = models.DateTimeField(auto_now=True)
 
