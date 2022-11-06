@@ -123,3 +123,9 @@ def comment(request, post_id):
         comm.save()
 
     return redirect('post', post_id)
+
+
+def comment_delete(request, post_id, comm_id):
+    if request.method == 'POST' and request.user.is_authenticated:
+        Comment.objects.get(id=comm_id).delete()
+    return redirect('post', post_id)

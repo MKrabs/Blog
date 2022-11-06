@@ -6,8 +6,19 @@
              class="img-fluid rounded-circle p-3" style="max-height: 100px" alt="profilePicture">
     </div>
     <div class="col-12 col-md-6 bg-body rounded-4 p-3 shadow">
-        <span class="fs-4">{{ comment.author | default:'[Deleted]' }}</span> - <small
-            class="text-muted pb-0">{{ comment.time }}</small>
+        <div class="row">
+            <div class="col-auto align-self-start">
+                <span class="fs-4">{{ comment.author | default:'[Deleted]' }}</span>
+            </div>
+            <div class="col-12 col-sm-auto my-auto ps-0">
+                <small class="text-muted pb-0">{{ comment.time|timesince }} ago</small>
+            </div>
+            <div class="col-auto ms-auto align-self-end">
+                {% if user and comment.author %}
+                    {% include 'blog/comment_menu.html' %}
+                {% endif %}
+            </div>
+        </div>
         <div>{{ comment.body | safe }}</div>
     </div>
 </div>
