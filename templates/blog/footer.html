@@ -1,24 +1,34 @@
 <!-- footer -->
 
-<div class="container text-center bg-body mt-5 p-2 rounded shadow-sm">
+<div class="container text-center mt-5">
     <div class="row">
-        <div class="col align-self-start">
+        <div class="col align-self-start p-2 bg-body rounded shadow-sm position-relative m-auto">
             {% if request.path == "/" %}
                 bottom text
             {% else %}
-                <a href="{% url 'home' %}" class="text-decoration-none"><span class="bi-caret-left-fill"></span>Home</a>
+                <a href="{% url 'home' %}" class="text-decoration-none stretched-link table-hover">
+                    <span class="bi-caret-left-fill"></span> Home
+                </a>
             {% endif %}
         </div>
         <div class="col align-self-center">
             <span class="text-muted">version 1.0.2</span>
         </div>
-        <div class="col align-self-end">
+        <div class="col align-self-end p-2 bg-body rounded shadow-sm">
             {% if user.is_authenticated %}
                 Hi {{ user.username }}! 👉
                 <a href="{% url 'logout' %}" class="text-decoration-none">Log Out</a>
             {% else %}
-                <a href="{% url 'login' %}" class="text-decoration-none">👉 Log In</a>
-                <a href="{% url 'register' %}" class="text-decoration-none">👉 Register</a>
+                <div class="row">
+                    <div class="col-12 col-md align-self-start position-relative">
+                        <a href="{% url 'login' %}" class="text-decoration-none stretched-link">👉 Log In</a>
+                    </div>
+                    <div class="vr d-none d-md-block p-0"></div>
+                    <hr class="d-block d-md-none mt-2 mb-1 p-0 w-75 mx-auto">
+                    <div class="col-12 col-md align-self-end position-relative">
+                        <a href="{% url 'register' %}" class="text-decoration-none stretched-link">👉 Register</a>
+                    </div>
+                </div>
             {% endif %}
         </div>
     </div>
