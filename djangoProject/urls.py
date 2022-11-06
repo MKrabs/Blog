@@ -38,5 +38,8 @@ urlpatterns = [
     path('new/', views.index, name='new'),
     path('create/', views.create_post, name='create'),
 
-    path('<str:pattern>', views.page_not_found, name='404'),
+
+    path('@<str:user_name>/', views.user_profile, name='user_profile'),
+
+    path('', views.page_not_found, name='404'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

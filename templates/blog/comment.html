@@ -1,9 +1,12 @@
 <!-- Comment {{ comment.author }} -->
 
 <div class="row d-flex justify-content-center m-3">
-    <div class="col-12 col-md-auto text-lg-end text-center">
+    <div class="col-12 col-md-auto text-lg-end text-center position-relative">
         <img src="{{ comment.author.profile.picture.url | default:'/media/profile_pictures/anonymous.jpg' }}"
              class="img-fluid rounded-circle p-3" style="max-height: 100px" alt="profilePicture">
+        {% if comment.author != None %}
+            <a href="{% url 'user_profile' user_name=comment.author %}" class="stretched-link"></a>
+        {% endif %}
     </div>
     <div class="col-12 col-md-6 bg-body rounded-4 p-3 shadow">
         <div class="row">
