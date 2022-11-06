@@ -112,3 +112,14 @@ def liked(request, post_id):
             like.delete()
 
     return redirect('post', post_id)
+
+
+def comment(request, post_id):
+    if request.method == 'POST':
+        comm = Comment()
+        comm.author = request.user if request.user.is_authenticated and not request.POST.get('anonymous') else None
+        comm.post_id = Post.objects.get(id=post_id)
+        comm.body = request.POST['commentBody']
+        comm.save()
+
+    return redirect('post', post_id)

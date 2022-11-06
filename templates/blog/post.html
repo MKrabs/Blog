@@ -67,16 +67,16 @@
                                    value="{{ user }}">
                         </div>
                         <div class="col-12 col-sm-auto align-self-end m-auto text-center">
-                            <input type="checkbox" class="form-check-input"
+                            <input type="checkbox" class="form-check-input" name="anonymous" value="off"
                                    id="exampleCheck1" {% if not user.is_authenticated %} checked disabled {% endif %}>
                             <label class="form-check-label" for="exampleCheck1">Post anonymously</label>
                         </div>
                     </div>
 
                     <div class="form-floating">
-                    <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"
+                    <textarea class="form-control" placeholder="Leave a comment here" id="commentText" name="commentBody"
                               style="height: 200px" aria-describedby="markdownHelpBlock"></textarea>
-                        <label for="floatingTextarea2">Comments</label>
+                        <label for="commentText">Comments</label>
                     </div>
 
                     <div class="row m-2 ">
