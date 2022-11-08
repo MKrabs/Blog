@@ -27,10 +27,12 @@
                         {{ profile.profile.location | default:'<i>No data.</i>' }}
                     </div>
                     <div class="col-12 bg-body border-0 shadow-sm rounded-5 p-3">
-                        {{ profile.profile.bio | safe | default:'<i>No bio.</i>'}}
+                        {{ profile.profile.bio | safe | default:'<i>No bio.</i>' }}
                     </div>
                 </div>
             </div>
         </div>
+
+        {% include 'blog/user_history.html' with profile=profile %}
     </div>
 {% endblock %}
