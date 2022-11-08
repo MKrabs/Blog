@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block header_info %}
-    Hi, I'm <span class="wavy">Marc</span>
+    Hi, I'm <span class="wavy">a Blog</span>
 {% endblock %}
 
 {% block main_body %}
@@ -49,24 +49,42 @@
                         </div>
                     {% endif %}
 
-                    <div class="col-lg-7 col-8 bg-body rounded p-3 shadow position-relative">
-                        <div class="row">
-                            <a target="_self" rel="noopener noreferrer" href="{% url 'post' post_id=post.id %}"
-                               class="display-6 text-decoration-none stretched-link">{{ post.title }}</a>
-                        </div>
-                        <div class="row">
-                            <p>{{ post.short }}</p>
-                        </div>
-                        <div class="row pt-2">
-                            <div class="col align-self-start">
-                                <a href="{% url 'post' post_id=post.id %}#comments" class="text-decoration-none position-relative stretched-link">
-                                    <span class="bi bi-chat-left"></span> {{ post.comments }}
-                                </a>
-                                <span class="bi bi-heart{% if post.liked %}-fill text-danger{% endif %}"></span> {{ post.likes }}
+                    <div class="col-lg-7 col-8">
+                        <div class="row mb-2 mt-auto">
+                            <div class="col-12 col-sm-auto align-text-bottom position-relative">
+                                <img src="{{ post.author.profile.picture.url | default:'/media/profile_pictures/anonymous.jpg' }}"
+                                     class="img-fluid rounded-circle" style="max-width: 1.5em"
+                                     alt="profilePicture">
+                                <span class="text-start my-auto text-center">
+                                    {{ post.author.username | default:'<i> Deleted</i>' }}
+                                </span>
+                                {% if post.author != None %}
+                                    <a href="{% url 'user_profile' user_name=post.author %}" class="stretched-link"></a>
+                                {% endif %}
                             </div>
-                            <div class="col align-self-end text-end">
-                                <p class="card-text"><small class="text-muted">Last
-                                    updated {{ post.pub_date }}</small></p>
+                            <div class="col-12 col-sm align-self-end text-center text-sm-end pt-2 pt-sm-0">
+                                <p class="card-text opacity-25 fst-italic small">
+                                    Updated {{ post.pub_date | timesince }} ago
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="bg-body rounded p-3 shadow position-relative">
+                            <div class="row">
+                                <div class="col-12 col-sm align-self-start">
+                                    <a target="_self" rel="noopener noreferrer" href="{% url 'post' post_id=post.id %}"
+                                       class="display-6 text-decoration-none stretched-link">{{ post.title }}</a>
+                                </div>
+                                <div class="col-auto align-self-end my-3 my-sm-0 mb-sm-auto">
+                                    <a href="{% url 'post' post_id=post.id %}#comments"
+                                       class="text-decoration-none position-relative stretched-link">
+                                        <span class="bi bi-chat-left"></span> {{ post.comments }}
+                                    </a>
+                                    <span class="bi bi-heart{% if post.liked %}-fill text-danger{% endif %}"></span> {{ post.likes }}
+                                </div>
+                            </div>
+                            <div class="row pt-2">
+                                <span>{{ post.short }}</span>
                             </div>
                         </div>
                     </div>
