@@ -157,6 +157,9 @@ def user_profile(request, user_name):
     for c in comments:
         c.body = marker(c.body)
 
+    for c in posts:
+        c.body = marker(c.body)
+
     profile.history = list(chain(posts, comments))
 
     context = {'profile': profile}

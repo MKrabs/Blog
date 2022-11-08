@@ -19,7 +19,7 @@
         {% for hist in profile.history|dictsortreversed:"date" %}
             {% if hist.title %}
                 <div class="col-sm-6 col-lg-4 mb-4">
-                    <div class="card">
+                    <div class="card border-0 shadow">
                         <div class="card-body">
                         <span class="card-title fs-3">
                             <span class="bi bi-journal-richtext text-success"></span>
@@ -30,7 +30,7 @@
                                 {{ hist.title }}
                             </a>
                         </span>
-                            <div class="card-text overflow-hidden" style="max-height: 300px">
+                            <div class="card-text overflow-hidden" style="max-height: 333px">
                                 {{ hist.body | safe }}
                             </div>
                             <p class="card-text"><small class="text-muted">
@@ -41,7 +41,7 @@
                 </div>
             {% elif hist.post_id %}
                 <div class="col-sm-6 col-lg-4 mb-4">
-                    <div class="card">
+                    <div class="card border-0 shadow">
                         <div class="card-body">
                             <h5 class="card-title">
                                 <span class="bi bi-chat-left"></span>
