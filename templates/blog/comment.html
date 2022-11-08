@@ -17,7 +17,9 @@
                 {% endif %}
             </div>
             <div class="col-12 col-sm-auto my-auto ps-0">
-                <small class="text-muted pb-0">{{ comment.time|timesince }} ago</small>
+                <span class="opacity-25 fst-italic small pb-0">
+                    {{ comment.time|timesince }} ago
+                </span>
             </div>
             <div class="col-auto ms-auto align-self-end">
                 {% if user and comment.author %}

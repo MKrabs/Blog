@@ -26,7 +26,9 @@
                     <a href="{% url 'user_profile' user_name=post.author %}" class="stretched-link"></a>
                 {% endif %}
             </span>
-            <small class="text-muted pb-0">Posted {{ post.pub_date|timesince }} ago</small>
+            <span class="opacity-50 fst-italic small pb-0">
+                Posted {{ post.pub_date|timesince }} ago
+            </span>
         </div>
         <div class="col-2 text-md-start mt-auto mb-1 align-self-start">
             <a href="#comments" class="btn text-decoration-none">
