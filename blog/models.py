@@ -72,20 +72,20 @@ class Post(models.Model):
     image = models.CharField(max_length=500, default='bi-robot')
     short = models.CharField(max_length=255)
     body = models.TextField(max_length=20000)
-    pub_date = models.DateTimeField(auto_now=True)
+    date = models.DateTimeField(auto_now=True)
 
 
 class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default=None, null=True)
     post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
-    time = models.DateTimeField(auto_now=True)
+    date = models.DateTimeField(auto_now=True)
     body = models.TextField(blank=False, null=False)
 
 
 class Like(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
-    time = models.DateTimeField(auto_now=True)
+    date = models.DateTimeField(auto_now=True)
 
 
 class Project(models.Model):

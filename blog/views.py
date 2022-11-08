@@ -1,3 +1,6 @@
+from itertools import chain
+from operator import attrgetter
+
 import markdown
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -34,7 +37,7 @@ def registerPage(request):
 
 def index(request, page=1):
     tags = Tag.objects.all()
-    latest_posts = Post.objects.order_by('-pub_date')
+    latest_posts = Post.objects.order_by('-date')
 
     for p in latest_posts:
         p.comments = Comment.objects.filter(post_id=p.id).count()
@@ -64,7 +67,7 @@ def index(request, page=1):
 
 def post(request, post_id):
     blog_post = Post.objects.get(pk=post_id)
-    comments = Comment.objects.filter(post_id=post_id).order_by('-time')
+    comments = Comment.objects.filter(post_id=post_id).order_by('-date')
 
     blog_post.likes = Like.objects.filter(post_id=blog_post.id).count()
     blog_post.liked = True if Like.objects.filter(post_id=blog_post.id, author=request.user.id) else False
@@ -147,5 +150,14 @@ def comment_delete(request, post_id, comm_id):
 def user_profile(request, user_name):
     profile = User.objects.get(username=user_name)
     profile.profile.bio = marker(profile.profile.bio)
+
+    posts = Post.objects.filter(author=profile).order_by('-date')
+    comments = Comment.objects.filter(author=profile).order_by('-date')
+
+    for c in comments:
+        c.body = marker(c.body)
+
+    profile.history = list(chain(posts, comments))
+
     context = {'profile': profile}
     return render(request, 'blog/userprofile.html', context)
