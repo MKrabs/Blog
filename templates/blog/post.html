@@ -13,8 +13,8 @@
 
     <div class="row">
         <div class="col-12 col-md-2 text-lg-end text-center position-relative">
-            <img src="{{ post.author.profile.picture.url | default:'/media/profile_pictures/anonymous.jpg' }}"
-                 class="img-fluid rounded-circle p-3" style="max-height: 100px">
+            {% include 'blog/profile_picture.html' with url=post.author.profile.picture.url maxheight='100px' %}
+
             {% if post.author != None %}
                 <a href="{% url 'user_profile' user_name=post.author %}" class="stretched-link"></a>
             {% endif %}

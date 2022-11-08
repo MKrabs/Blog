@@ -52,9 +52,7 @@
                     <div class="col-lg-7 col-8">
                         <div class="row mb-2 mt-auto">
                             <div class="col-12 col-sm-auto align-text-bottom position-relative">
-                                <img src="{{ post.author.profile.picture.url | default:'/media/profile_pictures/anonymous.jpg' }}"
-                                     class="img-fluid rounded-circle" style="max-width: 1.5em"
-                                     alt="profilePicture">
+                                {% include 'blog/profile_picture.html' with url=post.author.profile.picture.url maxheight='1.5em' %}
                                 <span class="text-start my-auto text-center">
                                     {{ post.author.username | default:'<i> Deleted</i>' }}
                                 </span>

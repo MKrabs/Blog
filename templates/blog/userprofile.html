@@ -13,8 +13,8 @@
     <div class="container">
         <div class="row justify-content-center gap-5">
             <div class="col-auto position-relative">
-                <img src="{{ profile.profile.picture.url | default:'/media/profile_pictures/anonymous.jpg' }}"
-                     class="img-fluid rounded-circle shadow" style="max-height: 300px" alt="profilePicture">
+                {% include 'blog/profile_picture.html' with url=profile.profile.picture.url maxheight='300px' %}
+
                 <div class="position-absolute bottom-0 end-0">
                     {% if user == profile %}
                         <div class="position-absolute bottom-0 end-0 btn bg-light rounded-pill px-3 fs-1 shadow bi bi-pen"></div>
