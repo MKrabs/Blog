@@ -167,8 +167,8 @@ def user_profile(request, user_name):
 
     elif request.user.username == user_name:
         user_form = UpdateUserForm(instance=request.user)
-        profile_form = UpdateProfileInfoForm(instance=request.user)
-        profile_picture_form = UpdateProfilePictureForm(instance=request.user)
+        profile_form = UpdateProfileInfoForm(instance=request.user.profile)
+        profile_picture_form = UpdateProfilePictureForm(instance=request.user.profile)
     else:
         user_form = UpdateUserForm()
         profile_form = UpdateProfileInfoForm()
