@@ -148,8 +148,7 @@ def comment_delete(request, post_id, comm_id):
 
 @login_required()
 def user_profile(request, user_name):
-    if request.method == 'POST' and request.user.username is user_name:
-        print("post !")
+    if request.method == 'POST' and request.user.username == user_name:
         user_form = UpdateUserForm(request.POST, instance=request.user)
         profile_form = UpdateProfileInfoForm(request.POST, request.FILES, instance=request.user.profile)
         profile_picture_form = UpdateProfilePictureForm(request.POST, request.FILES, instance=request.user.profile)
@@ -168,9 +167,9 @@ def user_profile(request, user_name):
             profile_picture_form.save()
 
     else:
-        user_form = UpdateUserForm(instance=request.user)
-        profile_form = UpdateProfileInfoForm(instance=request.user.profile)
-        profile_picture_form = UpdateProfilePictureForm(instance=request.user.profile)
+        user_form = UpdateUserForm()
+        profile_form = UpdateProfileInfoForm()
+        profile_picture_form = UpdateProfilePictureForm()
 
     profile = User.objects.get(username=user_name)
     profile.profile.bio = marker(profile.profile.bio)
