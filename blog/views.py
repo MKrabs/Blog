@@ -146,10 +146,8 @@ def comment_delete(request, post_id, comm_id):
     return redirect(reverse('post', kwargs={'post_id': post_id}) + '#comments')
 
 
-@login_required()
 def user_profile(request, user_name):
-    if request.method == 'POST':
-        print("post !")
+    if request.method == 'POST' and request.user.username == user_name:
         user_form = UpdateUserForm(request.POST, instance=request.user)
         profile_form = UpdateProfileInfoForm(request.POST, request.FILES, instance=request.user.profile)
         profile_picture_form = UpdateProfilePictureForm(request.POST, request.FILES, instance=request.user.profile)
@@ -167,10 +165,14 @@ def user_profile(request, user_name):
         if profile_picture_form.is_valid():
             profile_picture_form.save()
 
-    else:
+    elif request.user.username == user_name:
         user_form = UpdateUserForm(instance=request.user)
         profile_form = UpdateProfileInfoForm(instance=request.user.profile)
         profile_picture_form = UpdateProfilePictureForm(instance=request.user.profile)
+    else:
+        user_form = UpdateUserForm()
+        profile_form = UpdateProfileInfoForm()
+        profile_picture_form = UpdateProfilePictureForm()
 
     profile = User.objects.get(username=user_name)
     profile.profile.bio = marker(profile.profile.bio)
