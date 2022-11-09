@@ -146,7 +146,6 @@ def comment_delete(request, post_id, comm_id):
     return redirect(reverse('post', kwargs={'post_id': post_id}) + '#comments')
 
 
-@login_required()
 def user_profile(request, user_name):
     if request.method == 'POST' and request.user.username == user_name:
         user_form = UpdateUserForm(request.POST, instance=request.user)
