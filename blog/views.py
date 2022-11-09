@@ -148,7 +148,7 @@ def comment_delete(request, post_id, comm_id):
 
 @login_required()
 def user_profile(request, user_name):
-    if request.method == 'POST':
+    if request.method == 'POST' and request.user.username is user_name:
         print("post !")
         user_form = UpdateUserForm(request.POST, instance=request.user)
         profile_form = UpdateProfileInfoForm(request.POST, request.FILES, instance=request.user.profile)
