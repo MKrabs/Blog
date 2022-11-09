@@ -36,7 +36,6 @@ def registerPage(request):
 
 
 def index(request, page=1):
-    tags = Tag.objects.all()
     latest_posts = Post.objects.order_by('-date')
 
     for p in latest_posts:
@@ -59,7 +58,6 @@ def index(request, page=1):
             'total': p.num_pages,
         },
         'latest_posts': page_obj.object_list,
-        'tags': tags,
     }
 
     return render(request, 'blog/index.html', context)
@@ -150,6 +148,7 @@ def comment_delete(request, post_id, comm_id):
 def user_profile(request, user_name):
     profile = User.objects.get(username=user_name)
     profile.profile.bio = marker(profile.profile.bio)
+    tags = Tag.objects.all()
 
     posts = Post.objects.filter(author=profile).order_by('-date')
     comments = Comment.objects.filter(author=profile).order_by('-date')
@@ -162,5 +161,8 @@ def user_profile(request, user_name):
 
     profile.history = list(chain(posts, comments))
 
-    context = {'profile': profile}
+    context = {
+        'profile': profile,
+        'tags': tags,
+    }
     return render(request, 'blog/userprofile.html', context)
