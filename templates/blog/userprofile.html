@@ -1,6 +1,13 @@
 {% extends 'blog/base.html' %}
 {% load static %}
 
+{% block scripts %}
+    <script src="{% static 'js/filechooser.js' %}" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"
+            integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous"
+            async></script>
+{% endblock %}
+
 {% block title %}
     {{ profile }}
 {% endblock %}
@@ -11,47 +18,80 @@
 
 {% block main_body %}
     <div class="container">
-        <div class="row justify-content-center gap-5">
-            <div class="col-auto position-relative">
-                {% include 'blog/profile_picture.html' with url=profile.profile.picture.url maxheight='300px' %}
+        <div class="row justify-content-center gap-5 mb-5">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row justify-content-center gap-5">
 
-                <div class="position-absolute bottom-0 end-0">
-                    {% if user == profile %}
-                        <div class="position-absolute bottom-0 end-0 btn bg-light rounded-pill px-3 fs-1 shadow bi bi-pen"></div>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="col-12 col-md">
-                <div class="row gap-2 gap-md-4">
-                    <div class="col-12 bg-body border-0 shadow-sm rounded-5 p-2 text-center display-6">
-                        {{ profile.profile.location | default:'<i>No data.</i>' }}
+                    <div class="col-auto position-relative mb-auto">
+                        <div id="profile_picture">
+                            {% include 'blog/profile_picture.html' with url=profile.profile.picture.url maxheight='300px' %}
+                        </div>
+
+                        <div class="position-relative bottom-0 end-0">
+                            {% if user == profile %}
+                                <div onclick="activateEditMode()"
+                                     class="visible position-absolute bottom-0 end-0 btn bg-light rounded-circle px-sm-3 fs-1 shadow bi bi-pen">
+                                </div>
+                                <div class="invisible">
+                                    <div class="position-absolute bottom-0 end-0 btn bg-light rounded-circle px-sm-3 fs-1 shadow bi bi-camera">
+                                        {{ profile_picture_form.picture }}
+                                    </div>
+                                    <div id="confirm-form"
+                                         class="position-absolute bottom-0 start-0 btn bg-success rounded-circle px-sm-3 fs-1 shadow bi bi-check2 d-none">
+                                        <input type="submit"
+                                               style="width: 100%; height: 100%"
+                                               class="rounded-circle position-absolute bottom-0 end-0 opacity-0"/>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
                     </div>
-                    <div class="col-12 bg-body border-0 shadow-sm rounded-5 p-3">
-                        {{ profile.profile.bio | safe | default:'<i>No bio.</i>' }}
-                    </div>
-                    <div class="col-12">
-                        {% if tags %}
-                            <div class="container-fluid text-center">
-                                <div class="row row-cols-2 row-cols-md-3 row-cols-xl-6 row-cols-lg-4 g-2 g-md-3">
-                                    {% for tag in tags %}
-                                        <div class="col position-relative">
-                                            <div class="rounded bg-{{ tag.color }} p-2">
-                                                {% if tag.link %}
-                                                    <a target="_blank" rel="noopener noreferrer"
-                                                       href="{{ tag.link }}"
-                                                       class="text-decoration-none overflow-hidden stretched-link"></a>
-                                                {% endif %}
-                                                <i class="bi bi-{{ tag.icon }}"></i>
-                                                {{ tag.name }}
-                                            </div>
-                                        </div>
-                                    {% endfor %}
+                    <div class="col-12 col-md">
+                        <div class="row gap-2 gap-md-4">
+                            <div class="position-relative" id="location-form">
+                                <div class="col-12 bg-body border-0 shadow-sm rounded-5 p-3 display-5 visible">
+                                    {{ profile.profile.location | default:'<i>No data.</i>' }}
+                                </div>
+                                <div class="col-12 bg-body border-0 shadow-sm rounded-5 p-3 position-absolute top-0 end-0 invisible h-100">
+                                    {{ profile_form.location }}
                                 </div>
                             </div>
-                        {% endif %}
+                            <div class="position-relative" id="bio-form">
+                                <div class="col-12 bg-body border-0 shadow-sm rounded-5 p-3 visible">
+                                    {{ profile.profile.bio | safe | default:'<i>No bio.</i>' }}
+                                </div>
+                                <div class="col-12 bg-body border-0 shadow-sm rounded-5 p-3 position-absolute top-0 end-0 invisible h-100">
+                                    {{ profile_form.bio | safe | default:'<i>No bio.</i>' }}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </form>
+        </div>
+
+
+        <div class="col-12">
+            {% if tags %}
+                <div class="container-fluid text-center">
+                    <div class="row row-cols-2 row-cols-md-3 row-cols-xl-6 row-cols-lg-4 g-2 g-md-3">
+                        {% for tag in tags %}
+                            <div class="col position-relative">
+                                <div class="rounded bg-{{ tag.color }} p-2">
+                                    {% if tag.link %}
+                                        <a target="_blank" rel="noopener noreferrer"
+                                           href="{{ tag.link }}"
+                                           class="text-decoration-none overflow-hidden stretched-link"></a>
+                                    {% endif %}
+                                    <i class="bi bi-{{ tag.icon }}"></i>
+                                    {{ tag.name }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
         </div>
 
         {% include 'blog/user_history.html' with profile=profile %}

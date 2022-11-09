@@ -1,5 +1,7 @@
+import math
 from random import randint
 
+from PIL import Image
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
@@ -11,6 +13,24 @@ class Profile(models.Model):
     bio = models.TextField(max_length=500, blank=True)
     location = models.CharField(max_length=30, blank=True)
     picture = models.ImageField(blank=True, upload_to='profile_pictures')
+
+    def save(self, *args, **kwargs):
+        super().save()
+
+        img = Image.open(self.picture.path)
+
+        h = img.height
+        w = img.width
+
+        if w > h:
+            space_start = round((w - h) / 2)
+            crop_area = (space_start, 0, space_start + h, h)
+        else:
+            space_start = round((h - w) / 2)
+            crop_area = (0, space_start, w, space_start + w)
+
+        img = img.crop(crop_area)
+        img.save(self.picture.path)
 
 
 @receiver(post_save, sender=User)

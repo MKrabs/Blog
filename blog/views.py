@@ -3,6 +3,7 @@ from operator import attrgetter
 
 import markdown
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -10,7 +11,7 @@ from django.core.paginator import Paginator, EmptyPage
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse
 
-from blog.forms import CreateUserForm
+from blog.forms import CreateUserForm, UpdateUserForm, UpdateProfileInfoForm, UpdateProfilePictureForm
 import bleach
 from .models import Post, Tag, Comment, Like
 
@@ -145,7 +146,32 @@ def comment_delete(request, post_id, comm_id):
     return redirect(reverse('post', kwargs={'post_id': post_id}) + '#comments')
 
 
+@login_required()
 def user_profile(request, user_name):
+    if request.method == 'POST':
+        print("post !")
+        user_form = UpdateUserForm(request.POST, instance=request.user)
+        profile_form = UpdateProfileInfoForm(request.POST, request.FILES, instance=request.user.profile)
+        profile_picture_form = UpdateProfilePictureForm(request.POST, request.FILES, instance=request.user.profile)
+
+        print(user_form.is_valid())
+        print(profile_form.is_valid())
+        print(profile_picture_form.is_valid())
+
+        if user_form.is_valid():
+            user_form.save()
+
+        if profile_form.is_valid():
+            profile_form.save()
+
+        if profile_picture_form.is_valid():
+            profile_picture_form.save()
+
+    else:
+        user_form = UpdateUserForm(instance=request.user)
+        profile_form = UpdateProfileInfoForm(instance=request.user.profile)
+        profile_picture_form = UpdateProfilePictureForm(instance=request.user.profile)
+
     profile = User.objects.get(username=user_name)
     profile.profile.bio = marker(profile.profile.bio)
     tags = Tag.objects.all()
@@ -164,5 +190,8 @@ def user_profile(request, user_name):
     context = {
         'profile': profile,
         'tags': tags,
+        'user_form': user_form,
+        'profile_form': profile_form,
+        'profile_picture_form': profile_picture_form,
     }
     return render(request, 'blog/userprofile.html', context)
