@@ -78,7 +78,7 @@
                     <div class="row row-cols-2 row-cols-md-3 row-cols-xl-6 row-cols-lg-4 g-2 g-md-3">
                         {% for tag in tags %}
                             <div class="col position-relative">
-                                <div class="rounded bg-{{ tag.color }} p-2">
+                                <div class="rounded btn btn-{{ tag.color }} p-2 w-100">
                                     {% if tag.link %}
                                         <a target="_blank" rel="noopener noreferrer"
                                            href="{{ tag.link }}"
