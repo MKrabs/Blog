@@ -1,6 +1,11 @@
 <!-- Profile picture -->
 
-<img src="{{ url | default:'/media/profile_pictures/anonymous.jpg' }}"
+<img src="{{ user.profile.picture.url | default:'/media/profile_pictures/anonymous.jpg' }}"
      class="img-fluid rounded-circle"
      style="max-height: {{ maxheight }}; object-fit: cover;"
-     alt="profilePicture">
+     alt="profilePicture"
+     data-bs-toggle="popover"
+     data-bs-trigger="hover focus"
+     data-bs-placement="right"
+     data-bs-html="true"
+     data-bs-content='{% include "blog/userprofile_short.html" with user=user %}'>

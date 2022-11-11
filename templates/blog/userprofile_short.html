@@ -1,0 +1,56 @@
+<!-- popup profile {{ user }} -->
+
+<div class="container max-w-300">
+    <div class="row">
+        <div class="col-4 m-auto">
+            <img src="{{ user.profile.picture.url | default:'/media/profile_pictures/anonymous.jpg' }}"
+                 class="img-fluid rounded-circle"
+                 style="max-height: {{ maxheight }}; object-fit: cover;"
+                 alt="profilePicture">
+        </div>
+        <div class="col">
+            <div class="row text-end">
+                <span class="h2">
+                    {{ user.username }}
+                </span>
+            </div>
+
+            {% if user.profile.location %}
+                <div class="row text-end">
+                    <div class="col">
+                        {{ user.profile.location }}
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="row small text-muted text-end">
+                <div class="col">
+                    Joined: {{ user.date_joined | date }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if user.profile.bio %}
+        <hr>
+        <div class="row max-h-200 overflow-hidden">
+            {{ user.profile.bio | safe }}
+        </div>
+    {% endif %}
+    <div class="row justify-content-center mt-3">
+        <div class="col">
+            <hr>
+        </div>
+        <div class="col-auto m-auto">
+            <span class="bi bi-sticky-fill text-success"></span> {{ user.total_posts }}
+        </div>
+        <div class="col-auto m-auto">
+            <span class="bi bi-chat-left-fill text-primary"></span> {{ user.total_comments }}
+        </div>
+        <div class="col-auto m-auto">
+            <span class="bi bi-heart-fill text-danger"></span> {{ user.total_likes }}
+        </div>
+        <div class="col">
+            <hr>
+        </div>
+    </div>
+</div>

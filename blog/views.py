@@ -43,6 +43,10 @@ def index(request, page=1):
         p.comments = Comment.objects.filter(post_id=p.id).count()
         p.likes = Like.objects.filter(post_id=p.id).count()
         p.liked = True if Like.objects.filter(post_id=p.id, author=request.user.id) else False
+        p.author.profile.bio = marker(p.author.profile.bio)
+        p.author.total_posts = Post.objects.filter(author=p.author).count()
+        p.author.total_comments = Comment.objects.filter(author=p.author).count()
+        p.author.total_likes = Like.objects.filter(author=p.author).count()
 
     p = Paginator(latest_posts, 4)
 
@@ -68,6 +72,10 @@ def post(request, post_id):
     blog_post = Post.objects.get(pk=post_id)
     comments = Comment.objects.filter(post_id=post_id).order_by('-date')
 
+    blog_post.author.total_posts = Post.objects.filter(author=blog_post.author).count()
+    blog_post.author.total_comments = Comment.objects.filter(author=blog_post.author).count()
+    blog_post.author.total_likes = Like.objects.filter(author=blog_post.author).count()
+
     blog_post.likes = Like.objects.filter(post_id=blog_post.id).count()
     blog_post.liked = True if Like.objects.filter(post_id=blog_post.id, author=request.user.id) else False
 
@@ -75,6 +83,11 @@ def post(request, post_id):
 
     for c in comments:
         c.body = marker(c.body)
+        c.author.profile.bio = marker(c.author.profile.bio)
+
+        c.author.total_posts = Post.objects.filter(author=c.author).count()
+        c.author.total_comments = Comment.objects.filter(author=c.author).count()
+        c.author.total_likes = Like.objects.filter(author=c.author).count()
 
     context = {
         'post': blog_post,

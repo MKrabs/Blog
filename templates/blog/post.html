@@ -12,8 +12,13 @@
 {% block main_body %}
 
     <div class="row">
-        <div class="col-12 col-md-2 text-lg-end text-center position-relative">
-            {% include 'blog/profile_picture.html' with url=post.author.profile.picture.url maxheight='100px' %}
+        <div class="col-12 col-md-2 text-lg-end text-center position-relative"
+             data-bs-toggle="popover"
+             data-bs-trigger="hover focus"
+             data-bs-placement="right"
+             data-bs-html="true"
+             data-bs-content='{% include "blog/userprofile_short.html" with user=post.author %}'>
+            {% include 'blog/profile_picture.html' with user=post.author maxheight='100px' %}
 
             {% if post.author != None %}
                 <a href="{% url 'user_profile' user_name=post.author %}" class="stretched-link"></a>
@@ -78,8 +83,7 @@
                             </label>
                         </div>
                         <div class="col-auto pe-0 m-auto">
-                            <img class="img-fluid rounded-circle" style="max-height: 30px"
-                                 src="{{ user.profile.picture.url | default:'/media/profile_pictures/anonymous.jpg' }}">
+                            {% include 'blog/profile_picture.html' with user=user maxheight='30px' %}
                         </div>
                         <div class="col">
                             <input type="text" readonly class="form-control-plaintext" id="staticUser"

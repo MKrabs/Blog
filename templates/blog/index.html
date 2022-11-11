@@ -32,8 +32,13 @@
 
                     <div class="col-lg-7 col-8">
                         <div class="row mb-2 mt-auto">
-                            <div class="col-12 col-sm-auto align-text-bottom position-relative">
-                                {% include 'blog/profile_picture.html' with url=post.author.profile.picture.url maxheight='1.5em' %}
+                            <div class="col-12 col-sm-auto align-text-bottom position-relative"
+                                 data-bs-toggle="popover"
+                                 data-bs-trigger="hover focus"
+                                 data-bs-placement="right"
+                                 data-bs-html="true"
+                                 data-bs-content='{% include "blog/userprofile_short.html" with user=post.author %}'>
+                                {% include 'blog/profile_picture.html' with user=post.author maxheight='1.5em' %}
                                 <span class="text-start my-auto text-center">
                                     {{ post.author.username | default:'<i> Deleted</i>' }}
                                 </span>

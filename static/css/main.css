@@ -33,3 +33,15 @@
 	left: 0;
     z-index: -1;
 }
+
+.max-w-300 {
+    max-width: 300px;
+}
+
+.max-h-200 {
+    max-height: 200px;
+}
+
+.popover{
+    max-width: 100%; /* Max Width of the popover (depending on the container!) */
+}
