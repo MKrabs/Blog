@@ -19,8 +19,9 @@
             <div class="row">
                 <div class="col-12 col-md align-self-start position-relative p-2">
                     {% if user.is_authenticated %}
-                        {% include 'blog/profile_picture.html' with user=user maxheight='19px' popover=True direction='top'%}
+                        {% include 'blog/profile_picture.html' with user=user maxheight='19px'%}
                         Hi {{ user.username }}!
+                        <a href="{% url 'user_profile' user_name=user %}" class="text-decoration-none stretched-link"></a>
                     {% else %}
                         <a href="{% url 'login' %}" class="text-decoration-none stretched-link">
                             <i class="bi bi-person-vcard text-dark me-1"></i>
