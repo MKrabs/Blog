@@ -175,8 +175,8 @@ def user_profile(request, user_name):
         if profile_form.is_valid():
             profile_form.save()
 
-        if profile_picture_form.is_valid():
-            profile_picture_form.save()
+        if profile_picture_form.is_valid() and not profile_picture_form.fields['picture']:
+            profile_picture_form.save(True)
 
     elif request.user.username == user_name:
         user_form = UpdateUserForm(instance=request.user)

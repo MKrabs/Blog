@@ -14,24 +14,27 @@ class Profile(models.Model):
     location = models.CharField(max_length=30, blank=True)
     picture = models.ImageField(blank=True, upload_to='profile_pictures')
 
-    def save(self, *args, **kwargs):
+    def save(self, new_image=False, *args, **kwargs):
         super().save()
 
-        img = Image.open(self.picture.path)
-        img = ImageOps.exif_transpose(img)
+        if new_image:
+            self.user.profile.picture.delete(save=False)
 
-        h = img.height
-        w = img.width
+            img = Image.open(self.picture.path)
+            img = ImageOps.exif_transpose(img)
 
-        if w > h:
-            space_start = round((w - h) / 2)
-            crop_area = (space_start, 0, space_start + h, h)
-        else:
-            space_start = round((h - w) / 2)
-            crop_area = (0, space_start, w, space_start + w)
+            h = img.height
+            w = img.width
 
-        img = img.crop(crop_area)
-        img.save(self.picture.path)
+            if w > h:
+                space_start = round((w - h) / 2)
+                crop_area = (space_start, 0, space_start + h, h)
+            else:
+                space_start = round((h - w) / 2)
+                crop_area = (0, space_start, w, space_start + w)
+
+            img = img.crop(crop_area)
+            img.save(self.picture.path)
 
 
 @receiver(post_save, sender=User)
