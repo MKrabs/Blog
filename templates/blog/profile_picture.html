@@ -7,7 +7,7 @@
      alt="profilePicture"
      data-bs-toggle="popover"
      data-bs-trigger="hover focus"
-     data-bs-placement="right"
+     data-bs-placement="{{ direction | default:'right' }}"
      data-bs-html="true"
      data-bs-content='{% include "blog/userprofile_short.html" with user=user %}'
      {% endif %}

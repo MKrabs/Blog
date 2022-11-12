@@ -14,23 +14,33 @@
         <div class="col align-self-center">
             <span class="text-muted">version 1.0.4</span>
         </div>
-        <div class="col align-self-end p-2 bg-body rounded shadow-sm">
+        <div class="col align-self-end bg-body rounded shadow-sm">
 
             <div class="row">
-                <div class="col-12 col-md align-self-start position-relative">
+                <div class="col-12 col-md align-self-start position-relative p-2">
                     {% if user.is_authenticated %}
+                        {% include 'blog/profile_picture.html' with user=user maxheight='19px' popover=True direction='top'%}
                         Hi {{ user.username }}!
                     {% else %}
-                        <a href="{% url 'login' %}" class="text-decoration-none stretched-link">👉 Log In</a>
+                        <a href="{% url 'login' %}" class="text-decoration-none stretched-link">
+                            <i class="bi bi-person-vcard text-dark me-1"></i>
+                            Log In
+                        </a>
                     {% endif %}
                 </div>
-                <div class="vr d-none d-md-block p-0"></div>
+                <div class="vr d-none d-md-block p-0 my-2"></div>
                 <hr class="d-block d-md-none mt-2 mb-1 p-0 w-75 mx-auto">
-                <div class="col-12 col-md align-self-end position-relative">
+                <div class="col-12 col-md align-self-end position-relative p-2">
                     {% if user.is_authenticated %}
-                        <a href="{% url 'logout' %}" class="text-decoration-none">👉 Log Out</a>
+                        <a href="{% url 'logout' %}" class="text-decoration-none">
+                            <i class="bi bi-door-closed-fill me-1"></i>
+                            Log Out
+                        </a>
                     {% else %}
-                        <a href="{% url 'register' %}" class="text-decoration-none stretched-link">👉 Register</a>
+                        <a href="{% url 'register' %}" class="text-decoration-none stretched-link">
+                            <i class="bi bi-upc-scan text-dark me-1"></i>
+                            Register
+                        </a>
                     {% endif %}
                 </div>
             </div>
