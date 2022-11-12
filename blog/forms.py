@@ -29,12 +29,14 @@ class UpdateProfileInfoForm(forms.ModelForm):
             'class': 'form-control border-0 h-100',
             'rows': 20,
             'onkeydown': 'activateConfirmButton();',
+            'maxlength': Profile._meta.get_field('bio').max_length,
         }))
     location = forms.CharField(widget=forms.Textarea(
         attrs={
             'class': 'form-control border-0 h-100',
             'rows': 20,
             'onkeydown': 'activateConfirmButton();',
+            'maxlength': Profile._meta.get_field('location').max_length,
         }))
 
     class Meta:
