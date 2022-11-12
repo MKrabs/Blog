@@ -26,6 +26,7 @@
                                 {{ hist.title }}
                             </a>
                         </span>
+                            <hr>
                             <div class="card-text overflow-hidden" style="max-height: 333px">
                                 {{ hist.body | safe }}
                             </div>
@@ -47,11 +48,12 @@
                                     {{ hist.post_id.title }}
                                 </a>
                             </h5>
-                            <p class="card-text">This is another card with title and supporting text below. This card
-                                has
-                                some
-                                additional content to make it slightly taller overall.</p>
-                            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                            <div class="card-text overflow-hidden max-h-200 border-start border-5 rounded ps-2">
+                                {{ hist.body | safe }}
+                            </div>
+                            <p class="card-text text-muted small">
+                                Last updated {{ hist.date | timesince }} ago.
+                            </p>
                         </div>
                     </div>
                 </div>
