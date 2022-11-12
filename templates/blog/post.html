@@ -122,3 +122,10 @@
         {% include 'blog/comment.html' with comment=co %}
     {% endfor %}
 {% endblock %}
+
+{% block pagination %}
+    {% if page.total > 1 %}
+        {% url 'post' post_id=post.id as var_url%}
+        {% include 'blog/pagination.html' with page=page url=var_url anchor='#comments' %}
+    {% endif %}
+{% endblock %}

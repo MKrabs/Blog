@@ -68,7 +68,7 @@ def index(request, page=1):
     return render(request, 'blog/index.html', context)
 
 
-def post(request, post_id):
+def post(request, post_id, page=1):
     blog_post = Post.objects.get(pk=post_id)
     comments = Comment.objects.filter(post_id=post_id).order_by('-date')
 
@@ -81,6 +81,15 @@ def post(request, post_id):
 
     blog_post.body = marker(blog_post.body)
 
+    p = Paginator(comments, 5)
+
+    try:
+        page_obj = p.get_page(page)
+    except EmptyPage:
+        page_obj = p.page(p.num_pages)
+
+    comments = page_obj.object_list
+
     for c in comments:
         c.body = marker(c.body)
         if c.author:
@@ -92,6 +101,12 @@ def post(request, post_id):
     context = {
         'post': blog_post,
         'comments': comments,
+        'page': {
+            'current': page_obj.number,
+            'has_next': page_obj.has_next(),
+            'has_previous': page_obj.has_previous(),
+            'total': p.num_pages,
+        },
     }
 
     return render(request, 'blog/post.html', context)

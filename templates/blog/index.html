@@ -101,13 +101,8 @@
 
 
 {% block pagination %}
-    <div class="text-center fw-semibold">
-        <a href="{% url 'home' %}{{ page.current|add:"-1" }}"
-           class="{% if not page.has_previous %}invisible{% endif %}">
-            <span class="bi-caret-left-fill"></span></a>
-        <span>{{ page.current }} of {{ page.total }}</span>
-        <a href="{% url 'home' %}{{ page.current|add:"1" }}" class="{% if not page.has_next %}invisible{% endif %}">
-            <span class="bi-caret-right-fill"></span>
-        </a>
-    </div>
+    {% if page.total > 1 %}
+        {% url 'home' as var_url %}
+        {% include 'blog/pagination.html' with page=page url=var_url %}
+    {% endif %}
 {% endblock %}
