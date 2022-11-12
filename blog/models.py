@@ -1,7 +1,7 @@
 import math
 from random import randint
 
-from PIL import Image
+from PIL import Image, ImageOps
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
@@ -18,6 +18,7 @@ class Profile(models.Model):
         super().save()
 
         img = Image.open(self.picture.path)
+        img = ImageOps.exif_transpose(img)
 
         h = img.height
         w = img.width

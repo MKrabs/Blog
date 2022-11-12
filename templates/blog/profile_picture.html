@@ -2,7 +2,7 @@
 
 <img src="{{ user.profile.picture.url | default:'/media/profile_pictures/anonymous.jpg' }}"
      class="img-fluid rounded-circle"
-     style="max-height: {{ maxheight }}; object-fit: cover;"
+     style="height: {{ maxheight }}; width: {{ maxheight }}; object-fit: cover;"
      alt="profilePicture"
      data-bs-toggle="popover"
      data-bs-trigger="hover focus"
