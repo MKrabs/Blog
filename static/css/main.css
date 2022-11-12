@@ -42,6 +42,10 @@
     max-height: 200px;
 }
 
-.popover{
+.popover {
     max-width: 100%; /* Max Width of the popover (depending on the container!) */
+}
+
+img {
+    border-radius: 4px;
 }

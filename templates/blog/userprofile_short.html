@@ -5,13 +5,13 @@
         <div class="col-4 m-auto">
             <img src="{{ user.profile.picture.url | default:'/media/profile_pictures/anonymous.jpg' }}"
                  class="img-fluid rounded-circle"
-                 style="max-height: {{ maxheight }}; object-fit: cover;"
+                 style="height: {{ maxheight }}; width: {{ maxheight }}; object-fit: cover;"
                  alt="profilePicture">
         </div>
         <div class="col">
             <div class="row text-end">
                 <span class="h2">
-                    {{ user.username }}
+                    {{ user.username | default:"Anonymus" }}
                 </span>
             </div>
 
@@ -25,29 +25,33 @@
 
             <div class="row small text-muted text-end">
                 <div class="col">
-                    Joined: {{ user.date_joined | date }}
+                    Joined: {{ user.date_joined | date | default:"Never" }}
                 </div>
             </div>
         </div>
     </div>
-    {% if user.profile.bio %}
+    {% if user.profile.bio or not user %}
         <hr>
         <div class="row max-h-200 overflow-hidden">
-            {{ user.profile.bio | safe }}
+            {{ user.profile.bio | safe | default:"<h4>Comment as <b>you</b> with your own profile!</h4><span>Create your own Account at the bottom of the screen, by visiting <code>/register</code> or by clicking this profile!</span>" }}
         </div>
     {% endif %}
     <div class="row justify-content-center mt-3">
         <div class="col">
             <hr>
+            <span class="code"></span>
         </div>
         <div class="col-auto m-auto">
-            <span class="bi bi-sticky-fill text-success"></span> {{ user.total_posts }}
+            <span class="bi bi-sticky-fill text-success"></span>
+            {{ user.total_posts | default:'<span class="bi bi-dot"></span>' }}
         </div>
         <div class="col-auto m-auto">
-            <span class="bi bi-chat-left-fill text-primary"></span> {{ user.total_comments }}
+            <span class="bi bi-chat-left-fill text-primary"></span>
+            {{ user.total_comments | default:'<span class="bi bi-dot"></span>' }}
         </div>
         <div class="col-auto m-auto">
-            <span class="bi bi-heart-fill text-danger"></span> {{ user.total_likes }}
+            <span class="bi bi-heart-fill text-danger"></span>
+            {{ user.total_likes | default:'<span class="bi bi-dot"></span>' }}
         </div>
         <div class="col">
             <hr>

@@ -11,6 +11,8 @@
             {% include 'blog/profile_picture.html' with user=comment.author maxheight='100px' %}
             {% if comment.author != None %}
                 <a href="{% url 'user_profile' user_name=comment.author %}" class="stretched-link"></a>
+            {% else %}
+                <a href="{% url 'register' %}" class="stretched-link"></a>
             {% endif %}
         </div>
         <div class="row">

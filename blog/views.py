@@ -83,11 +83,11 @@ def post(request, post_id):
 
     for c in comments:
         c.body = marker(c.body)
-        c.author.profile.bio = marker(c.author.profile.bio)
-
-        c.author.total_posts = Post.objects.filter(author=c.author).count()
-        c.author.total_comments = Comment.objects.filter(author=c.author).count()
-        c.author.total_likes = Like.objects.filter(author=c.author).count()
+        if c.author:
+            c.author.profile.bio = marker(c.author.profile.bio)
+            c.author.total_posts = Post.objects.filter(author=c.author).count()
+            c.author.total_comments = Comment.objects.filter(author=c.author).count()
+            c.author.total_likes = Like.objects.filter(author=c.author).count()
 
     context = {
         'post': blog_post,

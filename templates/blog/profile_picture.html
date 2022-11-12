@@ -3,9 +3,12 @@
 <img src="{{ user.profile.picture.url | default:'/media/profile_pictures/anonymous.jpg' }}"
      class="img-fluid rounded-circle"
      style="height: {{ maxheight }}; width: {{ maxheight }}; object-fit: cover;"
+     {% if popover and user %}
      alt="profilePicture"
      data-bs-toggle="popover"
      data-bs-trigger="hover focus"
      data-bs-placement="right"
      data-bs-html="true"
-     data-bs-content='{% include "blog/userprofile_short.html" with user=user %}'>
+     data-bs-content='{% include "blog/userprofile_short.html" with user=user %}'
+     {% endif %}
+>
