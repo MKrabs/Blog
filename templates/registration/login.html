@@ -37,16 +37,16 @@
             {% csrf_token %}
             <div class="container">
                 <div class="row p-2 justify-content-center">
-                    <div class="col-12 col-sm-2 bg-body border border-opacity-10">
-                        {{ form.username.label }}
+                    <div class="col-12 col-sm-3 h4 text-md-start">
+                        <i class="bi bi-person-badge"></i> {{ form.username.label }}
                     </div>
                     <div class="col-12 col-sm-2">
                         {{ form.username }}
                     </div>
                 </div>
                 <div class="row p-2 justify-content-center">
-                    <div class="col-12 col-sm-2 bg-body border border-opacity-10">
-                        {{ form.password.label }}
+                    <div class="col-12 col-sm-3 h4 text-md-start">
+                        <i class="bi bi-lock"></i> {{ form.password.label }}
                     </div>
                     <div class="col-12 col-sm-2">
                         {{ form.password }}

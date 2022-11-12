@@ -29,46 +29,47 @@
             {% csrf_token %}
             <div class="container">
                 <div class="row p-2 justify-content-center">
-                    <div class="col-12 col-sm-3 bg-body border border-opacity-10">
-                        {{ form.username.label }}
+                    <div class="col-12 col-md-3 h4 text-md-start">
+                        <i class="bi bi-person-badge"></i> {{ form.username.label }}
                     </div>
-                    <div class="col-12 col-sm-3">
+                    <div class="col-12 col-md-3">
                         {{ form.username }}
                     </div>
                 </div>
                 <div class="row p-2 justify-content-center">
-                    <div class="col-12 col-sm-3 bg-body border border-opacity-10">
-                        {{ form.email.label }}
+                    <div class="col-12 col-md-3 h4 text-md-start">
+                        <i class="bi bi-envelope-open"></i> {{ form.email.label }} <small class="text-muted fs-6">(optional)</small>
                     </div>
-                    <div class="col-12 col-sm-3">
+                    <div class="col-12 col-md-3">
                         {{ form.email }}
                     </div>
                 </div>
                 <div class="row p-2 justify-content-center">
-                    <div class="col-12 col-sm-3 bg-body border border-opacity-10">
+                    <div class="col-12 col-md-3 h4 text-md-start">
                         <span>
                             <a class="text-decoration-none text-reset" data-bs-toggle="collapse" href="#collapseExample"
                                role="button" aria-expanded="false" aria-controls="collapseExample">
-                                {{ form.password1.label }} <span class="bi-question-circle-fill text-primary"></span>
+                                <i class="bi bi-key"></i> {{ form.password1.label }}
+                                <span class="bi-question-circle-fill text-primary"></span>
                             </a>
                         </span>
                     </div>
-                    <div class="col-12 col-sm-3">
+                    <div class="col-12 col-md-3">
                         {{ form.password1 }}
                     </div>
                 </div>
                 <div class="row justify-content-center">
                     <div class="col-12 col-md-10 col-lg-6 collapse" id="collapseExample">
-                        <div class="card card-body border text-start p-1">
+                        <div class="card card-body border-0 bg-transparent text-start p-0 my-2">
                             {{ form.password1.help_text }}
                         </div>
                     </div>
                 </div>
                 <div class="row p-2 justify-content-center">
-                    <div class="col-12 col-sm-3 bg-body border border-opacity-10">
-                        {{ form.password2.label }}
+                    <div class="col-12 col-md-3 h4 text-md-start">
+                        <i class="bi bi-shield-lock"></i> {{ form.password2.label }}
                     </div>
-                    <div class="col-12 col-sm-3">
+                    <div class="col-12 col-md-3">
                         {{ form.password2 }}
                     </div>
                 </div>
