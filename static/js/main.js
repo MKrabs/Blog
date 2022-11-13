@@ -1,5 +1,5 @@
 let resizeReset = function() {
-	w = canvasBody.width = Math.max(document.documentElement.getBoundingClientRect().width, window.innerWidth);
+	w = canvasBody.width = Math.max(document.documentElement.getBoundingClientRect().width, window.innerWidth) - 10;
 	h = canvasBody.height = Math.max(document.documentElement.getBoundingClientRect().height, window.innerHeight);
 }
 
