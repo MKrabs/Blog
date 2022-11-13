@@ -1,7 +1,19 @@
 <!-- - {{ profile }} history - -->
 
 <div class="row mb-3 mt-5">
-    <span class="display-4">Latest activity</span>
+    <div class="col-12 col-md">
+        <span class="display-4">Latest activity</span>
+    </div>
+    {% for f in filters %}
+        <div class="col-auto m-auto m-md-0 mt-4 mt-md-auto">
+            <div class="btn btn-dark rounded-pill position-relative">
+                <a href="{% url 'user_profile_type' user_name=profile.username activity_type=f.name %}"
+                   class="stretched-link"></a>
+                <span class="bi {{ f.icon }}"></span>
+                <span class="m-auto p-2">{{ f.name }}</span>
+            </div>
+        </div>
+    {% endfor %}
 </div>
 
 {% if not profile.history %}

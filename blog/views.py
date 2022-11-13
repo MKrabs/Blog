@@ -177,7 +177,7 @@ def comment_delete(request, post_id, comm_id):
     return redirect(reverse('post', kwargs={'post_id': post_id}) + '#comments')
 
 
-def user_profile(request, user_name):
+def user_profile(request, user_name, activity_type='all'):
     if request.method == 'POST' and request.user.username == user_name:
         user_form = UpdateUserForm(request.POST, instance=request.user)
         profile_form = UpdateProfileInfoForm(request.POST, request.FILES, instance=request.user.profile)
@@ -209,16 +209,35 @@ def user_profile(request, user_name):
     profile.profile.bio = marker(profile.profile.bio)
     tags = Tag.objects.all()
 
-    posts = Post.objects.filter(author=profile).order_by('-date')
-    comments = Comment.objects.filter(author=profile).order_by('-date')
+    posts = Post.objects.none()
+    comments = Comment.objects.none()
 
-    for c in comments:
-        c.body = marker(c.body)
+    if activity_type in ['all', 'posts']:
+        posts = Post.objects.filter(author=profile).order_by('-date')
+        for c in posts:
+            c.body = marker(c.body)
 
-    for c in posts:
-        c.body = marker(c.body)
+    if activity_type in ['all', 'comments']:
+        comments = Comment.objects.filter(author=profile).order_by('-date')
+        for c in comments:
+            c.body = marker(c.body)
 
     profile.history = list(chain(posts, comments))
+
+    filters = [
+        {
+            'name': 'all',
+            'icon': 'bi-stack'
+        },
+        {
+            'name': 'posts',
+            'icon': 'bi-journal'
+        },
+        {
+            'name': 'comments',
+            'icon': 'bi-chat-left'
+        }
+    ]
 
     context = {
         'profile': profile,
@@ -226,5 +245,6 @@ def user_profile(request, user_name):
         'user_form': user_form,
         'profile_form': profile_form,
         'profile_picture_form': profile_picture_form,
+        'filters': filters,
     }
     return render(request, 'blog/userprofile.html', context)

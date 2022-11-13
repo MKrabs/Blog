@@ -41,6 +41,7 @@ urlpatterns = [
 
 
     path('@<str:user_name>/', views.user_profile, name='user_profile'),
+    path('@<str:user_name>/<str:activity_type>/', views.user_profile, name='user_profile_type'),
 
     path('', views.page_not_found, name='404'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
