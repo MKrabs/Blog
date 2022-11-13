@@ -43,10 +43,12 @@ def index(request, page=1):
         p.comments = Comment.objects.filter(post_id=p.id).count()
         p.likes = Like.objects.filter(post_id=p.id).count()
         p.liked = True if Like.objects.filter(post_id=p.id, author=request.user.id) else False
-        p.author.profile.bio = marker(p.author.profile.bio)
-        p.author.total_posts = Post.objects.filter(author=p.author).count()
-        p.author.total_comments = Comment.objects.filter(author=p.author).count()
-        p.author.total_likes = Like.objects.filter(author=p.author).count()
+
+        if p.author:
+            p.author.profile.bio = marker(p.author.profile.bio)
+            p.author.total_posts = Post.objects.filter(author=p.author).count()
+            p.author.total_comments = Comment.objects.filter(author=p.author).count()
+            p.author.total_likes = Like.objects.filter(author=p.author).count()
 
     p = Paginator(latest_posts, 4)
 
@@ -72,9 +74,10 @@ def post(request, post_id, page=1):
     blog_post = Post.objects.get(pk=post_id)
     comments = Comment.objects.filter(post_id=post_id).order_by('-date')
 
-    blog_post.author.total_posts = Post.objects.filter(author=blog_post.author).count()
-    blog_post.author.total_comments = Comment.objects.filter(author=blog_post.author).count()
-    blog_post.author.total_likes = Like.objects.filter(author=blog_post.author).count()
+    if blog_post.author:
+        blog_post.author.total_posts = Post.objects.filter(author=blog_post.author).count()
+        blog_post.author.total_comments = Comment.objects.filter(author=blog_post.author).count()
+        blog_post.author.total_likes = Like.objects.filter(author=blog_post.author).count()
 
     blog_post.likes = Like.objects.filter(post_id=blog_post.id).count()
     blog_post.liked = True if Like.objects.filter(post_id=blog_post.id, author=request.user.id) else False

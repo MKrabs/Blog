@@ -25,7 +25,9 @@
         </div>
     </div>
     <div class="col-12 col-md-6 bg-body rounded-4 p-3 shadow">
-        {{ comment.body | safe }}
+        <div class="row">
+            {{ comment.body | safe }}
+        </div>
         <div class="row">
             <div class="col-auto ms-auto my-auto col-sm-auto">
                 <span class="opacity-25 fst-italic small pb-0">
@@ -33,7 +35,7 @@
                 </span>
             </div>
             <div class="col-auto align-self-end">
-                {% if user and comment.author %}
+                {% if user == comment.author %}
                     {% include 'blog/comment_menu.html' %}
                 {% endif %}
             </div>

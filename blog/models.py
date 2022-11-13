@@ -36,6 +36,9 @@ class Profile(models.Model):
             img = img.crop(crop_area)
             img.save(self.picture.path)
 
+    def __str__(self):
+        return self.user.username
+
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
@@ -82,6 +85,9 @@ class Tag(models.Model):
         blank=True
     )
 
+    def __str__(self):
+        return self.name
+
 
 class Post(models.Model):
     image_choice = (
@@ -90,13 +96,16 @@ class Post(models.Model):
         ('bi-icon', 'bi-icon'),
     )
 
-    author = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default=None, null=True)
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, null=True)
     title = models.CharField(max_length=200)
     image_type = models.CharField(max_length=20, choices=image_choice, default='bi-icon')
     image = models.CharField(max_length=500, default='bi-robot')
     short = models.CharField(max_length=255)
     body = models.TextField(max_length=20000)
     date = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.author} - {self.title}'
 
 
 class Comment(models.Model):
@@ -105,15 +114,14 @@ class Comment(models.Model):
     date = models.DateTimeField(auto_now=True)
     body = models.TextField(blank=False, null=False)
 
+    def __str__(self):
+        return f'{self.author} > {self.post_id} - {self.body[:10]}'
+
 
 class Like(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now=True)
 
-
-class Project(models.Model):
-    title = models.CharField(max_length=200)
-    description = models.TextField(max_length=20000)
-    image = models.ImageField()
-    last_updated = models.DateTimeField(auto_now=True)
+    def __str__(self):
+        return f'{self.author.username} > {self.post_id}'

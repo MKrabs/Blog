@@ -11,7 +11,7 @@
         <div class="col">
             <div class="row text-end">
                 <span class="h2">
-                    {{ user.username | default:"Anonymus" }}
+                    {{ user.username | default:"<i>Deleted</i>" }}
                 </span>
             </div>
 
@@ -33,13 +33,12 @@
     {% if user.profile.bio or not user %}
         <hr>
         <div class="row max-h-200 overflow-hidden">
-            {{ user.profile.bio | safe | default:"<h4>Comment as <b>you</b> with your own profile!</h4><span>Create your own Account at the bottom of the screen, by visiting <code>/register</code> or by clicking this profile!</span>" }}
+            {{ user.profile.bio | safe | default:'<span>Comment as <b>you</b> with your own profile!</span> <span>Create your Account at the bottom of the page <span class="bi bi-arrow-down"></span>, by visiting <code>/register</code> or by clicking this profile!</span>' }}
         </div>
     {% endif %}
     <div class="row justify-content-center mt-3">
         <div class="col">
             <hr>
-            <span class="code"></span>
         </div>
         <div class="col-auto m-auto">
             <span class="bi bi-sticky-fill text-success"></span>
