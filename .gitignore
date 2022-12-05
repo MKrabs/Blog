@@ -1,1 +1,5 @@
 **/__pycache__/
+/docs/Latex/pdf/
+/docs/Latex/auxil/
+db.sqlite3
+.idea/
