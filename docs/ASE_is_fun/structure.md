@@ -25,9 +25,6 @@ _Use at your own risk, lmao._
     - [Description of the requirements](#description-of-the-requirements)
     - [Explanation of the approach](#explanation-of-the-approach)
 - [Analysis of Ubiquitous Language](#analysis-of-ubiquitous-language)
-    - [Definition of the domain terms](#definition-of-the-domain-terms)
-    - [Identification of the domain concepts](#identification-of-the-domain-concepts)
-    - [Creation of a glossary](#creation-of-a-glossary)
 - [Domain Model](#domain-model)
     - [Definition of the entities, value objects, and aggregates](#definition-of-the-entities-value-objects-and-aggregates)
     - [Specification of the domain services](#specification-of-the-domain-services)
@@ -72,6 +69,7 @@ _Use at your own risk, lmao._
 
 # Introduction
 
+###### Chapter 1
 
 ## Overview of the project
 
@@ -103,9 +101,10 @@ necessary. Code smells must be identified and at least two refactorings must be 
 
 ## Explanation of the approach
 
-To incorporate DDD principles, the first step is to analyze the ubiquitous language of the domain and define the domain
-model using Value Objects, Entities, Aggregates, Repositories, and Domain Services. This helps to ensure a clear and
-consistent understanding of the domain and its concepts.
+To incorporate common python DDD principles whilst following Django design principles, the first step is to
+analyze the ubiquitous language of the domain and define the domain model using Value Objects, Entities, Aggregates,
+Repositories, and Domain Services. This helps to ensure a clear and consistent understanding of the domain and its
+concepts.
 
 Next, the Clean Architecture principles will be followed to define a clear and meaningful layer architecture. This will
 help to decouple the domain logic from the infrastructure and ensure that the application is easily testable,
@@ -123,6 +122,8 @@ To demonstrate each refactoring step or change, we will use examples from the co
 [#`5f0837`](https://github.com/MKrabs/Blog/tree/5f0837dd26a84c0e7e2687a66cbd54fd4254c209), which represents the code
 as it existed before the start of this project.
 
+###### Back to top [▲](#table-of-contents)
+
 ---
 
 # Analysis of Ubiquitous Language
@@ -133,8 +134,6 @@ The Analysis of Ubiquitous Language is a crucial step in the development of any 
 establish a common language and understanding between the development team and the stakeholders. This chapter will focus
 on defining the domain terms, identifying the domain concepts, and creating a glossary to ensure that everyone involved
 in the project has a clear understanding of the terminology used.
-
-## Definition of the domain terms
 
 The first step in analyzing the ubiquitous language is to define the domain terms used in the project. These terms
 should be identified from the project requirements and any other relevant documentation. In the case of our blog site
@@ -186,6 +185,8 @@ The report is a feature of the blog site that allows users to report offensive o
 report a blog post or comment if they believe it violates the website's terms of use. The report allows the website
 administrators to review the content and take appropriate action to ensure the safety and integrity of the platform.
 
+###### Back to top [▲](#table-of-contents)
+
 ---
 
 # Domain Model
@@ -197,6 +198,8 @@ administrators to review the content and take appropriate action to ensure the s
 ## Specification of the domain services
 
 ## Implementation of the repositories
+
+###### Back to top [▲](#table-of-contents)
 
 ---
 
@@ -212,6 +215,8 @@ administrators to review the content and take appropriate action to ensure the s
 
 ## Explanation of the approach and benefits
 
+###### Back to top [▲](#table-of-contents)
+
 ---
 
 # Programming Principles
@@ -226,6 +231,8 @@ administrators to review the content and take appropriate action to ensure the s
 
 ## Explanation of the approach and benefits
 
+###### Back to top [▲](#table-of-contents)
+
 ---
 
 # Implementation of Clean Architecture
@@ -237,6 +244,8 @@ administrators to review the content and take appropriate action to ensure the s
 ## Implementation of at least two layers
 
 ## Explanation of the approach and benefits
+
+###### Back to top [▲](#table-of-contents)
 
 ---
 
@@ -250,6 +259,8 @@ administrators to review the content and take appropriate action to ensure the s
 
 ## Explanation of the approach and benefits
 
+###### Back to top [▲](#table-of-contents)
+
 ---
 
 # Implementation of at least one Design Pattern
@@ -260,6 +271,8 @@ administrators to review the content and take appropriate action to ensure the s
 
 ## Creation of UML diagrams before and after the pattern implementation
 
+###### Back to top [▲](#table-of-contents)
+
 ---
 
 # Persistence Layer
@@ -268,7 +281,13 @@ administrators to review the content and take appropriate action to ensure the s
 
 ## Implementation of the persistence layer
 
+### Repository pattern
+
+### Active record pattern
+
 ## Explanation of the approach and benefits
+
+###### Back to top [▲](#table-of-contents)
 
 ---
 
@@ -276,13 +295,17 @@ administrators to review the content and take appropriate action to ensure the s
 
 ###### Chapter 10
 
-## Implementation of at least 10 unit tests
+## Unit tests
 
-## Adherence to ATRIP rules
+## Integration tests
+
+## Smoke tests
 
 ## Use of mocks in testing
 
 ## Explanation of the approach and benefits
+
+###### Back to top [▲](#table-of-contents)
 
 ---
 
@@ -296,11 +319,37 @@ administrators to review the content and take appropriate action to ensure the s
 
 ## Future work and improvements
 
+###### Back to top [▲](#table-of-contents)
+
 ---
 
 # References
 
-###### References duh
+###### Write the references used in the project
+
+* https://docs.djangoproject.com/en/4.2/misc/design-philosophies/#models
+* https://www.cosmicpython.com/book/preface (very nice)
+* https://wiki.c2.com/?CouplingAndCohesion
+* https://iktakahiro.dev/python-ddd-onion-architecture
+* https://www.amazon.com/Domain-Driven-Design-Tackling-Complexity-Software/dp/0321125215
+* https://github.com/jdiazromeral/django-ddd
+* https://openbase.com/python/Django-ddd
+* https://michalgodkowicz.medium.com/another-way-to-persist-ddd-aggregates-in-django-d148f4cad298
+* https://www.apress.com/gp/blog/all-blog-posts/domain-driven-design-with-django/16172586
+* https://thedomaindrivendesign.io/why-use-domain-driven-design/
+
+###### Video References
+
+* https://www.youtube.com/watch?v=hv-LiKQgN90
+* https://www.youtube.com/watch?v=Ru2T4fu3bGQ
+
+###### Back to top [▲](#table-of-contents)
+
+---
+
+_Thank you for reading._
+
+[@MKrabs](https://www.github.com/MKrabs) - [Website](https://www.mkrabs.de)
 
 [//]: # (Styles)
 <style>
