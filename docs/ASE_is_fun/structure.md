@@ -26,7 +26,7 @@ _Use at your own risk, lmao._
     - [Explanation of the approach](#explanation-of-the-approach)
 - [Analysis of Ubiquitous Language](#analysis-of-ubiquitous-language)
 - [Domain Model](#domain-model)
-    - [Definition of the entities, value objects, and aggregates](#definition-of-the-entities-value-objects-and-aggregates)
+    - [Definition of the entities, value objects, and aggregates](#definition-of-the-entities-services-and-repositories)
     - [Specification of the domain services](#specification-of-the-domain-services)
     - [Implementation of the repositories](#implementation-of-the-repositories)
 - [Tactical Design Patterns](#tactical-design-patterns)
@@ -203,9 +203,9 @@ administrators to review the content and take appropriate action to ensure the s
 
 Beispiele aus Code zeigen
 
-## Definition of the entities, value objects, and aggregates
+## Definition of the entities, services, and repositories
 
-Currently, our users profile have been structured as follows:
+Currently, our users profile have been structured as follows, all inside of the `models.py` file:
 
 ```python
 class Profile(models.Model):
@@ -250,6 +250,78 @@ def create_user_profile(sender, instance, created, **kwargs):
 def save_user_profile(sender, instance, **kwargs):
   instance.profile.save()
 ```
+
+We split the class into tree parts:
+
+1. The domain model (_Just the Profile class and its attributes_)
+```python
+# domain/entities/profile.py
+
+from django.contrib.auth.models import User
+from django.db import models
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    bio = models.TextField(max_length=500, blank=True)
+    location = models.CharField(max_length=30, blank=True)
+    picture = models.ImageField(blank=True, upload_to='profile_pictures')
+
+    def __str__(self):
+        return self.user.username
+```
+2. The specification of the domain services (_The profile methods_)
+
+```python
+# application/profile_services.py
+
+from abstraction.image_processor import ImageProcessor
+
+
+class ProfileService:
+  def __init__(self):
+    self.image_processor = ImageProcessor()
+
+  def save_profile(self, profile, new_image=False):
+    profile.save()
+
+    if new_image:
+      processed_image_path = self.image_processor.process(profile.picture.path)
+      profile.picture = processed_image_path
+      profile.save()
+```
+
+3. The implementation of the repositories (_the database management_)
+```python
+# infrastructure/repositories/profile_repository.py
+
+from random import randint
+
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+from abstraction.image_processor import ImageProcessor
+from blog.domain.entities.profile import Profile
+
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+  if created:
+    random_default_picture = f'profile_pictures/d{randint(1, 10)}.jpg'
+    Profile.objects.create(
+      user=instance,
+      picture=random_default_picture
+    )
+
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+  instance.profile.picture.delete(save=False)
+  instance.profile.picture = ImageProcessor.process(instance.profile.picture.path)
+  instance.profile.save()
+```
+
 
 value object: immutable / statisch
 zB kategorie
@@ -421,6 +493,7 @@ This is not what good code smells like. To fix this, we will:
 
 * https://docs.djangoproject.com/en/4.2/misc/design-philosophies/#models
 * https://www.cosmicpython.com/book/preface (very nice)
+* https://www.cosmicpython.com/book/chapter_02_repository.html
 * https://wiki.c2.com/?CouplingAndCohesion
 * https://iktakahiro.dev/python-ddd-onion-architecture
 * https://www.amazon.com/Domain-Driven-Design-Tackling-Complexity-Software/dp/0321125215
@@ -429,9 +502,15 @@ This is not what good code smells like. To fix this, we will:
 * https://michalgodkowicz.medium.com/another-way-to-persist-ddd-aggregates-in-django-d148f4cad298
 * https://www.apress.com/gp/blog/all-blog-posts/domain-driven-design-with-django/16172586
 * https://thedomaindrivendesign.io/why-use-domain-driven-design/
+* https://chat.openai.com
+* https://douwevandermeij.medium.com/hexagonal-architecture-in-python-7468c2606b63
+* https://io.made.com/repository-and-unit-of-work-pattern-in-python
+* https://codingcanvas.com/hexagonal-architecture/
+* https://www.reddit.com/r/Python/comments/9wbk8k/repository_pattern_with_sqlalchemy/
 
 ###### Video References
 
+* https://www.youtube.com/watch?v=QVTWvOzktbE
 * https://www.youtube.com/watch?v=hv-LiKQgN90
 * https://www.youtube.com/watch?v=Ru2T4fu3bGQ
 
