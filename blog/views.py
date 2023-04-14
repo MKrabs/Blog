@@ -11,7 +11,8 @@ from django.core.paginator import Paginator, EmptyPage
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse
 
-from blog.forms import CreateUserForm, UpdateUserForm, UpdateProfileInfoForm, UpdateProfilePictureForm
+from .application.profile_form_service import UpdateProfileInfoForm, UpdateProfilePictureForm
+from .application.user_form_service import CreateUserForm, UpdateUserForm
 import bleach
 from .domain.entities.like import Like
 from .domain.entities.comment import Comment
