@@ -54,9 +54,11 @@ _Use at your own risk, lmao._
     - [Implementation of the persistence layer](#implementation-of-the-persistence-layer)
     - [Explanation of the approach and benefits](#explanation-of-the-approach-and-benefits-4)
 - [Unit Testing](#unit-testing)
-    - [Implementation of at least 10 unit tests](#implementation-of-at-least-10-unit-tests)
-    - [Adherence to ATRIP rules](#adherence-to-atrip-rules)
+    - [Unit tests](#unit-tests)
+    - [Integration tests](#integration-tests)
+    - [Smoke tests](#smoke-tests)
     - [Use of mocks in testing](#use-of-mocks-in-testing)
+    - [Adherence to ATRIP rules](#adherence-to-atrip-rules)
     - [Explanation of the approach and benefits](#explanation-of-the-approach-and-benefits-5)
 - [Conclusion](#conclusion)
     - [Summary of the work done](#summary-of-the-work-done)
@@ -130,6 +132,13 @@ as it existed before the start of this project.
 
 ###### Chapter 2
 
+- [x] Überlegen wie domaine aussieht
+- [ ] was macht diese aus.
+- [x] was sind die wichtigsten Begriffe
+- [x] was sind die wichtigsten Konzepte
+
+## Domain Terms
+
 The Analysis of Ubiquitous Language is a crucial step in the development of any software system, as it helps to
 establish a common language and understanding between the development team and the stakeholders. This chapter will focus
 on defining the domain terms, identifying the domain concepts, and creating a glossary to ensure that everyone involved
@@ -158,8 +167,7 @@ to learn more about the user and their interests.
 
 User profiles, also referred to as portfolios, are collections of personal information and preferences that allow other
 users to learn more about a particular user. The user profile contains personal information, including the user's name,
-profile picture, and bio. It also contains personal tags that show the user's interests or link to other websites. Users
-can customize their profile with different themes and templates.
+profile picture, and bio. It also contains personal tags that show the user's interests or link to other websites.
 
 ##### Comment
 
@@ -194,6 +202,13 @@ administrators to review the content and take appropriate action to ensure the s
 ###### Chapter 3
 
 ## Definition of the entities, value objects, and aggregates
+
+value object: immutable / statisch
+zB kategorie
+
+Django using active records.
+
+Not anymore, we ditched django.
 
 ## Specification of the domain services
 
@@ -303,6 +318,14 @@ administrators to review the content and take appropriate action to ensure the s
 
 ## Use of mocks in testing
 
+## Adherence to ATRIP rules
+
+- Automatic
+- Thorough (Vollständig)
+- Repeatable
+- Independent
+- Professional
+
 ## Explanation of the approach and benefits
 
 ###### Back to top [▲](#table-of-contents)
@@ -325,7 +348,7 @@ administrators to review the content and take appropriate action to ensure the s
 
 # References
 
-###### Write the references used in the project
+###### Written references used in the project
 
 * https://docs.djangoproject.com/en/4.2/misc/design-philosophies/#models
 * https://www.cosmicpython.com/book/preface (very nice)
