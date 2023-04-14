@@ -13,7 +13,10 @@ from django.urls import reverse
 
 from blog.forms import CreateUserForm, UpdateUserForm, UpdateProfileInfoForm, UpdateProfilePictureForm
 import bleach
-from .models import Post, Tag, Comment, Like
+from .domain.entities.like import Like
+from .domain.entities.comment import Comment
+from .domain.entities.post import Post
+from .domain.entities.tag import Tag
 
 
 def registerPage(request):

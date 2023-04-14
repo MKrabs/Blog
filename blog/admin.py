@@ -2,7 +2,11 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import Post, Tag, Comment, Profile, Like
+from .domain.entities.like import Like
+from .domain.entities.comment import Comment
+from .domain.entities.post import Post
+from .domain.entities.tag import Tag
+from .domain.entities.profile import Profile
 
 admin.site.register(Profile)
 admin.site.register(Post)
