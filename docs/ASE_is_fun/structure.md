@@ -201,14 +201,60 @@ administrators to review the content and take appropriate action to ensure the s
 
 ###### Chapter 3
 
+Beispiele aus Code zeigen
+
 ## Definition of the entities, value objects, and aggregates
+
+Currently, our users profile have been structured as follows:
+
+```python
+class Profile(models.Model):
+  user = models.OneToOneField(User, on_delete=models.CASCADE)
+  bio = models.TextField(max_length=500, blank=True)
+  location = models.CharField(max_length=30, blank=True)
+  picture = models.ImageField(blank=True, upload_to='profile_pictures')
+
+  def save(self, new_image=False, *args, **kwargs):
+    super().save()
+
+    if new_image:
+      self.user.profile.picture.delete(save=False)
+
+      img = Image.open(self.picture.path)
+      img = ImageOps.exif_transpose(img)
+
+      h = img.height
+      w = img.width
+
+      if w > h:
+        space_start = round((w - h) / 2)
+        crop_area = (space_start, 0, space_start + h, h)
+      else:
+        space_start = round((h - w) / 2)
+        crop_area = (0, space_start, w, space_start + w)
+
+      img = img.crop(crop_area)
+      img.save(self.picture.path)
+
+  def __str__(self):
+    return self.user.username
+
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+  if created:
+    Profile.objects.create(user=instance, picture=f'profile_pictures/d{randint(1, 10)}.jpg')
+
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+  instance.profile.save()
+```
 
 value object: immutable / statisch
 zB kategorie
 
-Django using active records.
-
-Not anymore, we ditched django.
+But im using active records.
 
 ## Specification of the domain services
 
@@ -243,6 +289,29 @@ Not anymore, we ditched django.
 ## GRASP principles, especially Coupling and Cohesion
 
 ## DRY principle
+
+Can you see the difference between these two code blocks?
+```python
+if p.author:
+    p.author.profile.bio = marker(p.author.profile.bio)
+    p.author.total_posts = Post.objects.filter(author=p.author).count()
+    p.author.total_comments = Comment.objects.filter(author=p.author).count()
+    p.author.total_likes = Like.objects.filter(author=p.author).count()
+```
+
+```python
+if c.author:
+    c.author.profile.bio = marker(c.author.profile.bio)
+    c.author.total_posts = Post.objects.filter(author=c.author).count()
+    c.author.total_comments = Comment.objects.filter(author=c.author).count()
+    c.author.total_likes = Like.objects.filter(author=c.author).count()
+```
+
+This is not what good code smells like. To fix this, we will:
+- rethink the way we retrieve likes
+  - For this, the likes per user will be lazyly aggregated and counted whenever an event is fired.
+- implement a method in the repository class to retrieve these infos called `add` and using `overload` from the typing 
+  module
 
 ## Explanation of the approach and benefits
 
