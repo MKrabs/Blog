@@ -3,7 +3,7 @@ from PIL import Image, ImageOps
 
 class ImageProcessor:
     @staticmethod
-    def process(self, image_path):
+    def process(image_path):
         img = Image.open(image_path)
         img = ImageOps.exif_transpose(img)
 
