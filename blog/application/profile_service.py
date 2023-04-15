@@ -1,4 +1,6 @@
 from abstraction.image_processor import ImageProcessor
+from abstraction.markdown_processor import MarkdownProcessor as mp
+
 from blog.domain.entities.profile import Profile
 from blog.domain.repository.comment_repository import CommentRepository
 from blog.domain.repository.like_repository import LikeRepository
@@ -22,6 +24,7 @@ class ProfileService:
 
     def add_additional_fields(self, entity) -> None:
         if entity.author:
+            entity.author.profile.bio = mp.marker(entity.author.profile.bio)
             entity.author.total_posts = self.post_repo.get_count_by_author(entity.author.id)
             entity.author.total_comments = self.comments_repo.get_count_by_author(entity.author.id)
             entity.author.total_likes = self.likes_repo.get_count_by_author(entity.author.id)

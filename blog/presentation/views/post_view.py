@@ -30,32 +30,21 @@ class PostView:
         cls.post_service.add_additional_fields(entity=blog_post, user=request.user)
 
         blog_post.body = mp.marker(blog_post.body)
+        p, num_pages = CommentService.paginate_posts(comments, param=5, page=page)
+        comments = p.object_list
 
-        p = Paginator(comments, 5)
-
-        try:
-            page_obj = p.get_page(page)
-        except EmptyPage:
-            page_obj = p.page(p.num_pages)
-
-        comments = page_obj.object_list
-
-        for c in comments:
-            c.body = mp.marker(c.body)
-            if c.author:
-                c.author.profile.bio = mp.marker(c.author.profile.bio)
-                c.author.total_posts = Post.objects.filter(author=c.author).count()
-                c.author.total_comments = Comment.objects.filter(author=c.author).count()
-                c.author.total_likes = Like.objects.filter(author=c.author).count()
+        for comment in comments:
+            comment.body = mp.marker(comment.body)
+            cls.comment_service.add_additional_fields(comment)
 
         context = {
             'post': blog_post,
             'comments': comments,
             'page': {
-                'current': page_obj.number,
-                'has_next': page_obj.has_next(),
-                'has_previous': page_obj.has_previous(),
-                'total': p.num_pages,
+                'current': p.number,
+                'has_next': p.has_next(),
+                'has_previous': p.has_previous(),
+                'total': num_pages,
             },
         }
 

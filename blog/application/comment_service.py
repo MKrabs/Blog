@@ -1,3 +1,5 @@
+from django.core.paginator import Paginator, EmptyPage
+
 from blog.domain.entities.comment import Comment
 from blog.domain.entities.like import Like
 from blog.domain.entities.post import Post
@@ -26,3 +28,14 @@ class CommentService:
             comment.author.total_posts = Post.objects.filter(author=comment.author).count()
             comment.author.total_comments = Comment.objects.filter(author=comment.author).count()
             comment.author.total_likes = Like.objects.filter(author=comment.author).count()
+
+    @classmethod
+    def paginate_posts(cls, comments, param: int = 4, page: int = 1) -> (Paginator, int):
+        p = Paginator(comments, param)
+
+        try:
+            page_obj = p.get_page(page)
+        except EmptyPage:
+            page_obj = p.page(p.num_pages)
+
+        return page_obj, p.num_pages

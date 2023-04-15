@@ -20,13 +20,7 @@ class PostService:
         self.profile_repo = ProfileService()
 
     def get_latest_posts(self, user: User, order_by: str = None) -> QuerySet:
-        posts = self.post_repo.get_all(order_by=order_by)
-
-        for post in posts:
-            self.post_repo.add_additional_fields(post, user)
-            self.profile_repo.add_additional_fields(post)
-
-        return posts
+        return self.post_repo.get_all(order_by=order_by)
 
     def get_post_by_id(self, post_id: int) -> Optional[Post]:
         return self.post_repo.get_by_id(post_id)
@@ -75,5 +69,5 @@ class PostService:
         return page_obj, p.num_pages
 
     def add_additional_fields(self, entity, user: User) -> None:
-        entity.likes = self.likes_repo.get_count(entity.id)
-        entity.liked = self.likes_repo.did_user_like(post_id=entity.id, user=user)
+        self.post_repo.add_additional_fields(entity, user)
+        self.profile_repo.add_additional_fields(entity)
