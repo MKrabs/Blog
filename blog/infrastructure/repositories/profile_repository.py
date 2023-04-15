@@ -20,6 +20,4 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
-    instance.profile.picture.delete(save=False)
-    instance.profile.picture = ImageProcessor.process(instance.profile.picture.path)
     instance.profile.save()
