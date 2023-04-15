@@ -9,7 +9,7 @@ from django.urls import reverse
 
 from blog.application.post_service import PostService
 from blog.application.profile_form_service import UpdateProfileInfoForm, UpdateProfilePictureForm
-from blog.application.user_form_service import CreateUserForm, UpdateUserForm
+from blog.application.user_form_service import UpdateUserForm
 from blog.domain.entities.comment import Comment
 from blog.domain.entities.like import Like
 from blog.domain.entities.post import Post
@@ -90,18 +90,6 @@ class ViewsService:
     def page_not_found(cls, request, pattern):
         context = {'broken': pattern}
         return render(request, 'blog/404.html', context)
-
-    @classmethod
-    def liked(cls, request, post_id):
-        if request.user.is_authenticated:
-            p = Post.objects.get(id=post_id)
-            like = Like.objects.filter(author=request.user, post_id=p)
-            if like.count() < 1:
-                Like(author=request.user, post_id=p).save()
-            else:
-                like.delete()
-
-        return redirect('post', post_id)
 
     @classmethod
     def comment(cls, request, post_id):
