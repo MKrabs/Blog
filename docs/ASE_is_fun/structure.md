@@ -4,7 +4,6 @@
 
 [//]: # (by Marc Gökce, 2023)
 
----
 
 # Domain Driven Design in Django
 
@@ -66,7 +65,6 @@ _Use at your own risk, lmao._
     - [Future work and improvements](#future-work-and-improvements)
 - [References](#references)
 
----
 
 
 # Introduction
@@ -124,9 +122,8 @@ To demonstrate each refactoring step or change, we will use examples from the co
 [#`5f0837`](https://github.com/MKrabs/Blog/tree/5f0837dd26a84c0e7e2687a66cbd54fd4254c209), which represents the code
 as it existed before the start of this project.
 
-###### Back to top [▲](#table-of-contents)
+###### Back to top [▲](#domain-driven-design-in-django)
 
----
 
 # Analysis of Ubiquitous Language
 
@@ -193,9 +190,8 @@ The report is a feature of the blog site that allows users to report offensive o
 report a blog post or comment if they believe it violates the website's terms of use. The report allows the website
 administrators to review the content and take appropriate action to ensure the safety and integrity of the platform.
 
-###### Back to top [▲](#table-of-contents)
+###### Back to top [▲](#domain-driven-design-in-django)
 
----
 
 # Domain Model
 
@@ -332,9 +328,8 @@ But im using active records.
 
 ## Implementation of the repositories
 
-###### Back to top [▲](#table-of-contents)
+###### Back to top [▲](#domain-driven-design-in-django)
 
----
 
 # Tactical Design Patterns
 
@@ -348,9 +343,8 @@ But im using active records.
 
 ## Explanation of the approach and benefits
 
-###### Back to top [▲](#table-of-contents)
+###### Back to top [▲](#domain-driven-design-in-django)
 
----
 
 # Programming Principles
 
@@ -387,9 +381,8 @@ This is not what good code smells like. To fix this, we will:
 
 ## Explanation of the approach and benefits
 
-###### Back to top [▲](#table-of-contents)
+###### Back to top [▲](#domain-driven-design-in-django)
 
----
 
 # Implementation of Clean Architecture
 
@@ -401,9 +394,8 @@ This is not what good code smells like. To fix this, we will:
 
 ## Explanation of the approach and benefits
 
-###### Back to top [▲](#table-of-contents)
+###### Back to top [▲](#domain-driven-design-in-django)
 
----
 
 # Refactoring
 
@@ -415,9 +407,8 @@ This is not what good code smells like. To fix this, we will:
 
 ## Explanation of the approach and benefits
 
-###### Back to top [▲](#table-of-contents)
+###### Back to top [▲](#domain-driven-design-in-django)
 
----
 
 # Implementation of at least one Design Pattern
 
@@ -427,9 +418,8 @@ This is not what good code smells like. To fix this, we will:
 
 ## Creation of UML diagrams before and after the pattern implementation
 
-###### Back to top [▲](#table-of-contents)
+###### Back to top [▲](#domain-driven-design-in-django)
 
----
 
 # Persistence Layer
 
@@ -443,9 +433,8 @@ This is not what good code smells like. To fix this, we will:
 
 ## Explanation of the approach and benefits
 
-###### Back to top [▲](#table-of-contents)
+###### Back to top [▲](#domain-driven-design-in-django)
 
----
 
 # Unit Testing
 
@@ -469,9 +458,8 @@ This is not what good code smells like. To fix this, we will:
 
 ## Explanation of the approach and benefits
 
-###### Back to top [▲](#table-of-contents)
+###### Back to top [▲](#domain-driven-design-in-django)
 
----
 
 # Conclusion
 
@@ -483,9 +471,8 @@ This is not what good code smells like. To fix this, we will:
 
 ## Future work and improvements
 
-###### Back to top [▲](#table-of-contents)
+###### Back to top [▲](#domain-driven-design-in-django)
 
----
 
 # References
 
@@ -514,9 +501,8 @@ This is not what good code smells like. To fix this, we will:
 * https://www.youtube.com/watch?v=hv-LiKQgN90
 * https://www.youtube.com/watch?v=Ru2T4fu3bGQ
 
-###### Back to top [▲](#table-of-contents)
+###### Back to top [▲](#domain-driven-design-in-django)
 
----
 
 _Thank you for reading._
 
