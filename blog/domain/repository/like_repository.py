@@ -37,5 +37,8 @@ class LikeRepository:
     def get_count(self, post_id: int) -> int:
         return Like.objects.filter(post_id=post_id).count()
 
+    def get_count_by_author(self, author_id: int) -> int:
+        return Like.objects.filter(author_id=author_id).count()
+
     def did_user_like(self, user: User, post_id) -> bool:
         return True if Like.objects.filter(post_id=post_id, author=user.id) else False

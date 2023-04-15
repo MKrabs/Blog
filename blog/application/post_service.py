@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage
 from django.db.models import QuerySet
 
+from blog.application.profile_service import ProfileService
 from blog.domain.entities.post import Post
 from blog.domain.entities.profile import Profile
 from blog.domain.repository.comment_repository import CommentRepository
@@ -16,14 +17,14 @@ class PostService:
         self.post_repo = PostRepository()
         self.likes_repo = LikeRepository()
         self.comments_repo = CommentRepository()
+        self.profile_repo = ProfileService()
 
     def get_latest_posts(self, user: User, order_by: str = None) -> QuerySet:
         posts = self.post_repo.get_all(order_by=order_by)
 
         for post in posts:
-            post.comments = self.comments_repo.get_count(post.id)
-            post.likes = self.likes_repo.get_count(post.id)
-            post.liked = self.likes_repo.did_user_like(user, post.id)
+            self.post_repo.add_additional_fields(post, user)
+            self.profile_repo.add_additional_fields(post)
 
         return posts
 
@@ -72,3 +73,7 @@ class PostService:
             page_obj = p.page(p.num_pages)
 
         return page_obj, p.num_pages
+
+    def add_additional_fields(self, entity, user: User) -> None:
+        entity.likes = self.likes_repo.get_count(entity.id)
+        entity.liked = self.likes_repo.did_user_like(post_id=entity.id, user=user)

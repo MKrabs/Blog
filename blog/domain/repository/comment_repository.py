@@ -35,3 +35,6 @@ class CommentRepository:
 
     def get_count(self, post_id: int) -> int:
         return Comment.objects.filter(post_id=post_id).count()
+
+    def get_count_by_author(self, author_id: int) -> int:
+        return Comment.objects.filter(author_id=author_id).count()

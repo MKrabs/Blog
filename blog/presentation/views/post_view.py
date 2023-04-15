@@ -3,25 +3,31 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 from abstraction.markdown_processor import MarkdownProcessor as mp
+from blog.application.post_service import PostService
+from blog.application.profile_service import ProfileService
+
 from blog.domain.entities.comment import Comment
 from blog.domain.entities.like import Like
 from blog.domain.entities.post import Post
+from blog.application.comment_service import CommentService
 
 
 class PostView:
 
+    post_service = PostService()
+    comment_service = CommentService()
+    profile_service = ProfileService()
+
     @classmethod
     def post(cls, request, post_id, page=1):
-        blog_post = Post.objects.get(pk=post_id)
-        comments = Comment.objects.filter(post_id=post_id).order_by('-date')
+        blog_post = cls.post_service.get_post_by_id(post_id=post_id)
+        comments = cls.comment_service.get_comments_by_post_id(post_id=post_id)
 
-        if blog_post.author:
-            blog_post.author.total_posts = Post.objects.filter(author=blog_post.author).count()
-            blog_post.author.total_comments = Comment.objects.filter(author=blog_post.author).count()
-            blog_post.author.total_likes = Like.objects.filter(author=blog_post.author).count()
+        for comment in comments:
+            # add additional fields to comment
+            cls.profile_service.add_additional_fields(entity=comment)
 
-        blog_post.likes = Like.objects.filter(post_id=blog_post.id).count()
-        blog_post.liked = True if Like.objects.filter(post_id=blog_post.id, author=request.user.id) else False
+        cls.post_service.add_additional_fields(entity=blog_post, user=request.user)
 
         blog_post.body = mp.marker(blog_post.body)
 
