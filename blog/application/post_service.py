@@ -31,10 +31,19 @@ class PostService:
 
         return post
 
+    def get_post_by_user(self, user: User, order_by: str = None, beautify: bool = False) -> QuerySet:
+        posts = self.post_repo.get_by_author(author=user, order_by=order_by)
+
+        if posts and beautify:
+            for post in posts:
+                post.body = mp.marker(post.body)
+
+        return posts
+
     def get_post_order_by(self, order: str) -> QuerySet:
         return self.post_repo.get_all(order_by=order)
 
-    def create_post(self, author: Profile, title: str, image_type: str, image: str, short: str, body: str) -> Post:
+    def create_post(self, author: User, title: str, image_type: str, image: str, short: str, body: str) -> Post:
         post = self.post_repo.create(
             author=author,
             title=title,

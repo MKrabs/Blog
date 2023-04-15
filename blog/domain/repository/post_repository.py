@@ -15,10 +15,13 @@ class PostRepository:
     def get_by_id(self, post_id) -> Post:
         return Post.objects.get(id=post_id)
 
+    def get_by_author(self, author: User, order_by: str = None) -> QuerySet:
+        return Post.objects.filter(author=author).order_by(order_by)
+
     def get_all(self, order_by: str = None) -> QuerySet:
         return Post.objects.all().order_by(order_by)
 
-    def create(self, author: Profile, title: str, short: str, body: str, image_type: str = None, image: str = None) \
+    def create(self, author: User, title: str, short: str, body: str, image_type: str = None, image: str = None) \
             -> Post:
         post = Post(author=author, title=title, image_type=image_type, image=image, short=short, body=body)
         self.save_post(post)

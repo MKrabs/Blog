@@ -1,28 +1,33 @@
 from itertools import chain
 
-from django.contrib.auth.models import User
 from django.shortcuts import render
 
+from abstraction.markdown_processor import MarkdownProcessor as mp
+from blog.application.comment_service import CommentService
+
+from blog.application.post_service import PostService
 from blog.application.profile_form_service import UpdateProfileInfoForm, UpdateProfilePictureForm
+from blog.application.profile_service import ProfileService
 from blog.application.user_form_service import UpdateUserForm
 
-from abstraction.markdown_processor import MarkdownProcessor as mp
 from blog.domain.entities.comment import Comment
 from blog.domain.entities.post import Post
 from blog.domain.entities.tag import Tag
+from blog.domain.repository.tag_repository import TagRepository
 
 
-class ProfileView():
+class ProfileView:
+    comment_service = CommentService()
+    post_service = PostService()
+    profile_service = ProfileService()
+    tag_repo = TagRepository()
+
     @classmethod
     def user_profile(cls, request, user_name, activity_type='all'):
         if request.method == 'POST' and request.user.username == user_name:
             user_form = UpdateUserForm(request.POST, instance=request.user)
             profile_form = UpdateProfileInfoForm(request.POST, request.FILES, instance=request.user.profile)
             profile_picture_form = UpdateProfilePictureForm(request.POST, request.FILES, instance=request.user.profile)
-
-            print(user_form.is_valid())
-            print(profile_form.is_valid())
-            print(profile_picture_form.is_valid())
 
             if user_form.is_valid():
                 user_form.save()
@@ -42,24 +47,17 @@ class ProfileView():
             profile_form = UpdateProfileInfoForm()
             profile_picture_form = UpdateProfilePictureForm()
 
-        profile = User.objects.get(username=user_name)
-        profile.profile.bio = mp.marker(profile.profile.bio)
-        tags = Tag.objects.all()
+        profile = cls.profile_service.get_profile_by_username(user_name, beautify=True)
+        tags = cls.tag_repo.get_all()
 
-        posts = Post.objects.none()
-        comments = Comment.objects.none()
-
+        comments = posts = []
         if activity_type in ['all', 'posts']:
-            posts = Post.objects.filter(author=profile).order_by('-date')
-            for c in posts:
-                c.body = mp.marker(c.body)
+            posts = cls.post_service.get_post_by_user(user=profile.user, order_by='-date', beautify=True)
 
         if activity_type in ['all', 'comments']:
-            comments = Comment.objects.filter(author=profile).order_by('-date')
-            for c in comments:
-                c.body = mp.marker(c.body)
+            comments = cls.comment_service.get_comments_by_user(user=profile.user, order_by='-date', beautify=True)
 
-        profile.history = list(chain(posts, comments))
+        profile.user.history = list(chain(posts, comments))
 
         filters = [
             {
@@ -77,11 +75,12 @@ class ProfileView():
         ]
 
         context = {
-            'profile': profile,
+            'profile': profile.user,
             'tags': tags,
             'user_form': user_form,
             'profile_form': profile_form,
             'profile_picture_form': profile_picture_form,
             'filters': filters,
         }
+
         return render(request, 'blog/userprofile.html', context)

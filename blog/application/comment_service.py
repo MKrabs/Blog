@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage
 from django.db.models import QuerySet
 
@@ -52,3 +53,12 @@ class CommentService:
             page_obj = p.page(p.num_pages)
 
         return page_obj, p.num_pages
+
+    def get_comments_by_user(self, user: User, order_by: str = None, beautify: bool = False) -> QuerySet:
+        comments = Comment.objects.filter(author=user).order_by(order_by)
+
+        if comments and beautify:
+            for comment in comments:
+                comment.body = mp.marker(comment.body)
+
+        return comments
