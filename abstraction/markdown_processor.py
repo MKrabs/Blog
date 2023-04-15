@@ -3,17 +3,16 @@ import markdown
 
 
 class MarkdownProcessor:
-    def __init__(self, text):
-        self.text = text
 
-    def marker(self, text):
+    @classmethod
+    def marker(cls, text):
         return markdown.markdown(
-            self.bleacher(text),
+            cls.bleacher(text),
             extensions=['tables']
         )
 
-    @staticmethod
-    def bleacher(text):
+    @classmethod
+    def bleacher(cls, text):
         return bleach.clean(
             text,
             tags=['b', 'img', 'iframe'],

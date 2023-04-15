@@ -1,23 +1,20 @@
 from itertools import chain
-from operator import attrgetter
 
-import markdown
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator, EmptyPage
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.core.paginator import Paginator, EmptyPage
-from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse
 
-from .application.profile_form_service import UpdateProfileInfoForm, UpdateProfilePictureForm
-from .application.user_form_service import CreateUserForm, UpdateUserForm
-import bleach
-from .domain.entities.like import Like
-from .domain.entities.comment import Comment
-from .domain.entities.post import Post
-from .domain.entities.tag import Tag
+from blog.application.post_service import PostService
+from blog.application.profile_form_service import UpdateProfileInfoForm, UpdateProfilePictureForm
+from blog.application.user_form_service import CreateUserForm, UpdateUserForm
+from blog.domain.entities.comment import Comment
+from blog.domain.entities.like import Like
+from blog.domain.entities.post import Post
+from blog.domain.entities.tag import Tag
+from abstraction.markdown_processor import MarkdownProcessor as mp
 
 
 def registerPage(request):
@@ -49,7 +46,7 @@ def index(request, page=1):
         p.liked = True if Like.objects.filter(post_id=p.id, author=request.user.id) else False
 
         if p.author:
-            p.author.profile.bio = marker(p.author.profile.bio)
+            p.author.profile.bio = mp.marker(p.author.profile.bio)
             p.author.total_posts = Post.objects.filter(author=p.author).count()
             p.author.total_comments = Comment.objects.filter(author=p.author).count()
             p.author.total_likes = Like.objects.filter(author=p.author).count()
@@ -86,7 +83,7 @@ def post(request, post_id, page=1):
     blog_post.likes = Like.objects.filter(post_id=blog_post.id).count()
     blog_post.liked = True if Like.objects.filter(post_id=blog_post.id, author=request.user.id) else False
 
-    blog_post.body = marker(blog_post.body)
+    blog_post.body = mp.marker(blog_post.body)
 
     p = Paginator(comments, 5)
 
@@ -98,9 +95,9 @@ def post(request, post_id, page=1):
     comments = page_obj.object_list
 
     for c in comments:
-        c.body = marker(c.body)
+        c.body = mp.marker(c.body)
         if c.author:
-            c.author.profile.bio = marker(c.author.profile.bio)
+            c.author.profile.bio = mp.marker(c.author.profile.bio)
             c.author.total_posts = Post.objects.filter(author=c.author).count()
             c.author.total_comments = Comment.objects.filter(author=c.author).count()
             c.author.total_likes = Like.objects.filter(author=c.author).count()
@@ -126,21 +123,6 @@ def create_post(request):
 def page_not_found(request, pattern):
     context = {'broken': pattern}
     return render(request, 'blog/404.html', context)
-
-
-def marker(text):
-    return markdown.markdown(
-        bleacher(text),
-        extensions=['tables']
-    )
-
-
-def bleacher(text):
-    return bleach.clean(
-        text,
-        tags=['b', 'img', 'iframe'],
-        attributes=['class', 'href', 'src', 'style', 'width', 'height']
-    )
 
 
 def liked(request, post_id):
@@ -210,7 +192,7 @@ def user_profile(request, user_name, activity_type='all'):
         profile_picture_form = UpdateProfilePictureForm()
 
     profile = User.objects.get(username=user_name)
-    profile.profile.bio = marker(profile.profile.bio)
+    profile.profile.bio = mp.marker(profile.profile.bio)
     tags = Tag.objects.all()
 
     posts = Post.objects.none()
@@ -219,12 +201,12 @@ def user_profile(request, user_name, activity_type='all'):
     if activity_type in ['all', 'posts']:
         posts = Post.objects.filter(author=profile).order_by('-date')
         for c in posts:
-            c.body = marker(c.body)
+            c.body = mp.marker(c.body)
 
     if activity_type in ['all', 'comments']:
         comments = Comment.objects.filter(author=profile).order_by('-date')
         for c in comments:
-            c.body = marker(c.body)
+            c.body = mp.marker(c.body)
 
     profile.history = list(chain(posts, comments))
 
