@@ -4,19 +4,21 @@ from blog.domain.entities.profile import Profile
 
 
 class UpdateProfileInfoForm(forms.ModelForm):
-    bio = forms.CharField(widget=forms.Textarea(
+    bio = forms.CharField(required=False, widget=forms.Textarea(
         attrs={
             'class': 'form-control border-0 h-100',
             'rows': 20,
             'onkeydown': 'activateConfirmButton();',
             'maxlength': Profile._meta.get_field('bio').max_length,
+            'placeholder': 'Tell us about yourself...',
         }))
-    location = forms.CharField(widget=forms.Textarea(
+    location = forms.CharField(required=False, widget=forms.Textarea(
         attrs={
             'class': 'form-control border-0 h-100',
             'rows': 20,
             'onkeydown': 'activateConfirmButton();',
             'maxlength': Profile._meta.get_field('location').max_length,
+            'placeholder': 'Where are you from?',
         }))
 
     class Meta:

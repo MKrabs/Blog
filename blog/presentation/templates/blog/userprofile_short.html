@@ -30,12 +30,6 @@
             </div>
         </div>
     </div>
-    {% if user.profile.bio or not user %}
-        <hr>
-        <div class="row max-h-200 overflow-hidden">
-            {{ user.profile.bio | safe | default:'<span>Comment as <b>you</b> with your own profile!</span> <span>Create your Account at the bottom of the page <span class="bi bi-arrow-down"></span>, by visiting <code>/register</code> or by clicking this profile!</span>' }}
-        </div>
-    {% endif %}
     <div class="row justify-content-center mt-3">
         <div class="col">
             <hr>
@@ -56,4 +50,9 @@
             <hr>
         </div>
     </div>
+    {% if user.profile.bio or not user %}
+        <div class="row max-h-200 overflow-hidden">
+            {{ user.profile.bio | safe | default:'<span>Comment as <b>you</b> with your own profile!</span> <span>Create your Account at the bottom of the page <span class="bi bi-arrow-down"></span>, by visiting <code>/register</code> or by clicking this profile!</span>' }}
+        </div>
+    {% endif %}
 </div>
