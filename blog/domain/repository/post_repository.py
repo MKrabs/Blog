@@ -8,16 +8,13 @@ class PostRepository:
     def get_by_id(self, post_id) -> Post:
         return Post.objects.get(id=post_id)
 
-    def get_all(self) -> QuerySet:
-        return Post.objects.all()
-
-    def order_by(self, order: str) -> QuerySet:
-        return Post.objects.order_by(order)
+    def get_all(self, order_by: str = None) -> QuerySet:
+        return Post.objects.all().order_by(order_by)
 
     def create(self, author: Profile, title: str, short: str, body: str, image_type: str = None, image: str = None)\
             -> Post:
         post = Post(author=author, title=title, image_type=image_type, image=image, short=short, body=body)
-        post = self.save_post(post)
+        self.save_post(post)
         return post
 
     def update(self, post_id: int, title=None, image_type=None, image=None, short=None, body=None):
@@ -42,3 +39,6 @@ class PostRepository:
     def save_post(self, post: Post) -> Post:
         post.save()
         return post
+
+    def get_count(self, post_id: int) -> int:
+        return Post.objects.get(id=post_id).comments.count()

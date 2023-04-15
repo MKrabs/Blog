@@ -5,24 +5,31 @@ from django.db.models import QuerySet
 
 from blog.domain.entities.post import Post
 from blog.domain.entities.profile import Profile
+from blog.domain.repository.comment_repository import CommentRepository
+from blog.domain.repository.like_repository import LikeRepository
 from blog.domain.repository.post_repository import PostRepository
 
 
 class PostService:
     def __init__(self):
         self.post_repo = PostRepository()
+        self.likes_repo = LikeRepository()
+        self.comments_repo = CommentRepository()
 
     def get_latest_posts(self, order_by: str = None) -> QuerySet:
-        if order_by:
-            return self.post_repo.order_by(order_by)
+        posts = self.post_repo.get_all(order_by=order_by)
 
-        return self.post_repo.get_all()
+        for post in posts:
+            post.comments = self.comments_repo.get_count(post.id)
+            post.likes = self.likes_repo.get_count(post.id)
+
+        return posts
 
     def get_post_by_id(self, post_id: int) -> Optional[Post]:
         return self.post_repo.get_by_id(post_id)
 
     def get_post_order_by(self, order: str) -> QuerySet:
-        return self.post_repo.order_by(order)
+        return self.post_repo.get_all(order_by=order)
 
     def create_post(self, author: Profile, title: str, image_type: str, image: str, short: str, body: str) -> Post:
         post = self.post_repo.create(
@@ -51,7 +58,7 @@ class PostService:
         post = self.post_repo.get_by_id(post_id)
 
         if post:
-            self.post_repo.delete(post)
+            self.post_repo.delete(post_id)
 
     @classmethod
     def paginate_posts(cls, latest_posts, param: int = 4, page: int = 1) -> (Paginator, int):
