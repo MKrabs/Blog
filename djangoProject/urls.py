@@ -18,13 +18,16 @@ from django.urls import path, include
 from django.conf.urls import handler404
 from django.conf.urls.static import static
 
-from blog.presentation.views import ViewsService as views
+from blog.presentation.views import ViewsService as views, UserService, RegistrationView
 from djangoProject import settings
+
+user_service = UserService()
+registration_view = RegistrationView(user_service)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("me/", include("django.contrib.auth.urls")),
-    path("me/register", views.registerPage, name='register'),
+    path("me/register", registration_view.register_page, name='register'),
 
     # ex: /blog/
     path('', views.index, name='home'),

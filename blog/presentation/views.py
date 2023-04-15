@@ -17,28 +17,38 @@ from blog.domain.entities.tag import Tag
 from abstraction.markdown_processor import MarkdownProcessor as mp
 
 
-class ViewsService:
-    post_service = PostService()
+class UserService:
+    def register_user(self, form_data):
+        form = CreateUserForm(form_data)
+        if form.is_valid():
+            user = form.save()
+            return user
+        return None
 
-    @classmethod
-    def registerPage(cls, request):
+
+class RegistrationView:
+    def __init__(self, user_service):
+        self.user_service = user_service
+
+    def register_page(self, request):
         if request.user.is_authenticated:
             return redirect('home')
 
-        form = CreateUserForm()
+        form_data = request.POST if request.method == 'POST' else None
+        user = self.user_service.register_user(form_data)
 
-        if request.method == 'POST':
-            form = CreateUserForm(request.POST)
-            if form.is_valid():
-                form.save()
-                messages.success(request, 'Success!')
-
-                return redirect('login')
+        if user:
+            messages.success(request, 'Success!')
+            return redirect('login')
 
         context = {
-            'form': form,
+            'form': CreateUserForm(),
         }
         return render(request, 'registration/register.html', context)
+
+
+class ViewsService:
+    post_service = PostService()
 
     @classmethod
     def index(cls, request, page=1):
