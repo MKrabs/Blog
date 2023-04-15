@@ -18,11 +18,13 @@ from django.urls import path, include
 from django.conf.urls import handler404
 from django.conf.urls.static import static
 
-from blog.presentation.views import ViewsService as views, UserService, RegistrationView
+from blog.presentation.api.like_service import LikeService
+from blog.presentation.views.homepage_view import ViewsService as views
+from blog.presentation.views.registration_view import RegistrationView
 from djangoProject import settings
 
-user_service = UserService()
-registration_view = RegistrationView(user_service)
+registration_view = RegistrationView()
+liked_view = LikeService()
 
 urlpatterns = [
     path('admin/', admin.site.urls),
