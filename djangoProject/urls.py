@@ -18,7 +18,7 @@ from django.urls import path, include
 from django.conf.urls import handler404
 from django.conf.urls.static import static
 
-import blog.presentation.views as views
+from blog.presentation.views import ViewsService as views
 from djangoProject import settings
 
 urlpatterns = [
