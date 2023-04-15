@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db.models import QuerySet
 
 from blog.domain.entities.like import Like
@@ -35,3 +36,6 @@ class LikeRepository:
 
     def get_count(self, post_id: int) -> int:
         return Like.objects.filter(post_id=post_id).count()
+
+    def did_user_like(self, user: User, post_id) -> bool:
+        return True if Like.objects.filter(post_id=post_id, author=user.id) else False

@@ -1,5 +1,6 @@
 from typing import List, Optional
 
+from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage
 from django.db.models import QuerySet
 
@@ -16,12 +17,13 @@ class PostService:
         self.likes_repo = LikeRepository()
         self.comments_repo = CommentRepository()
 
-    def get_latest_posts(self, order_by: str = None) -> QuerySet:
+    def get_latest_posts(self, user: User, order_by: str = None) -> QuerySet:
         posts = self.post_repo.get_all(order_by=order_by)
 
         for post in posts:
             post.comments = self.comments_repo.get_count(post.id)
             post.likes = self.likes_repo.get_count(post.id)
+            post.liked = self.likes_repo.did_user_like(user, post.id)
 
         return posts
 
