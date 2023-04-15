@@ -1,9 +1,10 @@
-from typing import List, Optional
+from typing import Optional
 
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage
 from django.db.models import QuerySet
 
+from abstraction.markdown_processor import MarkdownProcessor as mp
 from blog.application.profile_service import ProfileService
 from blog.domain.entities.post import Post
 from blog.domain.entities.profile import Profile
@@ -22,8 +23,13 @@ class PostService:
     def get_latest_posts(self, user: User, order_by: str = None) -> QuerySet:
         return self.post_repo.get_all(order_by=order_by)
 
-    def get_post_by_id(self, post_id: int) -> Optional[Post]:
-        return self.post_repo.get_by_id(post_id)
+    def get_post_by_id(self, post_id: int, beautify: bool = False) -> Optional[Post]:
+        post = self.post_repo.get_by_id(post_id)
+
+        if post and beautify:
+            post.body = mp.marker(post.body)
+
+        return post
 
     def get_post_order_by(self, order: str) -> QuerySet:
         return self.post_repo.get_all(order_by=order)
