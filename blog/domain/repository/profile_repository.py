@@ -26,7 +26,3 @@ class IProfileRepository(ABC):
     @abstractmethod
     def get_all(self) -> QuerySet:
         raise NotImplementedError
-
-    @abstractmethod
-    def add_additional_fields(self, profile: Profile) -> None:
-        raise NotImplementedError

@@ -36,6 +36,3 @@ class ProfileRepository(IProfileRepository):
 
     def get_all(self) -> QuerySet:
         return Profile.objects.all()
-
-    def add_additional_fields(self, profile: Profile) -> None:
-        pass

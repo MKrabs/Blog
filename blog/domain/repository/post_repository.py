@@ -9,14 +9,17 @@ from blog.domain.entities.post import Post
 class IPostRepository(ABC):
 
     @abstractmethod
+    @staticmethod
     def create(self, sender, instance, created, **kwargs) -> Post | None:
         raise NotImplementedError
 
     @abstractmethod
+    @staticmethod
     def save(self, sender, instance, **kwargs) -> None:
         raise NotImplementedError
 
     @abstractmethod
+    @staticmethod
     def delete(self, sender, instance, **kwargs) -> None:
         raise NotImplementedError
 
@@ -38,8 +41,4 @@ class IPostRepository(ABC):
 
     @abstractmethod
     def get_count_by_author(self, author_id: int) -> int:
-        raise NotImplementedError
-
-    @abstractmethod
-    def add_additional_fields(self, post: Post, user: User) -> None:
         raise NotImplementedError
