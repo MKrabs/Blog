@@ -31,7 +31,7 @@ class PostService:
         return post
 
     def get_post_by_user(self, user: User, order_by: str = None, beautify: bool = False) -> QuerySet:
-        posts = self.post_repo.get_all_from_author(author=user, order_by=order_by)
+        posts = self.post_repo.get_all_from_author(author_id=user.id, order_by=order_by)
 
         if posts and beautify:
             for post in posts:
@@ -51,5 +51,4 @@ class PostService:
         return page_obj, p.num_pages
 
     def add_additional_fields(self, entity, user: User) -> None:
-        self.post_repo.add_additional_fields(entity, user)
         self.profile_repo.add_additional_fields(entity)

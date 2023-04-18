@@ -44,17 +44,17 @@ class CommentRepository(ICommentRepository):
     def order_by(self, order: str) -> QuerySet:
         return self.get_all().order_by(order)
 
-    def get_count(self, post: Post) -> int:
+    def get_count(self, post_id: int) -> int:
         return self.get_all().count()
 
-    def get_all_by_author(self, author: Profile) -> QuerySet:
-        return Comment.objects.filter(author=author.user)
+    def get_all_by_author(self, user_id: int) -> QuerySet:
+        return Comment.objects.filter(author=user_id)
 
     def get_all_by_post(self, post_id: int) -> QuerySet:
         return Comment.objects.filter(post=post_id)
 
-    def get_count_by_author(self, author: Profile) -> int:
-        return self.get_all_by_author(author=author).count()
+    def get_count_by_author(self, user_id: int) -> int:
+        return self.get_all_by_author(user_id=user_id).count()
 
     def get_count_by_post(self, post_id: int) -> int:
         return self.get_all_by_post(post_id=post_id).count()

@@ -34,21 +34,21 @@ class ICommentRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def get_count(self, post: Post) -> int:
+    def get_count(self, post_id: int) -> int:
         raise NotImplementedError
 
     @abstractmethod
-    def get_all_by_author(self, author: Profile) -> QuerySet:
+    def get_all_by_author(self, user_id: int) -> QuerySet:
         raise NotImplementedError
 
     @abstractmethod
-    def get_all_by_post(self, post: Post) -> QuerySet:
+    def get_all_by_post(self, post_id: int) -> QuerySet:
         raise NotImplementedError
 
     @abstractmethod
-    def get_count_by_author(self, author: Profile) -> int:
+    def get_count_by_author(self, user_id: int) -> int:
         raise NotImplementedError
 
     @abstractmethod
-    def get_count_by_post(self, post: Post) -> int:
+    def get_count_by_post(self, post_id: int) -> int:
         raise NotImplementedError
