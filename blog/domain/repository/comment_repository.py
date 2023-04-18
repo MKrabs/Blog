@@ -9,17 +9,14 @@ from blog.domain.entities.profile import Profile
 
 class ICommentRepository(ABC):
 
-    @staticmethod
     @abstractmethod
     def create(sender, instance, **kwargs) -> Comment:
         raise NotImplementedError
 
-    @staticmethod
     @abstractmethod
     def save(self, sender, instance, **kwargs) -> None:
         raise NotImplementedError
 
-    @staticmethod
     @abstractmethod
     def delete(self, comment_id: int) -> None:
         raise NotImplementedError

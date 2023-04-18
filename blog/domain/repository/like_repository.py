@@ -8,17 +8,14 @@ from blog.domain.entities.post import Post
 
 class ILikeRepository(ABC):
 
-    @staticmethod
     @abstractmethod
     def create(sender, instance, created, **kwargs) -> Like | None:
         raise NotImplementedError
 
-    @staticmethod
     @abstractmethod
     def save(sender, instance, **kwargs) -> Like | None:
         raise NotImplementedError
 
-    @staticmethod
     @abstractmethod
     def delete(sender, instance, **kwargs) -> Like | None:
         raise NotImplementedError
