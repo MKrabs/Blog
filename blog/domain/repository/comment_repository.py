@@ -1,40 +1,41 @@
+from abc import ABC, abstractmethod
+
 from django.db.models import QuerySet
 
 from blog.domain.entities.comment import Comment
 from blog.domain.entities.profile import Profile
 
 
-class CommentRepository:
-    def get_by_id(self, comment_id) -> Comment:
-        return Comment.objects.get(id=comment_id)
+class CommentRepository(ABC):
 
-    def get_all(self) -> QuerySet:
-        return Comment.objects.all()
-
-    def order_by(self, order: str) -> QuerySet:
-        return Comment.objects.order_by(order)
-
+    @abstractmethod
     def create(self, author: Profile, body: str) -> Comment:
-        comment = Comment(author=author, body=body)
+        raise NotImplementedError
 
-        return self.save_comment(comment)
-
-    def update(self, comment_id: int, body):
-        comment = self.get_by_id(comment_id)
-        comment.body = body
-
-        return self.save_comment(comment)
-
+    @abstractmethod
     def delete(self, comment_id: int) -> None:
-        comment = self.get_by_id(comment_id)
-        comment.delete()
+        raise NotImplementedError
 
+    @abstractmethod
     def save_comment(self, comment: Comment) -> Comment:
-        comment.save()
-        return comment
+        raise NotImplementedError
 
+    @abstractmethod
+    def get_by_id(self, comment_id) -> Comment:
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_all(self) -> QuerySet:
+        raise NotImplementedError
+
+    @abstractmethod
+    def order_by(self, order: str) -> QuerySet:
+        raise NotImplementedError
+
+    @abstractmethod
     def get_count(self, post_id: int) -> int:
-        return Comment.objects.filter(post_id=post_id).count()
+        raise NotImplementedError
 
+    @abstractmethod
     def get_count_by_author(self, author_id: int) -> int:
-        return Comment.objects.filter(author_id=author_id).count()
+        raise NotImplementedError
