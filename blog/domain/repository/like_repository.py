@@ -4,21 +4,23 @@ from django.contrib.auth.models import User
 
 from blog.domain.entities.like import Like
 from blog.domain.entities.post import Post
-from blog.domain.entities.profile import Profile
 
 
-class LikeRepository(ABC):
+class ILikeRepository(ABC):
 
+    @staticmethod
     @abstractmethod
-    def create(self, author: Profile, post: Post) -> int:
+    def create(sender, instance, created, **kwargs) -> Like | None:
         raise NotImplementedError
 
+    @staticmethod
     @abstractmethod
-    def save(self, author: Profile, post: Post) -> None:
+    def save(sender, instance, **kwargs) -> Like | None:
         raise NotImplementedError
 
+    @staticmethod
     @abstractmethod
-    def delete(self, like_id: int) -> None:
+    def delete(sender, instance, **kwargs) -> Like | None:
         raise NotImplementedError
 
     @abstractmethod
