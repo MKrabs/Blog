@@ -6,18 +6,17 @@ from abstraction.markdown_processor import MarkdownProcessor as mp
 from blog.domain.entities.profile import Profile
 from blog.domain.repository.comment_repository import CommentRepository
 from blog.domain.repository.like_repository import LikeRepository
-from blog.domain.repository.post_repository import PostRepository
-from blog.domain.repository.profile_repository import ProfileRepository
+from blog.domain.repository.post_repository import IPostRepository
+from blog.infrastructure.repositories.profile_repository import ProfileRepository
 
 
 class ProfileService:
     def __init__(self):
         self.profile_repo = ProfileRepository()
         self.image_processor = ImageProcessor()
-        self.post_repo = PostRepository()
+        self.post_repo = IPostRepository()
         self.likes_repo = LikeRepository()
         self.comments_repo = CommentRepository()
-
 
     def get_profile_by_id(self, profile_id: int) -> Profile:
         profile = self.profile_repo.get_by_id(profile_id)

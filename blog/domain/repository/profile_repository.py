@@ -5,14 +5,14 @@ from django.db.models import QuerySet
 from blog.domain.entities.profile import Profile
 
 
-class ProfileRepository(ABC):
+class IProfileRepository(ABC):
 
     @abstractmethod
-    def create(self, profile: Profile) -> None:
+    def create(self, sender, instance, **kwargs) -> None:
         raise NotImplementedError
 
     @abstractmethod
-    def save(self, profile: Profile) -> None:
+    def save(self, sender, instance, **kwargs) -> None:
         raise NotImplementedError
 
     @abstractmethod
