@@ -6,7 +6,7 @@ from blog.domain.entities.profile import Profile
 from blog.domain.entities.tag import Tag
 
 
-class TagRepository(ABC):
+class ITagRepository(ABC):
 
     @abstractmethod
     def create(self, name, colour: str = None, icon: str = None, icon_colour: str = None, link: str = None) -> None:
