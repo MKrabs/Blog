@@ -16,8 +16,6 @@ class HomepageView:
         context = {
             'page': {
                 'current': p.number,
-                'has_next': p.has_next(),
-                'has_previous': p.has_previous(),
                 'total': num_pages,
             },
             'latest_posts': p.object_list,
