@@ -6,9 +6,13 @@ from abstraction.markdown_processor import MarkdownProcessor as mp
 from blog.domain.entities.comment import Comment
 from blog.domain.entities.like import Like
 from blog.domain.entities.post import Post
+from blog.infrastructure.repositories.comment_repository import CommentRepository
 
 
 class CommentService:
+
+    comment_repository = CommentRepository()
+
     @classmethod
     def get_comments_by_post_id(cls, post_id: int, beautify: bool = False) -> QuerySet:
         comments = Comment.objects.filter(post_id=post_id).order_by('-date')
@@ -54,8 +58,9 @@ class CommentService:
 
         return page_obj, p.num_pages
 
-    def get_comments_by_user(self, user: User, order_by: str = None, beautify: bool = False) -> QuerySet:
-        comments = Comment.objects.filter(author=user).order_by(order_by)
+    @classmethod
+    def get_comments_by_user(cls, user: User, order_by: str = None, beautify: bool = False) -> QuerySet:
+        comments = cls.comment_repository.get_all_by_author() #Comment.objects.filter(author=user).order_by(order_by)
 
         if comments and beautify:
             for comment in comments:
