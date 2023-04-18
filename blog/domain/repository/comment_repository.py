@@ -3,21 +3,25 @@ from abc import ABC, abstractmethod
 from django.db.models import QuerySet
 
 from blog.domain.entities.comment import Comment
+from blog.domain.entities.post import Post
 from blog.domain.entities.profile import Profile
 
 
-class CommentRepository(ABC):
+class ICommentRepository(ABC):
 
+    @staticmethod
     @abstractmethod
-    def create(self, author: Profile, body: str) -> Comment:
+    def create(sender, instance, **kwargs) -> Comment:
         raise NotImplementedError
 
+    @staticmethod
+    @abstractmethod
+    def save(self, sender, instance, **kwargs) -> None:
+        raise NotImplementedError
+
+    @staticmethod
     @abstractmethod
     def delete(self, comment_id: int) -> None:
-        raise NotImplementedError
-
-    @abstractmethod
-    def save_comment(self, comment: Comment) -> Comment:
         raise NotImplementedError
 
     @abstractmethod
@@ -33,9 +37,21 @@ class CommentRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def get_count(self, post_id: int) -> int:
+    def get_count(self, post: Post) -> int:
         raise NotImplementedError
 
     @abstractmethod
-    def get_count_by_author(self, author_id: int) -> int:
+    def get_all_by_author(self, author: Profile) -> QuerySet:
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_all_by_post(self, post: Post) -> QuerySet:
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_count_by_author(self, author: Profile) -> int:
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_count_by_post(self, post: Post) -> int:
         raise NotImplementedError

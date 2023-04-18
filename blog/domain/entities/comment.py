@@ -6,7 +6,7 @@ from blog.domain.entities.post import Post
 
 class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default=None, null=True)
-    post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now=True)
     body = models.TextField(blank=False, null=False)
 
