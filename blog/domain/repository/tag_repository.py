@@ -17,7 +17,7 @@ class ITagRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def get_all_profile(self, profile: Profile) -> Tag:
+    def get_all_user(self, user_id: int) -> Tag:
         raise NotImplementedError
 
     @abstractmethod

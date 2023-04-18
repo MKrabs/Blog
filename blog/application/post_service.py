@@ -31,7 +31,7 @@ class PostService:
         return post
 
     def get_post_by_user(self, user: User, order_by: str = None, beautify: bool = False) -> QuerySet:
-        posts = self.post_repo.get_all_from_author(author_id=user.id, order_by=order_by)
+        posts = self.post_repo.get_all_from_user(author_id=user.id, order_by=order_by)
 
         if posts and beautify:
             for post in posts:

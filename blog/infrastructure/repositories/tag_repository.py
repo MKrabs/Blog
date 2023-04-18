@@ -33,8 +33,8 @@ class TagRepository(ITagRepository):
     def delete(sender, instance, **kwargs) -> None:
         instance.delete()
 
-    def get_all_profile(self, profile: Profile) -> Tag:
-        return Tag.objects.filter()
+    def get_all_user(self, user_id: int) -> Tag:
+        pass
 
     def get_all_username(self, username: str) -> Tag:
         pass

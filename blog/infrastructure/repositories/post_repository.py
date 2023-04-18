@@ -37,8 +37,8 @@ class PostRepository(IPostRepository):
     def get_by_id(self, post_id) -> Post:
         return Post.objects.get(id=post_id)
 
-    def get_all_from_author(self, author_id: int, order_by: str = None) -> QuerySet:
-        return Post.objects.filter(author=author_id).order_by(order_by)
+    def get_all_from_user(self, user_id: int, order_by: str = None) -> QuerySet:
+        return Post.objects.filter(author=user_id).order_by(order_by)
 
     def get_all(self, order_by: str = None) -> QuerySet:
         return Post.objects.all().order_by(order_by)
@@ -46,5 +46,5 @@ class PostRepository(IPostRepository):
     def get_count(self, post_id: int) -> int:
         return self.get_all().count()
 
-    def get_count_by_author(self, author_id: int) -> int:
-        return self.get_all_from_author(author_id=author_id).count()
+    def get_count_by_author(self, user_id: int) -> int:
+        return self.get_all_from_user(user_id=user_id).count()

@@ -21,11 +21,11 @@ class IPostRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def get_by_id(self, post_id) -> Post:
+    def get_by_id(self, post_id: int) -> Post:
         raise NotImplementedError
 
     @abstractmethod
-    def get_all_from_author(self, author: User, order_by: str = None) -> QuerySet:
+    def get_all_from_user(self, user_id: int, order_by: str = None) -> QuerySet:
         raise NotImplementedError
 
     @abstractmethod
