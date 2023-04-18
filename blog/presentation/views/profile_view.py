@@ -2,17 +2,13 @@ from itertools import chain
 
 from django.shortcuts import render
 
-from abstraction.markdown_processor import MarkdownProcessor as mp
 from blog.application.comment_service import CommentService
 
 from blog.application.post_service import PostService
-from blog.application.profile_form_service import UpdateProfileInfoForm, UpdateProfilePictureForm
+from blog.application.forms.profile_form_service import UpdateProfileInfoForm, UpdateProfilePictureForm
 from blog.application.profile_service import ProfileService
-from blog.application.user_form_service import UpdateUserForm
+from blog.application.forms.user_form_service import UpdateUserForm
 
-from blog.domain.entities.comment import Comment
-from blog.domain.entities.post import Post
-from blog.domain.entities.tag import Tag
 from blog.domain.repository.tag_repository import TagRepository
 
 

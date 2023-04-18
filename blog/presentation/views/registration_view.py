@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import redirect, render
 
-from blog.application.user_form_service import CreateUserForm
+from blog.application.forms.user_form_service import CreateUserForm
 
 
 class RegistrationView:
