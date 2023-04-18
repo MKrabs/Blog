@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.db.models import QuerySet
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 
 from blog.domain.entities.post import Post
@@ -30,7 +30,7 @@ class PostRepository(IPostRepository):
         instance.save()
 
     @staticmethod
-    @receiver(post_save, sender=Post)
+    @receiver(pre_delete, sender=Post)
     def delete(sender, instance, **kwargs) -> None:
         instance.delete()
 
