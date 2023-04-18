@@ -1,12 +1,9 @@
-from django.contrib.auth.models import User
-
 from abstraction.image_processor import ImageProcessor
 from abstraction.markdown_processor import MarkdownProcessor as mp
-
 from blog.domain.entities.profile import Profile
-from blog.domain.repository.comment_repository import CommentRepository
-from blog.domain.repository.like_repository import LikeRepository
-from blog.domain.repository.post_repository import IPostRepository
+from blog.infrastructure.repositories.comment_repository import CommentRepository
+from blog.infrastructure.repositories.like_repository import LikeRepository
+from blog.infrastructure.repositories.post_repository import PostRepository
 from blog.infrastructure.repositories.profile_repository import ProfileRepository
 
 
@@ -14,7 +11,7 @@ class ProfileService:
     def __init__(self):
         self.profile_repo = ProfileRepository()
         self.image_processor = ImageProcessor()
-        self.post_repo = IPostRepository()
+        self.post_repo = PostRepository()
         self.likes_repo = LikeRepository()
         self.comments_repo = CommentRepository()
 
@@ -47,4 +44,4 @@ class ProfileService:
             entity.author.profile.bio = mp.marker(entity.author.profile.bio)
             entity.author.total_posts = self.post_repo.get_count_by_author(entity.author.id)
             entity.author.total_comments = self.comments_repo.get_count_by_author(entity.author.id)
-            entity.author.total_likes = self.likes_repo.get_count_by_author(entity.author.id)
+            entity.author.total_likes = self.likes_repo.get_count_author(entity.author.id)
