@@ -14,11 +14,13 @@ class BlogConfig(AppConfig):
         from blog.domain.entities.comment import Comment
         from blog.domain.entities.post import Post
         from blog.domain.entities.like import Like
+        from blog.domain.entities.report import Report
 
         from blog.infrastructure.repositories.profile_repository import ProfileRepository
         from blog.infrastructure.repositories.post_repository import PostRepository
         from blog.infrastructure.repositories.comment_repository import CommentRepository
         from blog.infrastructure.repositories.like_repository import LikeRepository
+        from blog.infrastructure.repositories.report_repository import ReportRepository
 
         post_save.connect(ProfileRepository.create, sender=User)
         post_save.connect(ProfileRepository.save, sender=User)
@@ -35,4 +37,6 @@ class BlogConfig(AppConfig):
         post_save.connect(LikeRepository.save, sender=Like)
         pre_delete.connect(LikeRepository.delete, sender=Like)
 
-
+        post_save.connect(ReportRepository.create, sender=Report)
+        post_save.connect(ReportRepository.save, sender=Report)
+        pre_delete.connect(ReportRepository.delete, sender=Report)
