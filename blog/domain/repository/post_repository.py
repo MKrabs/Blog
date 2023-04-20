@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 
-from django.contrib.auth.models import User
 from django.db.models import QuerySet
 
 from blog.domain.entities.post import Post

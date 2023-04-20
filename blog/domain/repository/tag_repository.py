@@ -2,7 +2,6 @@ from abc import abstractmethod, ABC
 
 from django.db.models import QuerySet
 
-from blog.domain.entities.profile import Profile
 from blog.domain.entities.tag import Tag
 
 

@@ -3,8 +3,6 @@ from abc import ABC, abstractmethod
 from django.db.models import QuerySet
 
 from blog.domain.entities.comment import Comment
-from blog.domain.entities.post import Post
-from blog.domain.entities.profile import Profile
 
 
 class ICommentRepository(ABC):

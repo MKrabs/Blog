@@ -3,8 +3,6 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from blog.domain.entities.comment import Comment
-from blog.domain.entities.post import Post
-from blog.domain.entities.profile import Profile
 from blog.domain.repository.comment_repository import ICommentRepository
 from blog.infrastructure.repositories.post_repository import PostRepository
 

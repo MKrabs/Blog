@@ -2,7 +2,6 @@ from django.db.models import QuerySet
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from blog.domain.entities.profile import Profile
 from blog.domain.entities.tag import Tag
 from blog.domain.repository.tag_repository import ITagRepository
 

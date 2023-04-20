@@ -1,9 +1,6 @@
 from abc import ABC, abstractmethod
 
-from django.contrib.auth.models import User
-
 from blog.domain.entities.like import Like
-from blog.domain.entities.post import Post
 
 
 class ILikeRepository(ABC):
