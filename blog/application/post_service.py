@@ -59,5 +59,6 @@ class PostService:
 
         return page_obj, p.num_pages
 
-    def add_additional_fields(self, entity, user: User) -> None:
+    def add_additional_fields(self, entity) -> None:
         self.profile_repo.add_additional_fields(entity)
+        self.post_repo.add_additional_fields(entity)

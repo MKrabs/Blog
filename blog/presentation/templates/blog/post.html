@@ -37,13 +37,13 @@
         </div>
         <div class="col-2 text-md-start mt-auto mb-1 align-self-start">
             <a href="#comments" class="btn text-decoration-none">
-                <span class="bi bi-chat-right"></span> {{ comments|length }}
+                <span class="bi bi-chat-right"></span> {{ comments|length | default:'<span class="bi bi-dot"></span>' }}
             </a>
             <a href="{% url 'post' post_id=post.id %}liked"
                class="btn {% if not post.liked %}btn-outline-danger text-reset{% else %}btn-danger text-light{% endif %}
                       {% if not user.is_authenticated %} disabled {% endif %}
                       text-decoration-none position-relative stretched-link">
-                <span class="bi bi-heart{% if post.liked %}-fill text-light{% endif %}"></span> {{ post.likes }}
+                <span class="bi bi-heart{% if post.liked %}-fill text-light{% endif %}"></span> {{ post.likes | default:'<span class="bi bi-dot"></span>' }}
             </a>
         </div>
     </div>

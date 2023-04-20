@@ -16,7 +16,7 @@ class PostView:
     @classmethod
     def post(cls, request, post_id, page=1, beautify=True):
         blog_post = cls.post_service.get_post_by_id(post_id=post_id, beautify=beautify)
-        cls.post_service.add_additional_fields(entity=blog_post, user=request.user)
+        cls.post_service.add_additional_fields(entity=blog_post)
 
         comments = cls.comment_service.get_comments_by_post_id(post_id=post_id, beautify=beautify)
         p, num_pages = CommentService.paginate_posts(comments, param=5, page=page)

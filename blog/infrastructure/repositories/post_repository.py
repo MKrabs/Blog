@@ -4,9 +4,12 @@ from django.dispatch import receiver
 
 from blog.domain.entities.post import Post
 from blog.domain.repository.post_repository import IPostRepository
+from blog.infrastructure.repositories.like_repository import LikeRepository
 
 
 class PostRepository(IPostRepository):
+
+    likes_repo = LikeRepository()
 
     @staticmethod
     @receiver(post_save, sender=Post)
@@ -54,3 +57,8 @@ class PostRepository(IPostRepository):
 
     def get_count_by_author(self, user_id: int) -> int:
         return self.get_all_from_user(user_id=user_id).count()
+
+    @classmethod
+    def add_additional_fields(cls, entity):
+        entity.likes = cls.likes_repo.get_count_post(post_id=entity.id)
+        entity.liked = cls.likes_repo.did_user_like(user_id=entity.author.id, post_id=entity.id)
