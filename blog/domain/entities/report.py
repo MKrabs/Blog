@@ -29,7 +29,14 @@ class Report(models.Model):
     category = models.CharField(max_length=20, choices=report_category, default='spam')
     severity = models.CharField(max_length=20, choices=report_severity, default='low')
     status = models.CharField(max_length=20, choices=report_status, default='open')
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    content_type = models.ForeignKey(
+        ContentType,
+        on_delete=models.CASCADE,
+        limit_choices_to={
+            'app_label': 'blog',
+            'model__in': ['post', 'comment'],
+        },
+    )
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
     date = models.DateTimeField(auto_now=True)
