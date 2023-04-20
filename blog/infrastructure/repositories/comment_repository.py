@@ -1,5 +1,6 @@
+from profanity import profanity
 from django.db.models import QuerySet
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
 from blog.domain.entities.comment import Comment
@@ -12,27 +13,25 @@ class CommentRepository(ICommentRepository):
     @staticmethod
     @receiver(post_save, sender=Comment)
     def create(sender, instance, created, **kwargs) -> Comment | None:
-        if not created:
+        if created:
             return None
 
         return Comment.objects.create(
             author=instance.author,
-            title=instance.title,
-            image_type=instance.image_type,
-            image=instance.image,
-            short=instance.short,
+            post=instance.post,
             body=instance.body
         )
 
     @staticmethod
-    @receiver(post_save, sender=Comment)
+    @receiver(pre_save, sender=Comment)
     def save(sender, instance, **kwargs) -> None:
-        instance.save()
+        if profanity.contains_profanity(instance.body):
+            instance.body = profanity.censor(instance.body)
 
     @staticmethod
     @receiver(post_save, sender=Comment)
     def delete(sender, instance, **kwargs) -> None:
-        instance.delete()
+        pass
 
     def get_by_id(self, comment_id) -> Comment:
         return Comment.objects.get(id=comment_id)
@@ -51,13 +50,11 @@ class CommentRepository(ICommentRepository):
 
     def get_all_by_post(self, post_id: int) -> QuerySet:
         post = PostRepository().get_by_id(post_id=post_id)
-        return Comment.objects.get(post=post)
+        return Comment.objects.filter(post_id=post.id)
 
     def get_count_by_author(self, user_id: int) -> int:
         return self.get_all_by_author(user_id=user_id).count()
 
     def get_count_by_post(self, post_id: int) -> int:
-        print("Hello")
         app = self.get_all_by_post(post_id=post_id)
-        print(app)
         return app.count()

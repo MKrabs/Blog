@@ -12,7 +12,7 @@ class CommentService:
         if request.method == 'POST' and len(request.POST['commentBody']) > 0:
             comm = Comment()
             comm.author = request.user if request.user.is_authenticated and not request.POST.get('anonymous') else None
-            comm.post_id = Post.objects.get(id=post_id)
+            comm.post = Post.objects.get(id=post_id)
             comm.body = request.POST['commentBody']
             comm.save()
             messages.success(request, f'Comment "{comm.body[:10]}..." was posted.')

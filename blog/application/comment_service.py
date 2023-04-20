@@ -60,7 +60,7 @@ class CommentService:
 
     @classmethod
     def get_comments_by_user(cls, user: User, order_by: str = None, beautify: bool = False) -> QuerySet:
-        comments = cls.comment_repository.get_all_by_author() #Comment.objects.filter(author=user).order_by(order_by)
+        comments = cls.comment_repository.get_all_by_author(user_id=user.id)
 
         if comments and beautify:
             for comment in comments:
