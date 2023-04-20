@@ -27,7 +27,7 @@
         {% for hist in profile.history|dictsortreversed:"date" %}
             {% if hist.title %}
                 <div class="col-sm-6 col-lg-4 mb-4">
-                    <div class="card border-0 shadow">
+                    <div class="card border-0 shadow-sm">
                         <div class="card-body">
                         <span class="card-title fs-3">
                             <span class="bi bi-journal-richtext text-success"></span>
@@ -50,17 +50,18 @@
                 </div>
             {% elif hist.post_id %}
                 <div class="col-sm-6 col-lg-4 mb-4">
-                    <div class="card border-0 shadow">
+                    <div class="card border-0 shadow-sm">
                         <div class="card-body">
                             <h5 class="card-title">
                                 <span class="bi bi-chat-left"></span>
                                 Commented on :
                                 <a href="{% url 'post' post_id=hist.post_id %}#comments"
                                    class="text-decoration-none">
-                                    {{ hist.post_id.title }}
+                                    {{ hist.post.title }}
                                 </a>
                             </h5>
-                            <div class="card-text overflow-hidden max-h-200 border-start border-5 rounded ps-2">
+                            <hr>
+                            <div class="card-text overflow-hidden max-h-200 border-start border-5 rounded ps-2 shadow-sm">
                                 {{ hist.body | safe }}
                             </div>
                             <p class="card-text text-muted small">

@@ -65,6 +65,27 @@
                                     {{ profile_form.bio | safe | default:'<i>No bio.</i>' }}
                                 </div>
                             </div>
+
+                            <div class="row justify-content-center mt-3">
+                                <div class="col">
+                                    <hr>
+                                </div>
+                                <div class="col-auto m-auto">
+                                    <span class="bi bi-sticky{% if profile.total_posts > 0 %}-fill{% endif %} text-success"></span>
+                                    {{ profile.total_posts | default:'<span class="bi bi-dot"></span>' }}
+                                </div>
+                                <div class="col-auto m-auto">
+                                    <span class="bi bi-chat-left{% if profile.total_comments > 0 %}-fill{% endif %} text-primary"></span>
+                                    {{ profile.total_comments | default:'<span class="bi bi-dot"></span>' }}
+                                </div>
+                                <div class="col-auto m-auto">
+                                    <span class="bi bi-heart{% if profile.total_likes > 0 %}-fill{% endif %} text-danger"></span>
+                                    {{ profile.total_likes | default:'<span class="bi bi-dot"></span>' }}
+                                </div>
+                                <div class="col">
+                                    <hr>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
