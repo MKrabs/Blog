@@ -19,8 +19,17 @@ class PostService:
         self.comments_repo = CommentRepository()
         self.profile_repo = ProfileService()
 
-    def get_latest_posts(self, user: User, order_by: str = None) -> QuerySet:
-        return self.post_repo.get_all(order_by=order_by)
+    def get_latest_posts(self, user: User, order_by: str = None, additional_fields: bool = False) -> QuerySet:
+        posts = self.post_repo.get_all(order_by=order_by)
+
+        if additional_fields:
+            for post in posts:
+                post.comments = self.comments_repo.get_count_by_post(post_id=post.id)
+                post.likes = self.likes_repo.get_count_post(post_id=post.id)
+                if user.is_authenticated:
+                    post.liked = self.likes_repo.did_user_like(user_id=user.id,post_id=post.id)
+
+        return posts
 
     def get_post_by_id(self, post_id: int, beautify: bool = False) -> Optional[Post]:
         post = self.post_repo.get_by_id(post_id)

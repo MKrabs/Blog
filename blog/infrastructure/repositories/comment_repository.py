@@ -6,6 +6,7 @@ from blog.domain.entities.comment import Comment
 from blog.domain.entities.post import Post
 from blog.domain.entities.profile import Profile
 from blog.domain.repository.comment_repository import ICommentRepository
+from blog.infrastructure.repositories.post_repository import PostRepository
 
 
 class CommentRepository(ICommentRepository):
@@ -51,10 +52,14 @@ class CommentRepository(ICommentRepository):
         return Comment.objects.filter(author=user_id)
 
     def get_all_by_post(self, post_id: int) -> QuerySet:
-        return Comment.objects.filter(post=post_id)
+        post = PostRepository().get_by_id(post_id=post_id)
+        return Comment.objects.get(post=post)
 
     def get_count_by_author(self, user_id: int) -> int:
         return self.get_all_by_author(user_id=user_id).count()
 
     def get_count_by_post(self, post_id: int) -> int:
-        return self.get_all_by_post(post_id=post_id).count()
+        print("Hello")
+        app = self.get_all_by_post(post_id=post_id)
+        print(app)
+        return app.count()
