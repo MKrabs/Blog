@@ -9,7 +9,7 @@ class LikeRepository(ILikeRepository):
     @staticmethod
     @receiver(post_save, sender=Like)
     def create(sender, instance, created, **kwargs) -> Like | None:
-        if not created:
+        if created:
             return None
 
         return Like.objects.create(
@@ -20,12 +20,12 @@ class LikeRepository(ILikeRepository):
     @staticmethod
     @receiver(post_save, sender=Like)
     def save(sender, instance, **kwargs) -> None:
-        instance.save()
+        pass
 
     @staticmethod
     @receiver(pre_delete, sender=Like)
     def delete(sender, instance, **kwargs) -> None:
-        instance.delete()
+        pass
 
     def get_count_post(self, post_id: int) -> int:
         return Like.objects.filter(post=post_id).count()

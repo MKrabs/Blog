@@ -9,10 +9,10 @@ class LikeService:
     @classmethod
     def liked(cls, request, post_id):
         if request.user.is_authenticated:
-            p = Post.objects.get(id=post_id)
-            like = Like.objects.filter(author=request.user, post_id=p)
+            post = Post.objects.get(id=post_id)
+            like = Like.objects.filter(author=request.user, post_id=post)
             if like.count() < 1:
-                Like(author=request.user, post_id=p).save()
+                Like(author=request.user, post=post).save()
             else:
                 like.delete()
 
