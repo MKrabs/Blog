@@ -64,9 +64,11 @@
                                 <div class="col-auto align-self-end my-3 my-sm-0 mb-sm-auto">
                                     <a href="{% url 'post' post_id=post.id %}#comments"
                                        class="text-decoration-none position-relative stretched-link">
-                                        <span class="bi bi-chat-left"></span> {{ post.comments }}
+                                        <span class="bi bi-chat-left"></span>
+                                        {{ post.comments | default:'<span class="bi bi-dot"></span>' }}
                                     </a>
-                                    <span class="bi bi-heart{% if post.liked %}-fill text-danger{% endif %}"></span> {{ post.likes }}
+                                    <span class="bi bi-heart{% if post.liked %}-fill text-danger{% endif %}"></span>
+                                    {{ post.likes | default:'<span class="bi bi-dot"></span>' }}
                                 </div>
                             </div>
                             <div class="row pt-2">
