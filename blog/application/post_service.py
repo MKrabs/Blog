@@ -26,6 +26,7 @@ class PostService:
             for post in posts:
                 post.comments = self.comments_repo.get_count_by_post(post_id=post.id)
                 post.likes = self.likes_repo.get_count_post(post_id=post.id)
+                self.profile_repo.add_additional_fields(post.author)
                 if user.is_authenticated:
                     post.liked = self.likes_repo.did_user_like(user_id=user.id,post_id=post.id)
 
@@ -60,5 +61,5 @@ class PostService:
         return page_obj, p.num_pages
 
     def add_additional_fields(self, entity) -> None:
-        self.profile_repo.add_additional_fields(entity)
+        self.profile_repo.add_additional_fields(entity.author)
         self.post_repo.add_additional_fields(entity)

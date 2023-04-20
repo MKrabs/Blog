@@ -1,3 +1,5 @@
+from django.contrib.auth.models import User
+
 from abstraction.image_processor import ImageProcessor
 from abstraction.markdown_processor import MarkdownProcessor as mp
 from blog.domain.entities.profile import Profile
@@ -15,11 +17,11 @@ class ProfileService:
         self.likes_repo = LikeRepository()
         self.comments_repo = CommentRepository()
 
-    def get_profile_by_id(self, profile_id: int) -> Profile:
+    def get_profile_by_id(self, profile_id: int, beautify: bool = False) -> Profile:
         profile = self.profile_repo.get_by_id(profile_id)
 
-        if profile:
-            profile.bio = mp.marker(profile.bio)
+        if profile and beautify:
+            self.add_additional_fields(profile.user)
 
         return profile
 
@@ -27,7 +29,7 @@ class ProfileService:
         profile = self.profile_repo.get_by_username(user_name)
 
         if profile and beautify:
-            profile.bio = mp.marker(profile.bio)
+            self.add_additional_fields(profile.user)
 
         return profile
 
@@ -39,9 +41,9 @@ class ProfileService:
 
         profile.save()
 
-    def add_additional_fields(self, entity) -> None:
-        if entity.author:
-            entity.author.profile.bio = mp.marker(entity.author.profile.bio)
-            entity.author.total_posts = self.post_repo.get_count_by_author(entity.author.id)
-            entity.author.total_comments = self.comments_repo.get_count_by_author(entity.author.id)
-            entity.author.total_likes = self.likes_repo.get_count_author(entity.author.id)
+    def add_additional_fields(self, entity: User) -> None:
+        entity.profile.bio = mp.marker(entity.profile.bio)
+        entity.profile.location = mp.marker(entity.profile.location)
+        entity.total_posts = self.post_repo.get_count_by_author(entity.id)
+        entity.total_comments = self.comments_repo.get_count_by_author(entity.id)
+        entity.total_likes = self.likes_repo.get_count_author(entity.id)
