@@ -38,7 +38,13 @@ class PostRepository(IPostRepository):
         return Post.objects.get(id=post_id)
 
     def get_all_from_user(self, user_id: int, order_by: str = None) -> QuerySet:
-        return Post.objects.filter(author=user_id).order_by(order_by)
+        posts = Post.objects.filter(author=user_id)
+
+        if order_by:
+            return posts.order_by(order_by)
+
+        return posts
+
 
     def get_all(self, order_by: str = None) -> QuerySet:
         return Post.objects.all().order_by(order_by)
