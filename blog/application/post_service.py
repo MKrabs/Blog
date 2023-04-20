@@ -49,6 +49,7 @@ class PostService:
 
         return posts
 
+    # TODO - put pagination into abstraction layer
     @classmethod
     def paginate_posts(cls, latest_posts, param: int = 4, page: int = 1) -> (Paginator, int):
         p = Paginator(latest_posts, param)
