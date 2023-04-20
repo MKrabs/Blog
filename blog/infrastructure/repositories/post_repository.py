@@ -11,7 +11,7 @@ class PostRepository(IPostRepository):
     @staticmethod
     @receiver(post_save, sender=Post)
     def create(sender, instance, created, **kwargs) -> Post | None:
-        if not created:
+        if created:
             return None
 
         return Post.objects.create(
@@ -25,8 +25,9 @@ class PostRepository(IPostRepository):
 
     @staticmethod
     @receiver(post_save, sender=Post)
-    def save(sender, instance, **kwargs) -> None:
-        instance.save()
+    def save(sender, instance, created, **kwargs) -> None:
+        if not created:
+            instance.save()
 
     @staticmethod
     @receiver(pre_delete, sender=Post)
