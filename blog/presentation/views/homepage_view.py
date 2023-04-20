@@ -9,7 +9,7 @@ class HomepageView:
     @classmethod
     def index(cls, request, page=1):
         latest_posts = cls.post_service.get_latest_posts(user=request.user, order_by='-date', additional_fields=True)
-        p, num_pages = PostService.paginate_posts(latest_posts, param=4, page=page)
+        p, num_pages = cls.post_service.paginate_posts(latest_posts, param=4, page=page)
 
         context = {
             'page': {
@@ -23,5 +23,8 @@ class HomepageView:
 
     @classmethod
     def page_not_found(cls, request, pattern):
-        context = {'broken': pattern}
+        context = {
+            'broken': pattern
+        }
+
         return render(request, 'blog/404.html', context)
