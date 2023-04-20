@@ -10,27 +10,26 @@ class TagRepository(ITagRepository):
     @staticmethod
     @receiver(post_save, sender=Tag)
     def create(sender, instance, created, **kwargs) -> Tag | None:
-        if not created:
+        if created:
             return None
 
         return Tag.objects.create(
-            author=instance.author,
-            title=instance.title,
-            image_type=instance.image_type,
-            image=instance.image,
-            short=instance.short,
-            body=instance.body
+            name=instance.name,
+            color=instance.color,
+            icon=instance.icon,
+            icon_colour=instance.icon_colour,
+            link=instance.link,
         )
 
     @staticmethod
     @receiver(post_save, sender=Tag)
     def save(sender, instance, **kwargs) -> None:
-        instance.save()
+        pass
 
     @staticmethod
     @receiver(post_save, sender=Tag)
     def delete(sender, instance, **kwargs) -> None:
-        instance.delete()
+        pass
 
     def get_all_user(self, user_id: int) -> Tag:
         pass

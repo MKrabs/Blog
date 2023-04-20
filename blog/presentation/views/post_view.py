@@ -1,7 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 
-from abstraction.markdown_processor import MarkdownProcessor as mp
 from blog.application.comment_service import CommentService
 from blog.application.post_service import PostService
 from blog.application.profile_service import ProfileService
@@ -22,16 +21,15 @@ class PostView:
         p, num_pages = CommentService.paginate_posts(comments, param=5, page=page)
         comments = p.object_list
 
-        for comment in comments:
-            cls.comment_service.add_additional_fields(comment)
+        if beautify:
+            for comment in comments:
+                cls.comment_service.add_additional_fields(comment)
 
         context = {
             'post': blog_post,
             'comments': comments,
             'page': {
                 'current': p.number,
-                'has_next': p.has_next(),
-                'has_previous': p.has_previous(),
                 'total': num_pages,
             },
         }
