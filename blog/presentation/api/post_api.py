@@ -27,7 +27,7 @@ class PostAPI():
             'page': {
                 'current': p.number,
                 'total': num_pages,
-                },
+            },
             'latest_posts': posts,
         }
 
