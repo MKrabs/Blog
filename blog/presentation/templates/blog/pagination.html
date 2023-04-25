@@ -3,13 +3,13 @@
 
 <div class="text-center fw-semibold">
 
-    <a href="{{ url }}{{ page.current|add:"-1" }}{{ anchor }}"
+    <a href="{{ url }}{{ page.current|add:"-1" }}/{{ anchor }}"
        class="{% if page.current == 1 %}invisible{% endif %}">
         <span class="bi-caret-left-fill"></span></a>
 
     <span>{{ page.current }} of {{ page.total }}</span>
 
-    <a href="{{ url }}{{ page.current|add:"1" }}{{ anchor }}"
+    <a href="{{ url }}{{ page.current|add:"1" }}/{{ anchor }}"
        class="{% if page.current == page.total %}invisible{% endif %}">
         <span class="bi-caret-right-fill"></span></a>
 
