@@ -1,5 +1,4 @@
-from django.core import serializers
-from blog.domain.entities.comment import Comment
+from django.db.models import QuerySet
 
 
 class CommentSerializer:

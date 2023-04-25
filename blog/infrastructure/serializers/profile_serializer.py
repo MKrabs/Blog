@@ -1,4 +1,3 @@
-from django.core import serializers
 from blog.domain.entities.profile import Profile
 
 

@@ -1,13 +1,10 @@
-import json
-
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 
 from blog.application.comment_service import CommentService
 from blog.application.post_service import PostService
 from blog.application.profile_service import ProfileService
-
-from blog.infrastructure.serializers.post_serializer import PostSerializer
 from blog.infrastructure.serializers.comment_serializer import CommentSerializer
+from blog.infrastructure.serializers.post_serializer import PostSerializer
 from blog.infrastructure.serializers.profile_serializer import ProfileSerializer
 
 
@@ -18,9 +15,6 @@ class PostAPI():
 
     @classmethod
     def get_latest_posts(cls, request):
-        # Get the page and post_per_page from the request
-        # If the page or post_per_page is not in the request or not an int, set the default value
-
         page = get_param(request, 'page', 1)
         post_per_page = get_param(request, 'post_per_page', 10)
 
@@ -71,6 +65,7 @@ class PostAPI():
         }
 
         return JsonResponse(context)
+
 
 def get_param(request, param_name, default_value):
     try:

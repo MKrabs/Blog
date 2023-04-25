@@ -1,5 +1,4 @@
-from django.core import serializers
-from blog.domain.entities.post import Post
+from django.db.models import QuerySet
 
 
 class PostSerializer:
