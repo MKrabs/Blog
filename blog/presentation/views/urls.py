@@ -3,9 +3,8 @@ from django.urls import path
 from blog.presentation.views.homepage_view import HomepageView
 from blog.presentation.views.post_view import PostView
 from blog.presentation.views.profile_view import ProfileView
-
-from blog.presentation.api.comment_service import CommentService
-from blog.presentation.api.like_service import LikeService
+from blog.presentation.views.comment_service import CommentService
+from blog.presentation.views.like_service import LikeService
 
 urlpatterns = [
     path('', HomepageView.index, name='home'),
