@@ -8,6 +8,7 @@ from blog.application.profile_service import ProfileService
 
 from blog.infrastructure.serializers.post_serializer import PostSerializer
 from blog.infrastructure.serializers.comment_serializer import CommentSerializer
+from blog.infrastructure.serializers.profile_serializer import ProfileSerializer
 
 
 class PostAPI():
@@ -55,17 +56,16 @@ class PostAPI():
 
     @classmethod
     def get_user_profile(cls, request, user_name):
-        user = cls.profile_service.get_profile_by_username(user_name=user_name)
-        user = PostSerializer.serialize(user)
+        profile = cls.profile_service.get_profile_by_username(user_name=user_name)
+        posts = cls.post_service.get_post_by_user(profile.user)
+        comments = cls.comment_service.get_comments_by_user(profile.user)
 
-        posts = cls.post_service.get_posts_by_author_id(user.id)
+        profile = ProfileSerializer.serialize(profile)
         posts = PostSerializer.serialize(posts)
-
-        comments = cls.comment_service.get_comments_by_author_id(user.id)
         comments = CommentSerializer.serialize(comments)
 
         context = {
-            'user': user,
+            'user': profile,
             'posts': posts,
             'comments': comments,
         }
