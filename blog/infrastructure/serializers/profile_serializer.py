@@ -7,9 +7,9 @@ class ProfileSerializer:
         return {
             'id': profile.id,
             'username': profile.user.username,
-            'email': profile.user.email,
-            'picture': profile.picture.url,
-            'bio': profile.bio,
-            'location': profile.location,
+            'email': profile.user.email or None,
+            'picture': profile.picture.url or None,
+            'bio': profile.bio or None,
+            'location': profile.location or None,
             'date_joined': profile.user.date_joined.strftime('%Y-%m-%d %H:%M:%S'),
         }

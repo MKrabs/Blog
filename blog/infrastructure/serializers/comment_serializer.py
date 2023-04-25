@@ -4,10 +4,10 @@ from django.db.models import QuerySet
 class CommentSerializer:
     @classmethod
     def serialize(cls, comments: QuerySet):
-        ser_comms = []
+        serialized_comments = []
 
         for comment in comments:
-            ser_comms.append({
+            serialized_comments.append({
                 'id': comment.id,
                 'author': comment.author.username if comment.author else None,
                 'body': comment.body,
@@ -15,4 +15,4 @@ class CommentSerializer:
                 'post': comment.post.id,
             })
 
-        return ser_comms
+        return serialized_comments

@@ -4,12 +4,12 @@ from django.db.models import QuerySet
 class PostSerializer:
     @classmethod
     def serialize(cls, posts: QuerySet):
-        ser_posts = []
+        serialized_posts = []
 
         for post in posts:
-            ser_posts.append({
+            serialized_posts.append({
                 'id': post.id,
-                'author': post.author.username if post.author else None,
+                'author': post.author.username or None,
                 'title': post.title,
                 'body': post.body,
                 'date': post.date.strftime('%Y-%m-%d %H:%M:%S'),
@@ -17,4 +17,4 @@ class PostSerializer:
                 'image_type': post.image_type,
             })
 
-        return ser_posts
+        return serialized_posts
