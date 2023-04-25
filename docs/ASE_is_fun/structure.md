@@ -11,8 +11,8 @@
 
 This project is a restructuring of my existing blog site (www.mkrabs.de) using Domain Driven Design principles, as
 part of the Advanced Software Engineering course in the 6th semester at the Duale Hochschule of Karlsruhe. The project
-code is publicly available on GitHub, but please note that I do not take any responsibility for the use of this
-code / architecture or other mishaps you might write in other projects. I cannot be held liable for any negative
+code is publicly available on GitHub, but please note that I don't take any responsibility for the use of this
+code / architecture or other mishaps you might write in other projects. I can't be held liable for any negative
 outcomes or poor grades resulting from the use of this code, as it is intended for educational purposes only.
 
 _Use at your own risk, lmao._
@@ -155,7 +155,7 @@ and users can interact with blog posts by commenting, liking, and reporting.
 
 ##### User
 
-Users are individuals who have registered for an account on the blog site. They can create blog posts, comment on other
+Users are individuals who've registered for an account on the blog site. They can create blog posts, comment on other
 users' blog posts, like blog posts, and interact with other users on the platform. Users can also create a user profile
 that contains personal information, including their name, profile picture, and bio. The user profile allows other users
 to learn more about the user and their interests.
@@ -354,9 +354,6 @@ the PostRepository must adhere to. The create and save methods define the CRUD o
 post, respectively. The `get_all_from_user` interface method is a custom method that should, by the name of it retrieve
 all posts for a particular user and can optionally be ordered by a given field.
 
-All the methods defined here are meant to be used, which is the reason for the `NotImplementedError` exception being
-present at the end of each method. These are only a few of the methods defined in the `IPostRepository`.
-
 ```python
 # domain/repository/post_repository.py
 
@@ -377,34 +374,19 @@ class IPostRepository(ABC):
 # [...]
 ```
 
+All the methods defined here are meant to be used, which is the reason for the `NotImplementedError` exception being
+present at the end of each method. These are only a few of the methods defined in the `IPostRepository`.
+
 ### Part 2 - Infrastructure.Repository
 
-We are now implementing the interface that was previously defined. The infrastructure layer's repository is
-the lowest layer of code that should interact with the post entity. Essentially, it connects the database to the
-application logic, via Django's ORM (see: `Post.objects.`).
+The infrastructure repository is responsible for implementing the behavior defined in the interface, making it the
+lowest layer of the system that interacts with the `post` entity. This approach ensures that the repository closely
+follows the business logic of the project. The infrastructure layer's repository is the lowest layer of code that should
+interact with the `post` entity. Essentially, it connects the database to the application logic, via Django's ORM
+(see: `Post.objects.`).
 
-The `PostRepository` class defines methods that will allow the application to perform various operations on post
-entities, such as creating new posts, updating existing posts, or retrieving posts based on certain criteria.
-
-The `create` method is a signal receiver that is triggered whenever a new post is saved to the database. It checks if
-the post was just created or if it already existed. If it already existed, it returns `None`. Otherwise, it creates a
-new post object with the relevant attributes from the original post and returns it.
-
-The `get_all_from_user` method retrieves all posts created by a specific user. It does this by filtering the `Post`
-objects by the user ID. If an `order_by` argument is provided, the resulting query set will be ordered accordingly.
-Otherwise, the posts will be returned in the order they were retrieved from the database.
-
-The `LikeRepository` is a class that is meant to be used solely inside the `PostRepository` class. It is used to
-provide higher-level access to other related entities; in this particular case, it is used to provide access to
-the `Like` entity. The `LikeRepository` is a part of the infrastructure layer, which means that it provides an
-implementation for a specific interface and interacts with the data storage system directly. This allows
-the `PostRepository` to perform more complex operations with the `Like` entity, without having to worry about the
-low-level details of how the data is stored and retrieved.
-
-Overall, the `PostRepository` class provides an implementation of the `IPostRepository` interface, allowing the
-application to interact with `post` entities in a standardized way. By separating the implementation details of the
-repository from the rest of the application logic, we can ensure that the code is easier to maintain and modify in the
-future.
+Simply said: Our `PostRepository` class defines methods that will allow the application to perform various operations on
+`post` entities, such as creating new posts, updating existing posts, or retrieving posts based on certain criteria.
 
 ```python
 # infrastructure/repositories/profile_repository.py
@@ -438,7 +420,39 @@ class PostRepository(IPostRepository):
   # [...]
 ```
 
+The `create` method is a signal receiver that is triggered whenever a new post is saved to the database.
+Django signals are a way to allow decoupled applications to get notified when certain events occur. If a Post is being
+created by Django's ORM, the `create` method will be called, for us, after the post creation signal is sent.
+It checks if the post was just created or if it already existed. If it already existed, it returns `None`. Otherwise,
+it creates a new post object with the relevant attributes from the request and returns it.
+
+`get_all_from_user` does exactly what its name suggests: it retrieves all posts created by a specific user. It does this
+by filtering the `Post` objects by the user ID. If an `order_by` argument is provided, the resulting query set will be
+ordered accordingly. Otherwise, the posts will be returned in the order they were retrieved from the database.
+
+These are just a few of the methods defined in the `PostRepository` class.
+
+Inside the `PostRepository` class, we can see that it has a `LikeRepository` attribute. It is meant to be used solely
+inside the `PostRepository` class. It is used to provide higher-level access to other related entities; in this
+particular case, it is used to provide access to the `Like` entity. The `LikeRepository` is as much part of the
+infrastructure layer as the `PostRepository`, which means that it provides an implementation for a specific interface
+and interacts with the data storage system directly. This allows the `PostRepository` to perform more complex operations
+with the `Like` entity, without having to worry about the low-level details of how the data is stored and retrieved.
+
+Overall, the `PostRepository` class provides an implementation of the `IPostRepository` interface, allowing the
+application to interact with `post` entities in a standardized way. By separating the implementation details of the
+repository from the rest of the application logic, we can ensure that the code is easier to maintain and modify in the
+future.
+
 ### Part 3 - The implementation of the Post-Service
+
+The `PostService` implementation is located at the application layer and serves as an intermediary between the
+presentation layer (views or api) and the lower-level data access layers. Its purpose is to aggregate multiple
+lower-level accesses of the `post` entity and provide a simplified interface for the views to interact with.
+
+The `PostService` constructor initializes instances of the `PostRepository`, `LikeRepository`, `CommentRepository`, and
+`ProfileService` classes. This allows the service to access and manipulate the various aspects of a `post` entity, such
+as its content, comments, likes and so on.
 
 ```python
 # application/post_services.py
@@ -474,18 +488,90 @@ class PostService:
 # [...]
 ```
 
-## Specification of the domain services
+One of the main methods of the `PostService` is `get_latest_posts`, which retrieves the latest posts from the `post`
+repository and aggregates additional fields related to each post, such as the _number of comments and likes_. If the
+`additional_fields` parameter is set to `True`, the method adds these fields to each post and checks if the user has
+liked the post (or not). This method serves as an example of how the `PostService` can perform complex operations that
+involve multiple aspects of the `post` entity and provide a simplified interface for the `views` or `APIs` to consume.
 
-cool 👇
+## Presentation Layer
 
-```mermaid
-graph LR
-  A[ProfileService] --> B{save_profile}
-  B --> C[process]
-  C --> D[save]
+The presentation layer is the topmost layer in our architecture. The views layer is a part of the presentation layer and
+is responsible for rendering HTML pages that are returned to the user's browser. The URLs are mapped to views in the
+`views/urls.py` file, which is responsible for handling different URLs. Each view is responsible for handling a specific
+request and returning a response.
+
+```python
+# blog/presentation/views/urls.py
+
+urlpatterns = [
+  path('', HomepageView.index, name='home'),
+  path('<int:page>/', HomepageView.index),
+
+  path('post/<int:post_id>/', PostView.post, name='post'),
+  path('post/<int:post_id>/<int:page>/', PostView.post),
+  # ...
+]
 ```
 
-## Implementation of the repositories
+The presentation layer also includes the API layer. The API layer is structured the same as the views layer and follows
+the same important patterns. Similar to the views layer, the API layer also has a `urls.py` file with multiple services:
+
+```python
+# blog/presentation/api/urls.py
+
+urlpatterns = [
+    path('index/', PostAPI.get_latest_posts),
+    path('post/<int:post_id>/', PostAPI.get_post),
+
+    path('@<str:user_name>/', ProfileAPI.get_user_profile),
+]
+```
+
+Both the views and API layers are responsible for handling requests and returning responses. Looking at the `urls.py`, 
+we can see for example that the path `post/<int:post_id>/` is mapped to the `PostView.post` method. This means that 
+when a user visits the `/post/1/` URL, the `PostView.post` method will be called and the user will be presented with
+the html page representing the post with the id of 1. The `PostView.post` method is responsible for retrieving the post
+with the `id` of `1` from the services, processing the data, and returning a response.
+
+In the `PostView` class, we see an example of a view. This view is responsible for handling a specific URL and returning
+a response. It uses the `PostService`, `CommentService`, and `ProfileService` to retrieve the necessary data from the
+repository layer and processes the data to create a response. The `post` method in the `PostView` class is responsible
+for rendering a specific post with its comments and additional information. Here is the implementation of the `post`
+method:
+
+```python
+# blog/presentation/views/post_view.py
+
+class PostView:
+  post_service = PostService()
+  comment_service = CommentService()
+  profile_service = ProfileService()
+
+  @classmethod
+  def post(cls, request, post_id, page=1, beautify=True):
+    blog_post = cls.post_service.get_post_by_id(post_id=post_id, beautify=beautify)
+    cls.post_service.add_additional_fields(entity=blog_post)
+
+    comments = cls.comment_service.get_comments_by_post_id(post_id=post_id, beautify=beautify)
+    p, num_pages = CommentService.paginate_posts(comments, param=5, page=page)
+    comments = p.object_list
+
+    context = {
+      'post': blog_post,
+      'comments': comments,
+      'page': {
+        'current': p.number,
+        'total': num_pages,
+      },
+    }
+
+    return render(request, 'blog/post.html', context)
+```
+
+Overall, the presentation layer provides the user-facing interface for the application. The views and API are
+responsible for processing requests, retrieving data, and creating responses. The URLs are used to map the requests to
+the appropriate views or API services, allowing for a clear separation of concerns within the application.
 
 ###### Back to top [▲](#domain-driven-design-in-django)
 

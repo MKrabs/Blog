@@ -21,10 +21,6 @@ class PostView:
         p, num_pages = CommentService.paginate_posts(comments, param=5, page=page)
         comments = p.object_list
 
-        if beautify:
-            for comment in comments:
-                cls.comment_service.add_additional_fields(comment)
-
         context = {
             'post': blog_post,
             'comments': comments,
