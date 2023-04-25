@@ -15,39 +15,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.conf.urls import handler404
 from django.conf.urls.static import static
 
-from blog.presentation.api.like_service import LikeService as liked_view
 from blog.presentation.views.homepage_view import HomepageView as homepage_view
 from blog.presentation.views.registration_view import RegistrationView as registration_view
-from blog.presentation.api.comment_service import CommentService as comment
-from blog.presentation.views.profile_view import ProfileView as profile_view
-from blog.presentation.views.post_view import PostView as post_view
 
 from djangoProject import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("me/", include("django.contrib.auth.urls")),
-    path("me/register", registration_view.register_page, name='register'),
+    path("me/register/", registration_view.register_page, name='register'),
 
-    # ex: /blog/
-    path('', homepage_view.index, name='home'),
-    path('<int:page>', homepage_view.index),
-    path('<int:page>/', homepage_view.index),
-    path('post/<int:post_id>/', post_view.post, name='post'),
-    path('post/<int:post_id>/<int:page>/', post_view.post),
-    path('post/<int:post_id>/liked', liked_view.liked),
-    path('post/<int:post_id>/comment', comment.comment),
-    path('post/<int:post_id>/comment/<int:comm_id>/rm', comment.comment_delete),
-
-    path('new/', homepage_view.index, name='new'),
-    path('create/', post_view.create_post, name='create'),
-
-
-    path('@<str:user_name>/', profile_view.user_profile, name='user_profile'),
-    path('@<str:user_name>/<str:activity_type>/', profile_view.user_profile, name='user_profile_type'),
+    path('', include('blog.presentation.views.urls')),
 
     path('api/', include('blog.presentation.api.urls')),
 

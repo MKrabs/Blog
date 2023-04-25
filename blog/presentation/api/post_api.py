@@ -75,7 +75,7 @@ class PostAPI():
 def get_param(request, param_name, default_value):
     try:
         param = int(request.GET.get(param_name))
-    except ValueError:
+    except:
         param = default_value
 
     return param
