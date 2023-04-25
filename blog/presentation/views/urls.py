@@ -4,7 +4,7 @@ from blog.presentation.views.homepage_view import HomepageView
 from blog.presentation.views.post_view import PostView
 from blog.presentation.views.profile_view import ProfileView
 from blog.presentation.views.comment_endpoint import CommentEndpoint
-from blog.presentation.views.like_service import LikeService
+from blog.presentation.views.like_endpoint import LikeEndpoint
 
 urlpatterns = [
     path('', HomepageView.index, name='home'),
@@ -12,9 +12,9 @@ urlpatterns = [
 
     path('post/<int:post_id>/', PostView.post, name='post'),
     path('post/<int:post_id>/<int:page>/', PostView.post),
-    path('post/<int:post_id>/liked', LikeService.liked),
+    path('post/<int:post_id>/liked', LikeEndpoint.liked),
     path('post/<int:post_id>/comment', CommentEndpoint.comment),
-    path('post/<int:post_id>/comment/<int:comm_id>/rm', CommentEndpoint.comment_delete),
+    path('post/<int:post_id>/comment/<int:comment_id>/rm', CommentEndpoint.comment_delete),
 
     path('new/', HomepageView.index, name='new'),
     path('create/', PostView.create_post, name='create'),

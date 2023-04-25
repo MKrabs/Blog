@@ -28,3 +28,7 @@ class ILikeRepository(ABC):
     @abstractmethod
     def did_user_like(self, user_id: int, post_id: int) -> bool:
         raise NotImplementedError
+
+    @abstractmethod
+    def get_like_by_post_and_author(self, post_id: int, author: int) -> Like:
+        raise NotImplementedError

@@ -34,4 +34,8 @@ class LikeRepository(ILikeRepository):
         return Like.objects.filter(author=author_id).count()
 
     def did_user_like(self, user_id: int, post_id: int) -> bool:
-        return Like.objects.filter(post=post_id, author=user_id)
+        like = Like.objects.filter(post=post_id, author=user_id)
+        return like.count() > 0
+
+    def get_like_by_post_and_author(self, post_id: int, author_id: int) -> Like:
+        return Like.objects.get(post=post_id, author=author_id)
