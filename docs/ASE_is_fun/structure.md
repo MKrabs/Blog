@@ -199,9 +199,11 @@ administrators to review the content and take appropriate action to ensure the s
 
 Beispiele aus Code zeigen
 
-## Definition of the entities, services, and repositories
+## Definition of the entities, repositories and services
 
-Currently, our users profile have been structured as follows, all inside of the `models.py` file:
+Currently, all of our entities, repositories, and services are defined in the `models.py` file. This is not ideal, as it
+makes it difficult to identify the domain model and understand the relationships between the different entities. To
+show you one example, we will look at how our users profile have been structured inside the `models.py` file:
 
 ```python
 class Profile(models.Model):
@@ -247,89 +249,245 @@ def save_user_profile(sender, instance, **kwargs):
   instance.profile.save()
 ```
 
+As you can see there are a lot of things going on in this file, and it's not very clear what is the purpose of each
+thing. This is the only code that defines the profile model, and every action related to it (creating, updating, saving,
+deleting, aggregating, etc.) is manually writing anywhere in the project. There are no repositories or services defined.
+
+One example of this is the `liked` view, which is responsible for handling the like/unlike action on a post:
+
+```python
+def liked(request, post_id):
+  if request.user.is_authenticated:
+    p = Post.objects.get(id=post_id)
+    like = Like.objects.filter(author=request.user, post_id=p)
+    if like.count() < 1:
+      Like(author=request.user, post_id=p).save()
+    else:
+      like.delete()
+
+  return redirect('post', post_id)
+```
+
+As you can see, the `liked` view is directly interacting with the database, which is not ideal. _**This is not an
+isolated case**_ (
+see [views.py #5f0837](https://github.com/MKrabs/Blog/blob/5f0837dd26a84c0e7e2687a66cbd54fd4254c209/blog/views.py)),
+as there are many other places in the code where the database is directly accessed. This is a violation of the single
+responsibility principle, as the view is responsible for handling the like/unlike action, but it is also responsible
+for interacting with the database. This makes it difficult to understand what the view is doing, expanding the scope of
+the view, and making it more difficult to test.
+
+_Sounds bad, because it is bad._
+
+Refactoring a codebase is not only about cleaning it up, but also about making sure it is efficient and easy to
+understand. In the code provided, there is a violation of the single responsibility principle, as the liked view is
+responsible for interacting with the database while also handling the like/unlike action. This code can be refactored
+using the domain-driven design (DDD) approach, which makes use of the repository pattern to create a clear separation of
+concerns between domain entities and data storage.
+
+The first part of the refactoring is defining the domain model, which in this case is the Post entity. The domain model
+only consists of the Post class and its attributes, which are defined in the domain/entities/post.py file. The purpose
+of the domain model is to represent the data structure that the application will work with.
+
+The next step is to define the interface for the domain repository. In this case, the IPostRepository interface is
+defined in the domain/repository/post_repository.py file. The interface specifies the methods that the PostRepository
+class will implement to manage the database operations for the Post entity. By abstracting the database management, it
+will be easier to test and understand the codebase.
+
+The final part of the refactoring is to implement the repositories and services in the infrastructure layer. The
+implementation of the PostRepository is defined in the infrastructure/repositories/post_repository.py file. The purpose
+of the repository is to handle the database operations such as creating and retrieving posts. The PostService class is
+also defined in the application/post_services.py file, and it encapsulates the business logic for the Post entity, such
+as retrieving the latest posts or creating a new post.
+
+By splitting the code into these three parts, it will be easier to understand and test the codebase. The domain model
+represents the data structure, the domain repository handles the database operations, and the domain services handle the
+business logic. The codebase will be more modular, making it easier to add new features or refactor existing ones.
+
 We split the class into tree parts:
 
-1. The domain model (_Just the Profile class and its attributes_)
-```python
-# domain/entities/profile.py
+### Part 1.a - Domain.entities
 
-from django.contrib.auth.models import User
-from django.db import models
+In this project, the domain model is the most atomic piece of business logic that defines the data structure of the
+application. The main entity of the system is the Post class, which is responsible for representing the blog posts in
+the database. This class is defined in the domain/entities/post.py file, and it inherits from Django's models.Model
+class.
 
-
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    bio = models.TextField(max_length=500, blank=True)
-    location = models.CharField(max_length=30, blank=True)
-    picture = models.ImageField(blank=True, upload_to='profile_pictures')
-
-    def __str__(self):
-        return self.user.username
-```
-2. The specification of the domain services (_The profile methods_)
+The Post entity has several attributes, including the author, which is a foreign key to the User model provided by
+Django's authentication system. The title attribute is a string that represents the title of the blog post, while the
+short attribute is a shorter summary of the post's content. The body attribute is a text field that holds the main
+content of the post, and the date attribute represents the date and time the post was created.
 
 ```python
-# application/profile_services.py
+# domain/entities/post.py
 
-from abstraction.image_processor import ImageProcessor
+class Post(models.Model):
+  image_choice = (
+    ('iFrame', 'iFrame'),
+    ('image', 'image'),
+    ('bi-icon', 'bi-icon'),
+  )
 
+  author = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, null=True)
+  title = models.CharField(max_length=200)
+  image_type = models.CharField(max_length=20, choices=image_choice, default='bi-icon')
+  image = models.CharField(max_length=500, default='bi-robot')
+  short = models.CharField(max_length=255)
+  body = models.TextField(max_length=20000)
+  date = models.DateTimeField(auto_now=True)
 
-class ProfileService:
-  def __init__(self):
-    self.image_processor = ImageProcessor()
-
-  def save_profile(self, profile, new_image=False):
-    profile.save()
-
-    if new_image:
-      processed_image_path = self.image_processor.process(profile.picture.path)
-      profile.picture = processed_image_path
-      profile.save()
+  def __str__(self):
+    return f'{self.author} - {self.title}'
 ```
 
-3. The implementation of the repositories (_the database management_)
+The `__str__` method is defined to return a string representation of the object that includes the author and the title
+of the post. This ensures that when a Post object is displayed in the **Django admin panel** or any other context where
+string representation is needed, it will be displayed in a more readable format.
+
+### Part 1.b - Domain.repository
+
+The repository defines how the interface for the `post` entity access is laid out, making sure that the methods
+arguments and return types are strongly specified. In other words, the repository acts as a layer of abstraction between
+the entity and the data storage, allowing for a clear separation of concerns.
+
+Here is part of the code for the `IPostRepository` interface, which specifies the contract that the implementation of
+the PostRepository must adhere to. The create and save methods define the CRUD operations for creating and updating a
+post, respectively. The `get_all_from_user` interface method is a custom method that should, by the name of it retrieve
+all posts for a particular user and can optionally be ordered by a given field.
+
+All the methods defined here are meant to be used, which is the reason for the `NotImplementedError` exception being
+present at the end of each method. These are only a few of the methods defined in the `IPostRepository`.
+
+```python
+# domain/repository/post_repository.py
+
+class IPostRepository(ABC):
+
+  @abstractmethod
+  def create(self, sender, instance, created, **kwargs) -> Post | None:
+    raise NotImplementedError
+
+  @abstractmethod
+  def get_all_from_user(self, user_id: int, order_by: str = None) -> QuerySet:
+    raise NotImplementedError
+
+  @abstractmethod
+  def get_count_by_author(self, author_id: int) -> int:
+    raise NotImplementedError
+
+# [...]
+```
+
+### Part 2 - Infrastructure.Repository
+
+We are now implementing the interface that was previously defined. The infrastructure layer's repository is
+the lowest layer of code that should interact with the post entity. Essentially, it connects the database to the
+application logic, via Django's ORM (see: `Post.objects.`).
+
+The `PostRepository` class defines methods that will allow the application to perform various operations on post
+entities, such as creating new posts, updating existing posts, or retrieving posts based on certain criteria.
+
+The `create` method is a signal receiver that is triggered whenever a new post is saved to the database. It checks if
+the post was just created or if it already existed. If it already existed, it returns `None`. Otherwise, it creates a
+new post object with the relevant attributes from the original post and returns it.
+
+The `get_all_from_user` method retrieves all posts created by a specific user. It does this by filtering the `Post`
+objects by the user ID. If an `order_by` argument is provided, the resulting query set will be ordered accordingly.
+Otherwise, the posts will be returned in the order they were retrieved from the database.
+
+The `LikeRepository` is a class that is meant to be used solely inside the `PostRepository` class. It is used to
+provide higher-level access to other related entities; in this particular case, it is used to provide access to
+the `Like` entity. The `LikeRepository` is a part of the infrastructure layer, which means that it provides an
+implementation for a specific interface and interacts with the data storage system directly. This allows
+the `PostRepository` to perform more complex operations with the `Like` entity, without having to worry about the
+low-level details of how the data is stored and retrieved.
+
+Overall, the `PostRepository` class provides an implementation of the `IPostRepository` interface, allowing the
+application to interact with `post` entities in a standardized way. By separating the implementation details of the
+repository from the rest of the application logic, we can ensure that the code is easier to maintain and modify in the
+future.
+
 ```python
 # infrastructure/repositories/profile_repository.py
 
-from random import randint
+class PostRepository(IPostRepository):
+  likes_repo = LikeRepository()
 
-from django.contrib.auth.models import User
-from django.db.models.signals import post_save
-from django.dispatch import receiver
+  @staticmethod
+  @receiver(post_save, sender=Post)
+  def create(sender, instance, created, **kwargs) -> Post | None:
+    if created:
+      return None
 
-from abstraction.image_processor import ImageProcessor
-from blog.domain.entities.profile import Profile
-
-
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-  if created:
-    random_default_picture = f'profile_pictures/d{randint(1, 10)}.jpg'
-    Profile.objects.create(
-      user=instance,
-      picture=random_default_picture
+    return Post.objects.create(
+      author=instance.author,
+      title=instance.title,
+      image_type=instance.image_type,
+      image=instance.image,
+      short=instance.short,
+      body=instance.body
     )
 
+  def get_all_from_user(self, user_id: int, order_by: str = None) -> QuerySet:
+    posts = Post.objects.filter(author=user_id)
 
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-  instance.profile.picture.delete(save=False)
-  instance.profile.picture = ImageProcessor.process(instance.profile.picture.path)
-  instance.profile.save()
+    if order_by:
+      return posts.order_by(order_by)
+
+    return posts
+
+  # [...]
 ```
 
+### Part 3 - The implementation of the Post-Service
 
-value object: immutable / statisch
-zB kategorie
+```python
+# application/post_services.py
 
-But im using active records.
+class PostService:
+  def __init__(self):
+    self.post_repo = PostRepository()
+    self.likes_repo = LikeRepository()
+    self.comments_repo = CommentRepository()
+    self.profile_repo = ProfileService()
+
+  def get_latest_posts(self, user: User, order_by: str = None, additional_fields: bool = False) -> QuerySet:
+    posts = self.post_repo.get_all(order_by=order_by)
+
+    if additional_fields:
+      for post in posts:
+        post.comments = self.comments_repo.get_count_by_post(post_id=post.id)
+        post.likes = self.likes_repo.get_count_post(post_id=post.id)
+        self.profile_repo.add_additional_fields(post.author)
+        if user.is_authenticated:
+          post.liked = self.likes_repo.did_user_like(user_id=user.id, post_id=post.id)
+
+    return posts
+
+  def get_post_by_id(self, post_id: int, beautify: bool = False) -> Optional[Post]:
+    post = self.post_repo.get_by_id(post_id)
+
+    if post and beautify:
+      post.body = MarkdownProcessor.marker(post.body)
+
+    return post
+
+# [...]
+```
 
 ## Specification of the domain services
+
+cool 👇
+
+```mermaid
+graph LR
+  A[ProfileService] --> B{save_profile}
+  B --> C[process]
+  C --> D[save]
+```
 
 ## Implementation of the repositories
 
 ###### Back to top [▲](#domain-driven-design-in-django)
-
 
 # Tactical Design Patterns
 
