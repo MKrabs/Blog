@@ -8,7 +8,7 @@ from blog.infrastructure.serializers.post_serializer import PostSerializer
 from blog.infrastructure.serializers.profile_serializer import ProfileSerializer
 
 
-class PostAPI():
+class PostAPI:
     post_service = PostService()
     profile_service = ProfileService()
     comment_service = CommentService()
@@ -59,7 +59,7 @@ class PostAPI():
         comments = CommentSerializer.serialize(comments)
 
         context = {
-            'user': profile,
+            'profile': profile,
             'posts': posts,
             'comments': comments,
         }
@@ -70,7 +70,7 @@ class PostAPI():
 def get_param(request, param_name, default_value):
     try:
         param = int(request.GET.get(param_name))
-    except:
+    except (TypeError, ValueError):
         param = default_value
 
     return param
