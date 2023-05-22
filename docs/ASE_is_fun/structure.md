@@ -199,7 +199,7 @@ administrators to review the content and take appropriate action to ensure the s
 
 Beispiele aus Code zeigen
 
-## 💾 Definition of the entities, repositories and services
+## 📖 Definition of the entities, repositories and services
 
 Currently (commit hash
 [#`5f0837`](https://github.com/MKrabs/Blog/tree/5f0837dd26a84c0e7e2687a66cbd54fd4254c209)), all of our entities,
@@ -306,7 +306,7 @@ codebase, making it more maintainable and adaptable to future changes.
 
 We split the class into tree parts:
 
-### Part 1.a - Domain.entities
+### 🔑 Part 1.a - Domain.entities
 
 In this project, the domain model is the most atomic piece of business logic that defines the data structure of the
 application. The main entity of the system is the Post class, which is responsible for representing the blog posts in
@@ -353,7 +353,7 @@ Our Project Tree currently looks like this:
   <img src="../domain_entity.png" alt="Domain Entity (core)"/>
 </div>
 
-### Part 1.b - Domain.repository
+### 📐 Part 1.b - Domain.repository
 
 The repository defines how the interface for the `post` entity access is laid out, making sure that the methods
 arguments and return types are strongly specified. In other words, the repository acts as a layer of abstraction between
@@ -393,7 +393,7 @@ Our Project Tree currently looks like this:
   <img src="../domain_with_interface.png" alt="Domain Entity with Interface"/>
 </div>
 
-### Part 2 - Infrastructure.Repository
+### 🏙️ Part 2 - Infrastructure.Repository
 
 The infrastructure repository is responsible for implementing the behavior defined in the interface, making it the
 lowest layer of the system that interacts with the `post` entity. This approach ensures that the repository closely
@@ -499,7 +499,7 @@ Our Project Tree currently looks like this:
 Overall, the `PostRepository` class provides an implementation of the `IPostRepository` interface, allowing the
 application to interact with `post` entities in a standardized way.
 
-### Part 3 - The implementation of the Post-Service
+### 🚀 Part 3 - The implementation of the Post-Service
 
 The `PostService` implementation is located at the application layer and serves as an intermediary between the
 presentation layer (views or api) and the lower-level data access layers. Its purpose is to aggregate multiple
@@ -599,7 +599,7 @@ Our Project Tree currently looks like this:
   <img src="../application.svg" alt="Application Layer"/>
 </div>
 
-### Presentation Layer
+### 💻 Presentation Layer
 
 The presentation layer is the topmost layer in our architecture. The views layer is a part of the presentation layer and
 is responsible for rendering HTML pages that are returned to the user's browser. The URLs are mapped to views in the
@@ -695,11 +695,11 @@ decoupling of the layers has made the application more maintainable and easier t
 
 ###### Back to top [▲](#domain-driven-design-in-django)
 
-# Programming Principles
+# 🧠 Programming Principles
 
 ###### Chapter 5
 
-## 🎯🔒🧩📚🔄 SOLID Principles 
+## 🧊 SOLID Principles 
 
 In this chapter, we will explore how we refactored our code to improve adherence to the SOLID principles. By applying
 these principles, we aimed to make our codebase more maintainable, flexible, and understandable.
@@ -737,7 +737,7 @@ these principles, we aimed to make our codebase more maintainable, flexible, and
   substitution of implementations. However, we could further improve the application of DIP by utilizing dependency
   injection to provide dependencies from external sources.
 
-## GRASP principles, especially 🔗 Coupling and 🧩 Cohesion
+## ✊ GRASP principles, especially 🔗 Coupling and 🧩 Cohesion
 
 Coupling refers to the level of interdependence between classes or modules within a codebase. High coupling can lead to
 rigid code that is challenging to maintain. To address this, we refactored our project to make improvements in reducing
@@ -757,7 +757,7 @@ responsibility of a repository.
 In conclusion, I would say our refactoring efforts aligned with the GRASP principles of coupling and cohesion, and helped
 contribute to the project's overall quality and pave the way for easier maintenance and future enhancements.
 
-## DRY principle 🏜️
+## 🏜️ DRY principle
 
 Can you see the difference between these two code blocks?
 
@@ -822,58 +822,88 @@ def get_post_by_id(self, post_id: int, beautify: bool = False) -> Optional[Post]
     post.body = MarkdownProcessor.marker(post.body)
 ```
 
-
-
-# Refactoring
-
-###### Chapter 7
-
-## Identification of code smells
-
-## Application of at least two refactorings
-
-## Explanation of the approach and benefits
-
-###### Back to top [▲](#domain-driven-design-in-django)
-
-
-# Implementation of at least one Design Pattern
-
-###### Chapter 8
-
-## Justification of the pattern used
-
-## Creation of UML diagrams before and after the pattern implementation
-
-###### Back to top [▲](#domain-driven-design-in-django)
-
-
-# Persistence Layer
+# 💾 Persistence Layer
 
 ###### Chapter 9
 
 ## Implementation of the persistence layer
 
-### Repository pattern
+Let's compare the usage of the Repository pattern and the Active Record pattern in the context of your code.
 
-### Active record pattern
+### 🗄️ Repository pattern
 
-## Explanation of the approach and benefits
+In the Repository pattern, we define an interface `IPostRepository` (`domain/repository/post_repository.py`) that
+abstracts the operations related to posts. We then implement the `PostRepository` class (
+`infrastructure/repositories/post_repository.py`) that adheres to this interface and handles the persistence operations
+for posts.
+
+Usage of the Repository pattern:
+```python
+# application/post_service.py
+class PostService:
+    def __init__(self):
+        self.post_repo = PostRepository()
+
+    def create_post(self, author, title, body):
+        post = Post(author=author, title=title, body=body)
+        self.post_repo.create(post)  # Persist the post through the repository
+
+    def get_all_posts(self, order_by=None):
+        return self.post_repo.get_all(order_by=order_by)  # Retrieve all posts through the repository
+
+# Usage in views or other parts of the code
+post_service = PostService()
+post_service.create_post(author='John', title='My Post', body='Lorem ipsum...')
+all_posts = post_service.get_all_posts()
+```
+
+### 💼 Active record pattern
+
+In the Active Record pattern, the Django ORM provides a convenient and integrated way to interact with the database. Each model class (e.g., `Post`) directly extends the Django `models.Model` class and encapsulates both the data and the database operations.
+
+Usage of the Active Record pattern:
+```python
+# blog/models.py
+class Post(models.Model):
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, null=True)
+    title = models.CharField(max_length=200)
+    body = models.TextField(max_length=20000)
+    date = models.DateTimeField(auto_now=True)
+
+# Usage in views or other parts of the code
+post = Post(author='John', title='My Post', body='Lorem ipsum...')
+post.save()  # Save the post directly through the Django ORM
+
+all_posts = Post.objects.all()  # Retrieve all posts directly through the Django ORM
+```
+
+## 💡 Explanation of the approach and benefits
+
+In the Repository pattern, the repository class acts as an intermediary between the application/business logic and the
+data access layer. It provides a separation of concerns and allows for flexibility and testability. However, it adds a
+layer of abstraction.
+
+On the other hand, the Active Record pattern, as implemented by the Django ORM, integrates the data access logic within
+the model classes themselves. It provides a more straightforward and concise approach but can result in tighter coupling
+between the data access and business logic.
+
+Both patterns have their trade-offs, and the choice between them depends on the specific needs of the project, the
+complexity of the data access layer, and the desired level of abstraction and flexibility.
 
 ###### Back to top [▲](#domain-driven-design-in-django)
 
 
-# Unit Testing
+# ✅ Unit Testing
 
 ###### Chapter 10
 
-## Unit tests
+## 🧫 Unit tests
 
-## Integration tests
+## 🧱 Integration tests
 
-## Smoke tests
+## 🚬 Smoke tests
 
-## Use of mocks in testing
+## 🃏 Use of mocks in testing
 
 ## Adherence to ATRIP rules
 
@@ -888,15 +918,15 @@ def get_post_by_id(self, post_id: int, beautify: bool = False) -> Optional[Post]
 ###### Back to top [▲](#domain-driven-design-in-django)
 
 
-# Conclusion
+# 🌟 Conclusion
 
 ###### and or summary
 
-## Summary of the work done
+## 📋 Summary of the work done
 
-## Review of the benefits of using DDD principles
+## 🫠 Review of the benefits of using DDD principles
 
-## Future work and improvements
+## 🔮 Future work and improvements
 
 ###### Back to top [▲](#domain-driven-design-in-django)
 
@@ -908,6 +938,7 @@ def get_post_by_id(self, post_id: int, beautify: bool = False) -> Optional[Post]
 * https://docs.djangoproject.com/en/4.2/misc/design-philosophies/#models
 * https://www.cosmicpython.com/book/preface (very nice)
 * https://www.cosmicpython.com/book/chapter_02_repository.html
+* https://en.wikipedia.org/wiki/Domain-driven_design
 * https://wiki.c2.com/?CouplingAndCohesion
 * https://iktakahiro.dev/python-ddd-onion-architecture
 * https://www.amazon.com/Domain-Driven-Design-Tackling-Complexity-Software/dp/0321125215
@@ -921,12 +952,15 @@ def get_post_by_id(self, post_id: int, beautify: bool = False) -> Optional[Post]
 * https://io.made.com/repository-and-unit-of-work-pattern-in-python
 * https://codingcanvas.com/hexagonal-architecture/
 * https://www.reddit.com/r/Python/comments/9wbk8k/repository_pattern_with_sqlalchemy/
+* https://softwareengineering.stackexchange.com/questions/284865/are-the-repository-pattern-and-active-record-pattern-compatible
+* https://en.wikipedia.org/wiki/Active_record_pattern
+* 
 
 ###### Video References
 
-* https://www.youtube.com/watch?v=QVTWvOzktbE
 * https://www.youtube.com/watch?v=hv-LiKQgN90
 * https://www.youtube.com/watch?v=Ru2T4fu3bGQ
+* https://www.youtube.com/watch?v=QVTWvOzktbE
 
 ###### Back to top [▲](#domain-driven-design-in-django)
 
