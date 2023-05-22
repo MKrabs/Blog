@@ -292,25 +292,8 @@ concerns between domain entities and data storage.
 
 One approach to enhance the refactoring process is to incorporate the repository pattern as the basis for organizing the
 data access layer. The repository pattern provides an abstraction layer between the domain model and the underlying data
-storage, such as a database. By adding this pattern, we can further improve the separation of concerns and increase the
-maintainability and testability of the codebase.
-
-To apply the repository pattern, we introduce the concept of a repository interface, which defines the contract for
-performing database operations related to the Post entity. We create the Post-Repository interface in the
-`blog/domain/repository/post_repository.py` file to specify the methods that the PostRepository class will implement.
-This separation allows us to switch between different data storage implementations without affecting the rest of the
-application.
-
-The implementation of the repository is then placed in the infrastructure layer, specifically the
-`blog/infrastructure/repositories/post_repository.py` file. The PostRepository class contains the logic for interacting
-with the database, including creating and retrieving posts. Separating the data access logic into a dedicated repository
-class enables us to isolate and test these operations independently, promoting code reusability and maintainability.
-
-In addition to the repository pattern, we introduce the PostService class in the application/post_services.py file. This
-class encapsulates the business logic related to the Post entity, such as retrieving the latest posts or creating a new
-post. By separating the business logic from the data access code, we achieve better code organization and modularity.
-
-Overall, by adopting the repository pattern in the refactoring process, we enhance the architecture of the application.
+storage, such as a database. By adopting the repository pattern in the refactoring process, we enhance the architecture
+of the application.
 The domain model represents the data structure, the domain repository handles the database operations, and the domain
 services encapsulate the business logic. This modular approach simplifies understanding, testing, and extending the
 codebase, making it more maintainable and adaptable to future changes.
@@ -321,13 +304,15 @@ We split the class into tree parts:
 
 In this project, the domain model is the most atomic piece of business logic that defines the data structure of the
 application. The main entity of the system is the Post class, which is responsible for representing the blog posts in
-the database. This class is defined in the domain/entities/post.py file, and it inherits from Django's models.Model
-class.
+the database. This class is defined in the `blog/domain/entities/post.py` file, and it inherits from Django's
+models.Model class.
 
-The Post entity has several attributes, including the author, which is a foreign key to the User model provided by
-Django's authentication system. The title attribute is a string that represents the title of the blog post, while the
-short attribute is a shorter summary of the post's content. The body attribute is a text field that holds the main
-content of the post, and the date attribute represents the date and time the post was created.
+The Post entity has several attributes, including the **author**, which is a foreign key to the User model provided by
+Django's authentication system. The **title** attribute is a string that represents the title of the blog post, while
+the **short** attribute is a shorter summary of the post's content. The **body** attribute is a text field that holds
+the main content of the post, and the **date** attribute represents the date and time the post was created. Pretty
+trivial stuff, but important to keep seperated from the rest of the project. This is what the domain entity looks like
+after extracting its core attributes:
 
 ```python
 # domain/entities/post.py
@@ -351,9 +336,16 @@ class Post(models.Model):
     return f'{self.author} - {self.title}'
 ```
 
-The `__str__` method is defined to return a string representation of the object that includes the author and the title
-of the post. This ensures that when a Post object is displayed in the **Django admin panel** or any other context where
-string representation is needed, it will be displayed in a more readable format.
+The `__str__` method purely for the Django Admin panel and does not contribute to any real part of the project. It's
+defined to return a string representation of the object that includes the author and the title of the post. This ensures
+that when a Post object is displayed in the **Django admin panel** or any other context where string representation is
+needed, it will be displayed in a more readable format instead of `post (1)`.
+
+Our Project Tree currently looks like this:
+
+<div style="text-align:center">
+  <img src="../domain_entity.png" alt="Domain Entity" width="105"/>
+</div>
 
 ### Part 1.b - Domain.repository
 
@@ -387,7 +379,13 @@ class IPostRepository(ABC):
 ```
 
 All the methods defined here are meant to be used, which is the reason for the `NotImplementedError` exception being
-present at the end of each method. These are only a few of the methods defined in the `IPostRepository`.
+present at the end of each method. These are only a few of the most primitive and necessary methods defined in there.
+
+Our Project Tree currently looks like this:
+
+<div style="text-align:center">
+  <img src="../domain_with_interface.png" alt="Domain Entity with Interface"/>
+</div>
 
 ### Part 2 - Infrastructure.Repository
 
@@ -432,11 +430,16 @@ class PostRepository(IPostRepository):
   # [...]
 ```
 
-The `create` method is a signal receiver that is triggered whenever a new post is saved to the database.
-Django signals are a way to allow decoupled applications to get notified when certain events occur. If a Post is being
-created by Django's ORM, the `create` method will be called, for us, after the post creation signal is sent.
-It checks if the post was just created or if it already existed. If it already existed, it returns `None`. Otherwise,
-it creates a new post object with the relevant attributes from the request and returns it.
+The `create` method is a _signal receiver_ that is triggered whenever a new post is saved to the database.
+Django signals are a way to allow decoupled applications to get notified when certain events occur. They can be
+compared to the event listeners in JavaScript. If a Post is being created by Django's ORM, the `create` method will be
+called, for us, after the post creation signal is sent. It checks if the post was just created or if it already existed.
+If it already existed, it returns `None`. Otherwise, it creates a new post object with the relevant attributes from the
+request and returns it.
+
+Since I want to leverage Django's ORM as much as possible, I've decided to not implement the `update` method myself. The
+`update` method is already implemented by Django's ORM, so there is no need to implement it again. I merely need to
+access it via the `Post.objects.create` method.
 
 `get_all_from_user` does exactly what its name suggests: it retrieves all posts created by a specific user. It does this
 by filtering the `Post` objects by the user ID. If an `order_by` argument is provided, the resulting query set will be
@@ -451,10 +454,44 @@ infrastructure layer as the `PostRepository`, which means that it provides an im
 and interacts with the data storage system directly. This allows the `PostRepository` to perform more complex operations
 with the `Like` entity, without having to worry about the low-level details of how the data is stored and retrieved.
 
+In addition to the `PostRepository` class and its related files, there is another set of almost hidden files that play a
+crucial role in the codebase: the serialization files. These files are responsible for converting the entities, such
+as `Post` and `Like`, into JSON format, allowing for further processing or transfer of data. These files can be found in
+the `infrastructure/serializers` directory and contain classes or functions that define the serialization and
+deserialization logic. By separating the serialization concerns into dedicated files, we ensure a clean separation of
+responsibilities and maintain the flexibility to adapt the serialization process to different requirements or formats as
+needed. This is the code for the `PostSerializer` class:
+
+```python
+# infrastructure/serializers/post_serializer.py
+
+class PostSerializer:
+  @classmethod
+  def serialize(cls, posts: QuerySet):
+    serialized_posts = []
+
+    for post in posts:
+      serialized_posts.append({
+        'id': post.id,
+        'author': post.author.username or None,
+        'title': post.title,
+        'body': post.body,
+        'date': post.date.strftime('%Y-%m-%d %H:%M:%S'),
+        'image': post.image,
+        'image_type': post.image_type,
+      })
+
+    return serialized_posts
+```
+
+Our Project Tree currently looks like this:
+
+<div style="text-align:center">
+  <img src="../infrastucture.png" alt="Infrastructure Layer"/>
+</div>
+
 Overall, the `PostRepository` class provides an implementation of the `IPostRepository` interface, allowing the
-application to interact with `post` entities in a standardized way. By separating the implementation details of the
-repository from the rest of the application logic, we can ensure that the code is easier to maintain and modify in the
-future.
+application to interact with `post` entities in a standardized way.
 
 ### Part 3 - The implementation of the Post-Service
 
@@ -504,7 +541,57 @@ One of the main methods of the `PostService` is `get_latest_posts`, which retrie
 repository and aggregates additional fields related to each post, such as the _number of comments and likes_. If the
 `additional_fields` parameter is set to `True`, the method adds these fields to each post and checks if the user has
 liked the post (or not). This method serves as an example of how the `PostService` can perform complex operations that
-involve multiple aspects of the `post` entity and provide a simplified interface for the `views` or `APIs` to consume.
+involve multiple aspects of the `post` entity and provide a simplified interface for the `views` or `APIs` to consume
+in the presentation layer.
+
+The forms used in the frontend are an integral part of the application layer of the project and serve as a means to
+collect and process user input. These forms are responsible for handling the updating of user information and profiles.
+The `FormUpdater` class demonstrates this functionality by generating the necessary forms based on the request method
+and the user's username. The forms, such as `UpdateUserForm`, `UpdateProfileInfoForm`, and `UpdateProfilePictureForm`,
+validate and save the submitted data, ensuring that the user's information and profile are accurately updated. By
+encapsulating the form logic in a dedicated folder within the application layer, we promote separation of concerns and
+maintain a clear structure for handling user interactions in the frontend.
+
+The following code snippet shows the `FormUpdater` class, which is responsible for generating the necessary forms needed
+to update the user's information and profile:
+
+```python
+# application/forms/profile_form_service.py
+
+class FormUpdater:
+  @classmethod
+  def generateForms(cls, request, user_name):
+    if request.method == 'POST' and request.user.username == user_name:
+      user_form = UpdateUserForm(request.POST, instance=request.user)
+      profile_form = UpdateProfileInfoForm(request.POST, request.FILES, instance=request.user.profile)
+      profile_picture_form = UpdateProfilePictureForm(request.POST, request.FILES, instance=request.user.profile)
+
+      if user_form.is_valid():
+        user_form.save()
+
+      if profile_form.is_valid():
+        profile_form.save()
+
+      if profile_picture_form.is_valid() and not profile_picture_form.fields['picture']:
+        profile_picture_form.save(True)
+
+    elif request.user.username == user_name:
+      user_form = UpdateUserForm(instance=request.user)
+      profile_form = UpdateProfileInfoForm(instance=request.user.profile)
+      profile_picture_form = UpdateProfilePictureForm(instance=request.user.profile)
+    else:
+      user_form = UpdateUserForm()
+      profile_form = UpdateProfileInfoForm()
+      profile_picture_form = UpdateProfilePictureForm()
+
+    return user_form, profile_form, profile_picture_form
+```
+
+Our Project Tree currently looks like this:
+
+<div style="text-align:center">
+  <img src="../application.svg" alt="Application Layer"/>
+</div>
 
 ## Presentation Layer
 
