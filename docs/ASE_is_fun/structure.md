@@ -5,7 +5,7 @@
 [//]: # (by Marc Gökce, 2023)
 
 
-# Domain Driven Design in Django
+# 🏗️ Domain Driven Design in Django
 
 ###### Sperrvermerk
 
@@ -71,7 +71,7 @@ _Use at your own risk, lmao._
 
 ###### Chapter 1
 
-## Overview of the project
+## 📋 Overview of the Project
 
 <div style="text-align:center">
   <img style="max-height: 200px" src="resources/banner.png" alt="banner"/>
@@ -125,7 +125,7 @@ as it existed before the start of this project.
 ###### Back to top [▲](#domain-driven-design-in-django)
 
 
-# Analysis of Ubiquitous Language
+# 💬 Analysis of Ubiquitous Language
 
 ###### Chapter 2
 
@@ -193,13 +193,13 @@ administrators to review the content and take appropriate action to ensure the s
 ###### Back to top [▲](#domain-driven-design-in-django)
 
 
-# Domain Model
+# 🌍 Domain Model
 
 ###### Chapter 3
 
 Beispiele aus Code zeigen
 
-## Definition of the entities, repositories and services
+## 💾 Definition of the entities, repositories and services
 
 Currently (commit hash
 [#`5f0837`](https://github.com/MKrabs/Blog/tree/5f0837dd26a84c0e7e2687a66cbd54fd4254c209)), all of our entities,
@@ -294,7 +294,7 @@ concerns between domain entities and data storage.
 
 ###### Back to top [▲](#domain-driven-design-in-django)
 
-## Refactoring the codebase
+## 🔀 Refactoring the Codebase
 
 One approach to enhance the refactoring process is to incorporate the repository pattern as the basis for organizing the
 data access layer. The repository pattern provides an abstraction layer between the domain model and the underlying data
@@ -599,7 +599,7 @@ Our Project Tree currently looks like this:
   <img src="../application.svg" alt="Application Layer"/>
 </div>
 
-## Presentation Layer
+### Presentation Layer
 
 The presentation layer is the topmost layer in our architecture. The views layer is a part of the presentation layer and
 is responsible for rendering HTML pages that are returned to the user's browser. The URLs are mapped to views in the
@@ -699,45 +699,45 @@ decoupling of the layers has made the application more maintainable and easier t
 
 ###### Chapter 5
 
-## SOLID principles
+## 🎯🔒🧩📚🔄 SOLID Principles 
 
 In this chapter, we will explore how we refactored our code to improve adherence to the SOLID principles. By applying
 these principles, we aimed to make our codebase more maintainable, flexible, and understandable.
 
-- **Single Responsibility Principle (S)**
+- **🎯 Single Responsibility Principle (S)**
 
   To adhere to the SRP, we focused on separating concerns and reducing the responsibilities of our classes. In the
   previous version, the Profile class was responsible for both user profile management and image manipulation, which
   violated the SRP. We refactored the code and moved the image processing logic into a separate class or module,
   ensuring that each class has a single responsibility.
 
-- **Open/Closed Principle (O)**
+- **🔒 Open/Closed Principle (O)**
 
   To align with the OCP, we made our code more extensible by allowing for easy additions or modifications without
   modifying existing code. In the updated version, the Post class can be extended with new properties or behaviors
   without modifying its existing implementation. Similarly, the PostRepository and PostService classes can be extended
   or replaced without impacting their clients.
 
-- **Liskov Substitution Principle (L)**
+- **🧩 Liskov Substitution Principle (L)**
 
   As our code did not involve any inheritance or subclassing, the LSP was not directly applicable. Therefore, we did not
   encounter violations or adherence to this principle during the refactoring process.
 
-- **Interface Segregation Principle (I)**
+- **📚 Interface Segregation Principle (I)**
 
   To follow the ISP, we focused on defining interfaces or interface contracts that are specific and focused on the needs
   of clients. In our refactored code, we introduced the IPostRepository interface, which abstracts the methods related
   to post repository functionality. This allows clients of the repository to depend only on the methods they require,
   avoiding unnecessary dependencies.
 
-- **Dependency Inversion Principle (D)**
+- **🔄 Dependency Inversion Principle (D)**
 
   We aimed to apply the DIP by depending on abstractions rather than concrete implementations. In the updated code, the
   PostRepository and PostService classes depend on the IPostRepository interface, promoting flexibility and easier
   substitution of implementations. However, we could further improve the application of DIP by utilizing dependency
   injection to provide dependencies from external sources.
 
-## GRASP principles, especially Coupling and Cohesion
+## GRASP principles, especially 🔗 Coupling and 🧩 Cohesion
 
 Coupling refers to the level of interdependence between classes or modules within a codebase. High coupling can lead to
 rigid code that is challenging to maintain. To address this, we refactored our project to make improvements in reducing
@@ -757,7 +757,7 @@ responsibility of a repository.
 In conclusion, I would say our refactoring efforts aligned with the GRASP principles of coupling and cohesion, and helped
 contribute to the project's overall quality and pave the way for easier maintenance and future enhancements.
 
-## DRY principle
+## DRY principle 🏜️
 
 Can you see the difference between these two code blocks?
 
@@ -777,14 +777,39 @@ if c.author:
     c.author.total_likes = Like.objects.filter(author=c.author).count()
 ```
 
-This is not what good code smells like. To fix this, we will:
-- rethink the way we retrieve likes
-  - For this, the likes per user will be lazyly aggregated and counted whenever an event is fired.
-- implement a method in the repository class to retrieve these infos called `add` and using `overload` from the typing 
-  module
-```python
+This is not what good code smells like. 
 
+In our project, we made significant improvements to adhere to the DRY (Don't Repeat Yourself) principle. One notable
+example is the elimination of code duplication in retrieving information about authors and dynamic information about
+them, such as the number of blogs posted, likes given or comments written.
+
+Previously, we had separate code blocks that performed the same actions for different variables, resulting in redundant
+and error-prone code. After the refactoring, we do not write the same code twice, since we only need to pass an argument
+to the function to get the desired result of retrieving additional information about whatever.
+
+This is the code that we had before the refactoring:
+
+## 🤢 Bad Code
+
+```python
+# blog/views.py
+def index(request, page=1):
+    latest_posts = Post.objects.order_by('-date')
+
+    for p in latest_posts:
+        p.comments = Comment.objects.filter(post_id=p.id).count()
+        p.likes = Like.objects.filter(post_id=p.id).count()
+        p.liked = True if Like.objects.filter(post_id=p.id, author=request.user.id) else False
+
+        if p.author:
+            p.author.profile.bio = marker(p.author.profile.bio)
+            p.author.total_posts = Post.objects.filter(author=p.author).count()
+            p.author.total_comments = Comment.objects.filter(author=p.author).count()
+            p.author.total_likes = Like.objects.filter(author=p.author).count()
 ```
+
+## 😎 Good Code
+
 ```python
 # presentation/views/post_view.py
 blog_post = cls.post_service.get_post_by_id(post_id=post_id, beautify=beautify)
@@ -795,25 +820,8 @@ def get_post_by_id(self, post_id: int, beautify: bool = False) -> Optional[Post]
 
   if post and beautify:
     post.body = MarkdownProcessor.marker(post.body)
-
 ```
 
-## Explanation of the approach and benefits
-
-###### Back to top [▲](#domain-driven-design-in-django)
-
-
-# Implementation of Clean Architecture
-
-###### Chapter 6
-
-## Plan and justification of a layered architecture
-
-## Implementation of at least two layers
-
-## Explanation of the approach and benefits
-
-###### Back to top [▲](#domain-driven-design-in-django)
 
 
 # Refactoring
