@@ -1,5 +1,5 @@
 from django.db.models import QuerySet
-from django.db.models.signals import post_save, pre_delete
+from django.db.models.signals import post_save, pre_delete, post_delete
 from django.dispatch import receiver
 
 from blog.domain.entities.post import Post
@@ -35,7 +35,7 @@ class PostRepository(IPostRepository):
     @staticmethod
     @receiver(pre_delete, sender=Post)
     def delete(sender, instance, **kwargs) -> None:
-        instance.delete()
+        pass
 
     def get_by_id(self, post_id) -> Post:
         return Post.objects.get(id=post_id)
