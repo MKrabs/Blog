@@ -251,6 +251,12 @@ def save_user_profile(sender, instance, **kwargs):
   instance.profile.save()
 ```
 
+In its primitive form, our project structure looked as follows:
+
+<div style="text-align:center">
+  <img src="../primitiv.png" alt="Primitive project structure"/>
+</div>
+
 As you can see there are a lot of things going on in this file, and it's not very clear what is the purpose of each
 thing. This is the only code that defines the profile model, and every action related to it (creating, updating, saving,
 deleting, aggregating, etc.) is manually writing anywhere in the project. There are no repositories or services defined.
@@ -344,7 +350,7 @@ needed, it will be displayed in a more readable format instead of `post (1)`.
 Our Project Tree currently looks like this:
 
 <div style="text-align:center">
-  <img src="../domain_entity.png" alt="Domain Entity" width="105"/>
+  <img src="../domain_entity.png" alt="Domain Entity (core)"/>
 </div>
 
 ### Part 1.b - Domain.repository
@@ -642,6 +648,11 @@ method:
 ```python
 # blog/presentation/views/post_view.py
 
+from blog.application.comment_service import CommentService
+from blog.application.post_service import PostService
+from blog.application.profile_service import ProfileService
+
+
 class PostView:
   post_service = PostService()
   comment_service = CommentService()
@@ -668,26 +679,21 @@ class PostView:
     return render(request, 'blog/post.html', context)
 ```
 
+Our Project Tree currently looks like this:
+
+<div style="text-align:center">
+  <img src="../presentation.png" alt="Presentation Layer"/>
+</div>
+
 Overall, the presentation layer provides the user-facing interface for the application. The views and API are
 responsible for processing requests, retrieving data, and creating responses. The URLs are used to map the requests to
 the appropriate views or API services, allowing for a clear separation of concerns within the application.
 
-###### Back to top [▲](#domain-driven-design-in-django)
-
-# Tactical Design Patterns
-
-###### Chapter 4
-
-## Implementation of Domain Events
-
-## Use of Factory and/or Builder patterns
-
-## Application of Specification pattern
-
-## Explanation of the approach and benefits
+To summarize, the repository pattern helped us to separate the data access logic from the business logic. The
+Project tree has significantly changed since the beginning of the chapter, both in size and complexity, but the
+decoupling of the layers has made the application more maintainable and easier to understand. :)
 
 ###### Back to top [▲](#domain-driven-design-in-django)
-
 
 # Programming Principles
 
@@ -695,11 +701,66 @@ the appropriate views or API services, allowing for a clear separation of concer
 
 ## SOLID principles
 
+In this chapter, we will explore how we refactored our code to improve adherence to the SOLID principles. By applying
+these principles, we aimed to make our codebase more maintainable, flexible, and understandable.
+
+- **Single Responsibility Principle (S)**
+
+  To adhere to the SRP, we focused on separating concerns and reducing the responsibilities of our classes. In the
+  previous version, the Profile class was responsible for both user profile management and image manipulation, which
+  violated the SRP. We refactored the code and moved the image processing logic into a separate class or module,
+  ensuring that each class has a single responsibility.
+
+- **Open/Closed Principle (O)**
+
+  To align with the OCP, we made our code more extensible by allowing for easy additions or modifications without
+  modifying existing code. In the updated version, the Post class can be extended with new properties or behaviors
+  without modifying its existing implementation. Similarly, the PostRepository and PostService classes can be extended
+  or replaced without impacting their clients.
+
+- **Liskov Substitution Principle (L)**
+
+  As our code did not involve any inheritance or subclassing, the LSP was not directly applicable. Therefore, we did not
+  encounter violations or adherence to this principle during the refactoring process.
+
+- **Interface Segregation Principle (I)**
+
+  To follow the ISP, we focused on defining interfaces or interface contracts that are specific and focused on the needs
+  of clients. In our refactored code, we introduced the IPostRepository interface, which abstracts the methods related
+  to post repository functionality. This allows clients of the repository to depend only on the methods they require,
+  avoiding unnecessary dependencies.
+
+- **Dependency Inversion Principle (D)**
+
+  We aimed to apply the DIP by depending on abstractions rather than concrete implementations. In the updated code, the
+  PostRepository and PostService classes depend on the IPostRepository interface, promoting flexibility and easier
+  substitution of implementations. However, we could further improve the application of DIP by utilizing dependency
+  injection to provide dependencies from external sources.
+
 ## GRASP principles, especially Coupling and Cohesion
+
+Coupling refers to the level of interdependence between classes or modules within a codebase. High coupling can lead to
+rigid code that is challenging to maintain. To address this, we refactored our project to make improvements in reducing
+coupling.
+
+The `Post` class, responsible for representing a post entity, was successfully decoupled from other classes or modules.
+It no longer has direct dependencies on unrelated components (being accessed directly my the `views`). To achieve loose
+coupling between components, we introduced interfaces as abstractions. For example, the `PostRepository` class now
+depends on the abstract `IPostRepository` interface.
+
+Cohesion, on the other hand, refers to the degree to which the responsibilities within a module or class are related and
+focused. High cohesion is desirable as it leads to more maintainable and understandable code.
+
+The `PostRepository` class focused solely on persistence-related operations for posts, aligning with the single
+responsibility of a repository.
+
+In conclusion, I would say our refactoring efforts aligned with the GRASP principles of coupling and cohesion, and helped
+contribute to the project's overall quality and pave the way for easier maintenance and future enhancements.
 
 ## DRY principle
 
 Can you see the difference between these two code blocks?
+
 ```python
 if p.author:
     p.author.profile.bio = marker(p.author.profile.bio)
@@ -721,6 +782,21 @@ This is not what good code smells like. To fix this, we will:
   - For this, the likes per user will be lazyly aggregated and counted whenever an event is fired.
 - implement a method in the repository class to retrieve these infos called `add` and using `overload` from the typing 
   module
+```python
+
+```
+```python
+# presentation/views/post_view.py
+blog_post = cls.post_service.get_post_by_id(post_id=post_id, beautify=beautify)
+
+# application/post_service.py
+def get_post_by_id(self, post_id: int, beautify: bool = False) -> Optional[Post]:
+  post = self.post_repo.get_by_id(post_id)
+
+  if post and beautify:
+    post.body = MarkdownProcessor.marker(post.body)
+
+```
 
 ## Explanation of the approach and benefits
 
