@@ -48,7 +48,7 @@ _Use at your own risk, lmao._
     - [Explanation of the approach and benefits](#explanation-of-the-approach-and-benefits-3)
 - [Implementation of at least one Design Pattern](#implementation-of-at-least-one-design-pattern)
     - [Justification of the pattern used](#justification-of-the-pattern-used)
-    - [Creation of UML diagrams before and after the pattern implementation](#creation-of-uml-diagrams-before-and-after-the-pattern-implementation)
+    - [Creation of UML diagrams before and after the pattern implementation](#creation-of-uml-diagrams-before-and-after)
 - [Persistence Layer](#persistence-layer)
     - [Implementation of the persistence layer](#implementation-of-the-persistence-layer)
     - [Explanation of the approach and benefits](#explanation-of-the-approach-and-benefits-4)
@@ -201,7 +201,9 @@ Beispiele aus Code zeigen
 
 ## Definition of the entities, repositories and services
 
-Currently, all of our entities, repositories, and services are defined in the `models.py` file. This is not ideal, as it
+Currently (commit hash
+[#`5f0837`](https://github.com/MKrabs/Blog/tree/5f0837dd26a84c0e7e2687a66cbd54fd4254c209)), all of our entities,
+repositories, and services are defined in the `models.py` file. This is not ideal, as it
 makes it difficult to identify the domain model and understand the relationships between the different entities. To
 show you one example, we will look at how our users profile have been structured inside the `models.py` file:
 
@@ -276,7 +278,7 @@ responsibility principle, as the view is responsible for handling the like/unlik
 for interacting with the database. This makes it difficult to understand what the view is doing, expanding the scope of
 the view, and making it more difficult to test.
 
-_Sounds bad, because it is bad._
+> _Sounds bad, because it is bad._
 
 Refactoring a codebase is not only about cleaning it up, but also about making sure it is efficient and easy to
 understand. In the code provided, there is a violation of the single responsibility principle, as the liked view is
@@ -284,24 +286,34 @@ responsible for interacting with the database while also handling the like/unlik
 using the domain-driven design (DDD) approach, which makes use of the repository pattern to create a clear separation of
 concerns between domain entities and data storage.
 
-The first part of the refactoring is defining the domain model, which in this case is the Post entity. The domain model
-only consists of the Post class and its attributes, which are defined in the domain/entities/post.py file. The purpose
-of the domain model is to represent the data structure that the application will work with.
+###### Back to top [▲](#domain-driven-design-in-django)
 
-The next step is to define the interface for the domain repository. In this case, the IPostRepository interface is
-defined in the domain/repository/post_repository.py file. The interface specifies the methods that the PostRepository
-class will implement to manage the database operations for the Post entity. By abstracting the database management, it
-will be easier to test and understand the codebase.
+## Refactoring the codebase
 
-The final part of the refactoring is to implement the repositories and services in the infrastructure layer. The
-implementation of the PostRepository is defined in the infrastructure/repositories/post_repository.py file. The purpose
-of the repository is to handle the database operations such as creating and retrieving posts. The PostService class is
-also defined in the application/post_services.py file, and it encapsulates the business logic for the Post entity, such
-as retrieving the latest posts or creating a new post.
+One approach to enhance the refactoring process is to incorporate the repository pattern as the basis for organizing the
+data access layer. The repository pattern provides an abstraction layer between the domain model and the underlying data
+storage, such as a database. By adding this pattern, we can further improve the separation of concerns and increase the
+maintainability and testability of the codebase.
 
-By splitting the code into these three parts, it will be easier to understand and test the codebase. The domain model
-represents the data structure, the domain repository handles the database operations, and the domain services handle the
-business logic. The codebase will be more modular, making it easier to add new features or refactor existing ones.
+To apply the repository pattern, we introduce the concept of a repository interface, which defines the contract for
+performing database operations related to the Post entity. We create the Post-Repository interface in the
+`blog/domain/repository/post_repository.py` file to specify the methods that the PostRepository class will implement.
+This separation allows us to switch between different data storage implementations without affecting the rest of the
+application.
+
+The implementation of the repository is then placed in the infrastructure layer, specifically the
+`blog/infrastructure/repositories/post_repository.py` file. The PostRepository class contains the logic for interacting
+with the database, including creating and retrieving posts. Separating the data access logic into a dedicated repository
+class enables us to isolate and test these operations independently, promoting code reusability and maintainability.
+
+In addition to the repository pattern, we introduce the PostService class in the application/post_services.py file. This
+class encapsulates the business logic related to the Post entity, such as retrieving the latest posts or creating a new
+post. By separating the business logic from the data access code, we achieve better code organization and modularity.
+
+Overall, by adopting the repository pattern in the refactoring process, we enhance the architecture of the application.
+The domain model represents the data structure, the domain repository handles the database operations, and the domain
+services encapsulate the business logic. This modular approach simplifies understanding, testing, and extending the
+codebase, making it more maintainable and adaptable to future changes.
 
 We split the class into tree parts:
 
