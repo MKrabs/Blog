@@ -116,11 +116,6 @@ as it existed before the start of this project.
 
 ###### Chapter 2
 
-- [x] Überlegen wie domaine aussieht
-- [ ] was macht diese aus.
-- [x] was sind die wichtigsten Begriffe
-- [x] was sind die wichtigsten Konzepte
-
 ## 🔖 Domain Terms
 
 The Analysis of Ubiquitous Language is a crucial step in the development of any software system, as it helps to
@@ -819,6 +814,8 @@ contribute to the project's overall quality and pave the way for easier maintena
 Can you see the difference between these two code blocks?
 
 ```python
+# blog/views.py#L47
+
 if p.author:
     p.author.profile.bio = marker(p.author.profile.bio)
     p.author.total_posts = Post.objects.filter(author=p.author).count()
@@ -827,6 +824,8 @@ if p.author:
 ```
 
 ```python
+# blog/views.py#L98
+
 if c.author:
     c.author.profile.bio = marker(c.author.profile.bio)
     c.author.total_posts = Post.objects.filter(author=c.author).count()
@@ -959,6 +958,31 @@ complexity of the data access layer, and the desired level of abstraction and fl
 ###### Chapter 6
 
 ## 🕹️ Manually testing
+
+visit: https://mkrabs.de or run it locally, via:
+```bash
+# Create virtual environment
+python -m venv /path/to/new/virtual/environment
+```
+
+```bash
+# Install requirements
+pip install -r requirements.txt
+```
+
+```bash
+# Run server
+python manage.py runserver
+```
+
+or via docker: TODO
+
+```bash
+docker build -t my-django-app .
+docker run -p my-django-app
+```
+
+Open: http://localhost:8000
 
 ## 🧫 Unit tests
 
