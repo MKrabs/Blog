@@ -5,67 +5,52 @@
 [//]: # (by Marc Gökce, 2023)
 
 
-# 🏗️ Domain Driven Design in Django
+# 🏗️ Domain Driven Design in Django 🐍
 
 ###### Sperrvermerk
 
-This project is a restructuring of my existing blog site (www.mkrabs.de) using Domain Driven Design principles, as
+> This project is a restructuring of my existing blog site (www.mkrabs.de) using Domain Driven Design principles, as
 part of the Advanced Software Engineering course in the 6th semester at the Duale Hochschule of Karlsruhe. The project
 code is publicly available on GitHub, but please note that I don't take any responsibility for the use of this
-code / architecture or other mishaps you might write in other projects. I can't be held liable for any negative
-outcomes or poor grades resulting from the use of this code, as it is intended for educational purposes only.
-
-_Use at your own risk, lmao._
+code / architecture or other mishaps you might write in other projects. I am not liable for any negative
+outcomes or poor grades resulting from the use of this code, as it's intended for educational purposes only. Everything
+is given **as is**. Since every developer knows: more emojis → faster code, I have giving myself the permission to
+throw many emojis in here 🦀.
+>
+> _Use at your own risk, lmao._
 
 ###### Table of Contents
 
 - [Introduction](#introduction)
-    - [Overview of the project](#overview-of-the-project)
-    - [Description of the requirements](#description-of-the-requirements)
-    - [Explanation of the approach](#explanation-of-the-approach)
+  - 📋 Overview of the Project
+  - 🚧 Description of the requirements
+  - 📌 Explanation of the approach
 - [Analysis of Ubiquitous Language](#analysis-of-ubiquitous-language)
+  - 🔖 Domain Terms
 - [Domain Model](#domain-model)
-    - [Definition of the entities, value objects, and aggregates](#definition-of-the-entities-services-and-repositories)
-    - [Specification of the domain services](#specification-of-the-domain-services)
-    - [Implementation of the repositories](#implementation-of-the-repositories)
-- [Tactical Design Patterns](#tactical-design-patterns)
-    - [Implementation of Domain Events](#implementation-of-domain-events)
-    - [Use of Factory and/or Builder patterns](#use-of-factory-andor-builder-patterns)
-    - [Application of Specification pattern](#application-of-specification-pattern)
-    - [Explanation of the approach and benefits](#explanation-of-the-approach-and-benefits)
+  - 📖 Definition of the entities, repositories and services
+  - 🔀 Refactoring the Codebase
 - [Programming Principles](#programming-principles)
-    - [SOLID principles](#solid-principles)
-    - [GRASP principles, especially Coupling and Cohesion](#grasp-principles-especially-coupling-and-cohesion)
-    - [DRY principle](#dry-principle)
-    - [Explanation of the approach and benefits](#explanation-of-the-approach-and-benefits-1)
-- [Implementation of Clean Architecture](#implementation-of-clean-architecture)
-    - [Plan and justification of a layered architecture](#plan-and-justification-of-a-layered-architecture)
-    - [Implementation of at least two layers](#implementation-of-at-least-two-layers)
-    - [Explanation of the approach and benefits](#explanation-of-the-approach-and-benefits-2)
-- [Refactoring](#refactoring)
-    - [Identification of code smells](#identification-of-code-smells)
-    - [Application of at least two refactorings](#application-of-at-least-two-refactorings)
-    - [Explanation of the approach and benefits](#explanation-of-the-approach-and-benefits-3)
-- [Implementation of at least one Design Pattern](#implementation-of-at-least-one-design-pattern)
-    - [Justification of the pattern used](#justification-of-the-pattern-used)
-    - [Creation of UML diagrams before and after the pattern implementation](#creation-of-uml-diagrams-before-and-after)
+  - 🧊 SOLID Principles
+  - ✊ GRASP principles, especially 🔗 Coupling and 🧩 Cohesion
+  - 🏜️ DRY principle
 - [Persistence Layer](#persistence-layer)
-    - [Implementation of the persistence layer](#implementation-of-the-persistence-layer)
-    - [Explanation of the approach and benefits](#explanation-of-the-approach-and-benefits-4)
+  - 💽 Implementation of the persistence layer
+  - 💡 Explanation of the approach and benefits
 - [Unit Testing](#unit-testing)
-    - [Unit tests](#unit-tests)
-    - [Integration tests](#integration-tests)
-    - [Smoke tests](#smoke-tests)
-    - [Use of mocks in testing](#use-of-mocks-in-testing)
-    - [Adherence to ATRIP rules](#adherence-to-atrip-rules)
-    - [Explanation of the approach and benefits](#explanation-of-the-approach-and-benefits-5)
+  - 🧫 Unit tests
+  - 🧱 Integration tests
+  - 🚬 Smoke tests
+  - 🃏 Use of mocks in testing
+  - 📏 Adherence to ATRIP rules
+  - 📊 Explanation of the approach and benefits
 - [Conclusion](#conclusion)
-    - [Summary of the work done](#summary-of-the-work-done)
-    - [Review of the benefits of using DDD principles](#review-of-the-benefits-of-using-ddd-principles)
-    - [Future work and improvements](#future-work-and-improvements)
+  - 📋 Summary of the work done
+  - 🫠 Review of the benefits of using DDD principles
+  - 🔮 Future work and improvements
 - [References](#references)
 
-
+---
 
 # Introduction
 
@@ -86,7 +71,7 @@ The goal of this project is to improve the overall architecture and design of th
 principles and best practices in software engineering. This paper serves as a documentation of the process and decisions
 made during the restructuring of the project.
 
-## Description of the requirements
+## 🚧 Description of the requirements
 
 The main requirement for this project is to implement DDD principles and patterns in the existing blog platform. This
 includes analyzing the ubiquitous language of the domain, using tactical DDD patterns such as Value Objects, Entities,
@@ -99,7 +84,7 @@ principles, with a planned and justified layer architecture, and at least two la
 To ensure code quality, at least 10 unit tests must be implemented following the ATRIP rules and using mocks where
 necessary. Code smells must be identified and at least two refactorings must be applied and justified.
 
-## Explanation of the approach
+## 📌 Explanation of the approach
 
 To incorporate common python DDD principles whilst following Django design principles, the first step is to
 analyze the ubiquitous language of the domain and define the domain model using Value Objects, Entities, Aggregates,
@@ -122,10 +107,10 @@ To demonstrate each refactoring step or change, we will use examples from the co
 [#`5f0837`](https://github.com/MKrabs/Blog/tree/5f0837dd26a84c0e7e2687a66cbd54fd4254c209), which represents the code
 as it existed before the start of this project.
 
-###### Back to top [▲](#domain-driven-design-in-django)
+###### Back to top [▲](#sperrvermerk)
 
 
-# 💬 Analysis of Ubiquitous Language
+# Analysis of Ubiquitous Language
 
 ###### Chapter 2
 
@@ -134,7 +119,7 @@ as it existed before the start of this project.
 - [x] was sind die wichtigsten Begriffe
 - [x] was sind die wichtigsten Konzepte
 
-## Domain Terms
+## 🔖 Domain Terms
 
 The Analysis of Ubiquitous Language is a crucial step in the development of any software system, as it helps to
 establish a common language and understanding between the development team and the stakeholders. This chapter will focus
@@ -190,14 +175,12 @@ The report is a feature of the blog site that allows users to report offensive o
 report a blog post or comment if they believe it violates the website's terms of use. The report allows the website
 administrators to review the content and take appropriate action to ensure the safety and integrity of the platform.
 
-###### Back to top [▲](#domain-driven-design-in-django)
+###### Back to top [▲](#sperrvermerk)
 
 
-# 🌍 Domain Model
+# Domain Model
 
 ###### Chapter 3
-
-Beispiele aus Code zeigen
 
 ## 📖 Definition of the entities, repositories and services
 
@@ -292,7 +275,7 @@ responsible for interacting with the database while also handling the like/unlik
 using the domain-driven design (DDD) approach, which makes use of the repository pattern to create a clear separation of
 concerns between domain entities and data storage.
 
-###### Back to top [▲](#domain-driven-design-in-django)
+###### Back to top [▲](#sperrvermerk)
 
 ## 🔀 Refactoring the Codebase
 
@@ -693,11 +676,11 @@ To summarize, the repository pattern helped us to separate the data access logic
 Project tree has significantly changed since the beginning of the chapter, both in size and complexity, but the
 decoupling of the layers has made the application more maintainable and easier to understand. :)
 
-###### Back to top [▲](#domain-driven-design-in-django)
+###### Back to top [▲](#sperrvermerk)
 
-# 🧠 Programming Principles
+# Programming Principles
 
-###### Chapter 5
+###### Chapter 4
 
 ## 🧊 SOLID Principles 
 
@@ -822,11 +805,13 @@ def get_post_by_id(self, post_id: int, beautify: bool = False) -> Optional[Post]
     post.body = MarkdownProcessor.marker(post.body)
 ```
 
-# 💾 Persistence Layer
+###### Back to top [▲](#sperrvermerk)
 
-###### Chapter 9
+# Persistence Layer
 
-## Implementation of the persistence layer
+###### Chapter 5
+
+## 💽 Implementation of the persistence layer
 
 Let's compare the usage of the Repository pattern and the Active Record pattern in the context of your code.
 
@@ -859,7 +844,9 @@ all_posts = post_service.get_all_posts()
 
 ### 💼 Active record pattern
 
-In the Active Record pattern, the Django ORM provides a convenient and integrated way to interact with the database. Each model class (e.g., `Post`) directly extends the Django `models.Model` class and encapsulates both the data and the database operations.
+In the Active Record pattern, the Django ORM provides a convenient and integrated way to interact with the database.
+Each model class (e.g., `Post`) directly extends the Django `models.Model` class and encapsulates both the data and the
+database operations.
 
 Usage of the Active Record pattern:
 ```python
@@ -890,12 +877,12 @@ between the data access and business logic.
 Both patterns have their trade-offs, and the choice between them depends on the specific needs of the project, the
 complexity of the data access layer, and the desired level of abstraction and flexibility.
 
-###### Back to top [▲](#domain-driven-design-in-django)
+###### Back to top [▲](#sperrvermerk)
 
 
-# ✅ Unit Testing
+# Unit Testing
 
-###### Chapter 10
+###### Chapter 6
 
 ## 🧫 Unit tests
 
@@ -905,7 +892,7 @@ complexity of the data access layer, and the desired level of abstraction and fl
 
 ## 🃏 Use of mocks in testing
 
-## Adherence to ATRIP rules
+## 📏 Adherence to ATRIP rules
 
 - Automatic
 - Thorough (Vollständig)
@@ -913,12 +900,12 @@ complexity of the data access layer, and the desired level of abstraction and fl
 - Independent
 - Professional
 
-## Explanation of the approach and benefits
+## 📊 Explanation of the approach and benefits
 
-###### Back to top [▲](#domain-driven-design-in-django)
+###### Back to top [▲](#sperrvermerk)
 
 
-# 🌟 Conclusion
+# Conclusion
 
 ###### and or summary
 
@@ -928,7 +915,7 @@ complexity of the data access layer, and the desired level of abstraction and fl
 
 ## 🔮 Future work and improvements
 
-###### Back to top [▲](#domain-driven-design-in-django)
+###### Back to top [▲](#sperrvermerk)
 
 
 # References
@@ -962,12 +949,17 @@ complexity of the data access layer, and the desired level of abstraction and fl
 * https://www.youtube.com/watch?v=Ru2T4fu3bGQ
 * https://www.youtube.com/watch?v=QVTWvOzktbE
 
-###### Back to top [▲](#domain-driven-design-in-django)
+###### Back to top [▲](#sperrvermerk)
+
+---
+
+<div style="text-align:center">
+  <i>Thank you for reading.</i>
+
+  [@MKrabs](https://www.github.com/MKrabs) - [Website](https://www.mkrabs.de)
+</div>
 
 
-_Thank you for reading._
-
-[@MKrabs](https://www.github.com/MKrabs) - [Website](https://www.mkrabs.de)
 
 [//]: # (Styles)
 <style>
