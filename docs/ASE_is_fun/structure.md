@@ -10,12 +10,12 @@
 ###### Sperrvermerk
 
 > This project is a restructuring of my existing blog site (www.mkrabs.de) using Domain Driven Design principles, as
-part of the Advanced Software Engineering course in the 6th semester at the Duale Hochschule of Karlsruhe. The project
-code is publicly available on GitHub, but please note that I don't take any responsibility for the use of this
-code / architecture or other mishaps you might write in other projects. I am not liable for any negative
-outcomes or poor grades resulting from the use of this code, as it's intended for educational purposes only. Everything
-is given **as is**. Since every developer knows: more emojis → faster code, I have giving myself the permission to
-throw many emojis in here 🦀.
+> part of the Advanced Software Engineering course in the 6th semester at the Duale Hochschule of Karlsruhe. The project
+> code is publicly available on GitHub, but please note that I don't take any responsibility for the use of this
+> code / architecture or other mishaps you might write in other projects. I am not liable for any negative
+> outcomes or poor grades resulting from the use of this code, as it's intended for educational purposes only. Everything
+> is given **as is**. Since every developer knows: more emojis → faster code, I have giving myself the permission to
+> throw many emojis in here 🦀.
 >
 > _Use at your own risk, lmao._
 
@@ -27,6 +27,7 @@ throw many emojis in here 🦀.
   - 📌 Explanation of the approach
 - [Analysis of Ubiquitous Language](#analysis-of-ubiquitous-language)
   - 🔖 Domain Terms
+  - 🗺️ Use Cases Diagrams
 - [Domain Model](#domain-model)
   - 📖 Definition of the entities, repositories and services
   - 🔀 Refactoring the Codebase
@@ -37,7 +38,8 @@ throw many emojis in here 🦀.
 - [Persistence Layer](#persistence-layer)
   - 💽 Implementation of the persistence layer
   - 💡 Explanation of the approach and benefits
-- [Unit Testing](#unit-testing)
+- [Testing](#testing)
+  - 🕹️ Manually testing
   - 🧫 Unit tests
   - 🧱 Integration tests
   - 🚬 Smoke tests
@@ -175,6 +177,17 @@ The report is a feature of the blog site that allows users to report offensive o
 report a blog post or comment if they believe it violates the website's terms of use. The report allows the website
 administrators to review the content and take appropriate action to ensure the safety and integrity of the platform.
 
+
+## 🗺️ Use Cases Diagrams
+
+| New UseCase diagram                                                 | New UseCase diagram                                                    |
+|---------------------------------------------------------------------|------------------------------------------------------------------------|
+| <img src="../d_usecase_old.png" alt="Primitive project structure"/> | <img src="../d_usecase.drawio.png" alt="Primitive project structure"/> |
+
+As you can see from the two version, not much has changed functionality wise. I just changed the layout of the Usecase
+diagram and added some colours. The project structure and the code complexity were the major factors we focused on
+refining and improving.   
+
 ###### Back to top [▲](#sperrvermerk)
 
 
@@ -191,6 +204,8 @@ makes it difficult to identify the domain model and understand the relationships
 show you one example, we will look at how our users profile have been structured inside the `models.py` file:
 
 ```python
+# blog/models.py
+
 class Profile(models.Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE)
   bio = models.TextField(max_length=500, blank=True)
@@ -247,6 +262,8 @@ deleting, aggregating, etc.) is manually writing anywhere in the project. There 
 One example of this is the `liked` view, which is responsible for handling the like/unlike action on a post:
 
 ```python
+# blog/views.py#L142
+
 def liked(request, post_id):
   if request.user.is_authenticated:
     p = Post.objects.get(id=post_id)
@@ -672,7 +689,10 @@ Overall, the presentation layer provides the user-facing interface for the appli
 responsible for processing requests, retrieving data, and creating responses. The URLs are used to map the requests to
 the appropriate views or API services, allowing for a clear separation of concerns within the application.
 
-To summarize, the repository pattern helped us to separate the data access logic from the business logic. The
+
+### 🗿 To summarize
+
+The repository pattern helped us to separate the data access logic from the business logic. The
 Project tree has significantly changed since the beginning of the chapter, both in size and complexity, but the
 decoupling of the layers has made the application more maintainable and easier to understand. :)
 
@@ -880,9 +900,11 @@ complexity of the data access layer, and the desired level of abstraction and fl
 ###### Back to top [▲](#sperrvermerk)
 
 
-# Unit Testing
+# Testing
 
 ###### Chapter 6
+
+## 🕹️ Manually testing
 
 ## 🧫 Unit tests
 
