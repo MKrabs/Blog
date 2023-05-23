@@ -249,6 +249,60 @@ def save_user_profile(sender, instance, **kwargs):
   instance.profile.save()
 ```
 
+Furthermore, there is only one point of entry to the app, which includes ALL database access, user forms, and
+aggregation of various types. 😨 This is terrible, and I really don't know why I did it like that. Here is an example of
+that:
+
+
+```python
+# blog/views.py
+
+def index(request, page=1):
+    latest_posts = Post.objects.order_by('-date')
+
+    for p in latest_posts:
+        p.comments = Comment.objects.filter(post_id=p.id).count()
+        p.likes = Like.objects.filter(post_id=p.id).count()
+        p.liked = True if Like.objects.filter(post_id=p.id, author=request.user.id) else False
+
+        if p.author:
+            p.author.profile.bio = marker(p.author.profile.bio)
+            p.author.total_posts = Post.objects.filter(author=p.author).count()
+            p.author.total_comments = Comment.objects.filter(author=p.author).count()
+            p.author.total_likes = Like.objects.filter(author=p.author).count()
+
+    p = Paginator(latest_posts, 4)
+
+    try:
+        page_obj = p.get_page(page)
+    except EmptyPage:
+        page_obj = p.page(p.num_pages)
+
+    context = {
+        'page': {
+            'current': page_obj.number,
+            'has_next': page_obj.has_next(),
+            'has_previous': page_obj.has_previous(),
+            'total': p.num_pages,
+        },
+        'latest_posts': page_obj.object_list,
+    }
+
+    return render(request, 'blog/index.html', context)
+
+def post(request, post_id, page=1):
+    blog_post = Post.objects.get(pk=post_id)
+    comments = Comment.objects.filter(post_id=post_id).order_by('-date')
+  
+    if blog_post.author:
+        blog_post.author.total_posts = Post.objects.filter(author=blog_post.author).count()
+        blog_post.author.total_comments = Comment.objects.filter(author=blog_post.author).count()
+        blog_post.author.total_likes = Like.objects.filter(author=blog_post.author).count()
+  
+    blog_post.likes = Like.objects.filter(post_id=blog_post.id).count()
+    # ...
+```
+
 In its primitive form, our project structure looked as follows:
 
 <div style="text-align:center">
