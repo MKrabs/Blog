@@ -5,7 +5,7 @@
 [//]: # (by Marc Gökce, 2023)
 
 
-# 🏗️ Domain Driven Design in Django 🐍
+# Domain Driven Design in Django
 
 ###### Sperrvermerk
 
@@ -14,43 +14,42 @@
 > code is publicly available on GitHub, but please note that I don't take any responsibility for the use of this
 > code / architecture or other mishaps you might write in other projects. I am not liable for any negative
 > outcomes or poor grades resulting from the use of this code, as it's intended for educational purposes only. Everything
-> is given **as is**. Since every developer knows: more emojis → faster code, I have giving myself the permission to
-> throw many emojis in here 🦀.
+> is given **as is**.
 >
 > _Use at your own risk, lmao._
 
 ###### Table of Contents
 
-- [Introduction](#introduction)
-  - 📋 Overview of the Project
-  - 🚧 Description of the requirements
-  - 📌 Explanation of the approach
-- [Analysis of Ubiquitous Language](#analysis-of-ubiquitous-language)
-  - 🔖 Domain Terms
-  - 🗺️ Use Cases Diagrams
-- [Domain Model](#domain-model)
-  - 📖 Definition of the entities, repositories and services
-  - 🔀 Refactoring the Codebase
-- [Programming Principles](#programming-principles)
-  - 🧊 SOLID Principles
-  - ✊ GRASP principles, especially 🔗 Coupling and 🧩 Cohesion
-  - 🏜️ DRY principle
-- [Persistence Layer](#persistence-layer)
-  - 💽 Implementation of the persistence layer
-  - 💡 Explanation of the approach and benefits
-- [Testing](#testing)
-  - 🕹️ Manually testing
-  - 🧫 Unit tests
-  - 🧱 Integration tests
-  - 🚬 Smoke tests
-  - 🃏 Use of mocks in testing
-  - 📏 Adherence to ATRIP rules
-  - 📊 Explanation of the approach and benefits
-- [Conclusion](#conclusion)
-  - 📋 Summary of the work done
-  - 🫠 Review of the benefits of using DDD principles
-  - 🔮 Future work and improvements
-- [References](#references)
+1. [Introduction](#introduction)
+   1. Overview of the Project 
+   2. Description of the requirements 
+2. [Domain Driven Design](#domain-driven-design)
+   1. Domain Terms
+   2. Use Cases Diagrams
+   3. Explanation of the approach
+3. [Domain Model](#domain-model)
+   1. Definition of the entities, repositories and services
+   2. Refactoring the Codebase
+4. [Programming Principles](#programming-principles)
+   1. SOLID Principles
+   2. GRASP principles, especially Coupling and Cohesion
+   3. DRY principle
+5. [Persistence Layer](#persistence-layer)
+   1. Implementation of the persistence layer
+   2. Explanation of the approach and benefits
+6. [Testing](#testing)
+   1. Manually testing
+   2. Unit tests
+   3. Integration tests
+   4. Smoke tests
+   5. Use of mocks in testing
+   6. Adherence to ATRIP rules
+   7. Explanation of the approach and benefits
+7. [Conclusion](#conclusion)
+   1. Summary of the work done
+   2. Review of the benefits of using DDD principles
+   3. Future work and improvements
+8. [References](#references)
 
 ---
 
@@ -58,7 +57,7 @@
 
 ###### Chapter 1
 
-## 📋 Overview of the Project
+## Overview of the Project
 
 <div style="text-align:center">
   <img style="max-height: 200px" src="resources/banner.png" alt="banner"/>
@@ -73,7 +72,7 @@ The goal of this project is to improve the overall architecture and design of th
 principles and best practices in software engineering. This paper serves as a documentation of the process and decisions
 made during the restructuring of the project.
 
-## 🚧 Description of the requirements
+## Description of the requirements
 
 The main requirement for this project is to implement DDD principles and patterns in the existing blog platform. This
 includes analyzing the ubiquitous language of the domain, using tactical DDD patterns such as Value Objects, Entities,
@@ -86,37 +85,14 @@ principles, with a planned and justified layer architecture, and at least two la
 To ensure code quality, at least 10 unit tests must be implemented following the ATRIP rules and using mocks where
 necessary. Code smells must be identified and at least two refactorings must be applied and justified.
 
-## 📌 Explanation of the approach
-
-To incorporate common python DDD principles whilst following Django design principles, the first step is to
-analyze the ubiquitous language of the domain and define the domain model using Value Objects, Entities, Aggregates,
-Repositories, and Domain Services. This helps to ensure a clear and consistent understanding of the domain and its
-concepts.
-
-Next, the Clean Architecture principles will be followed to define a clear and meaningful layer architecture. This will
-help to decouple the domain logic from the infrastructure and ensure that the application is easily testable,
-maintainable, and scalable.
-
-Programming principles such as SOLID, GRASP, and DRY will be followed to ensure code quality and maintainability. Design
-patterns will be used where necessary to solve common design problems and improve the overall architecture of the
-platform.
-
-Finally, unit tests will be implemented to ensure that the code behaves as expected and to catch any potential
-regressions. Code smells will be identified and refactored using appropriate techniques to ensure a clean and
-maintainable codebase.
-
-To demonstrate each refactoring step or change, we will use examples from the code base at commit hash
-[#`5f0837`](https://github.com/MKrabs/Blog/tree/5f0837dd26a84c0e7e2687a66cbd54fd4254c209), which represents the code
-as it existed before the start of this project.
 
 ###### Back to top [▲](#sperrvermerk)
 
-
-# Analysis of Ubiquitous Language
+# Domain Driven Design
 
 ###### Chapter 2
 
-## 🔖 Domain Terms
+## Analysis of Ubiquitous Language - Domain Terms
 
 The Analysis of Ubiquitous Language is a crucial step in the development of any software system, as it helps to
 establish a common language and understanding between the development team and the stakeholders. This chapter will focus
@@ -173,7 +149,7 @@ report a blog post or comment if they believe it violates the website's terms of
 administrators to review the content and take appropriate action to ensure the safety and integrity of the platform.
 
 
-## 🗺️ Use Cases Diagrams
+## Use Cases Diagrams
 
 | New UseCase diagram                                                 | New UseCase diagram                                                    |
 |---------------------------------------------------------------------|------------------------------------------------------------------------|
@@ -183,6 +159,32 @@ As you can see from the two version, not much has changed functionality wise. I 
 diagram and added some colours. The project structure and the code complexity were the major factors we focused on
 refining and improving.   
 
+
+
+
+## Explanation of the approach
+
+To incorporate common python DDD principles whilst following Django design principles, the first step is to
+analyze the ubiquitous language of the domain and define the domain model using Value Objects, Entities, Aggregates,
+Repositories, and Domain Services. This helps to ensure a clear and consistent understanding of the domain and its
+concepts.
+
+Next, the Clean Architecture principles will be followed to define a clear and meaningful layer architecture. This will
+help to decouple the domain logic from the infrastructure and ensure that the application is easily testable,
+maintainable, and scalable.
+
+Programming principles such as SOLID, GRASP, and DRY will be followed to ensure code quality and maintainability. Design
+patterns will be used where necessary to solve common design problems and improve the overall architecture of the
+platform.
+
+Finally, unit tests will be implemented to ensure that the code behaves as expected and to catch any potential
+regressions. Code smells will be identified and refactored using appropriate techniques to ensure a clean and
+maintainable codebase.
+
+To demonstrate each refactoring step or change, we will use examples from the code base at commit hash
+[#`5f0837`](https://github.com/MKrabs/Blog/tree/5f0837dd26a84c0e7e2687a66cbd54fd4254c209), which represents the code
+as it existed before the start of this project.
+
 ###### Back to top [▲](#sperrvermerk)
 
 
@@ -190,7 +192,7 @@ refining and improving.
 
 ###### Chapter 3
 
-## 📖 Definition of the entities, repositories and services
+## Definition of the entities, repositories and services
 
 Currently (commit hash
 [#`5f0837`](https://github.com/MKrabs/Blog/tree/5f0837dd26a84c0e7e2687a66cbd54fd4254c209)), all of our entities,
@@ -245,7 +247,7 @@ def save_user_profile(sender, instance, **kwargs):
 ```
 
 Furthermore, there is only one point of entry to the app, which includes ALL database access, user forms, and
-aggregation of various types. 😨 This is terrible, and I really don't know why I did it like that. Here is an example of
+aggregation of various types. This is terrible, and I really don't know why I did it like that. Here is an example of
 that:
 
 
@@ -343,7 +345,7 @@ concerns between domain entities and data storage.
 
 ###### Back to top [▲](#sperrvermerk)
 
-## 🔀 Refactoring the Codebase
+## Refactoring the Codebase
 
 One approach to enhance the refactoring process is to incorporate the repository pattern as the basis for organizing the
 data access layer. The repository pattern provides an abstraction layer between the domain model and the underlying data
@@ -355,7 +357,7 @@ codebase, making it more maintainable and adaptable to future changes.
 
 We split the class into tree parts:
 
-### 🔑 Part 1.a - Domain.entities
+### Part 1.a - Domain.entities
 
 In this project, the domain model is the most atomic piece of business logic that defines the data structure of the
 application. The main entity of the system is the Post class, which is responsible for representing the blog posts in
@@ -402,7 +404,7 @@ Our Project Tree currently looks like this:
   <img src="../domain_entity.png" alt="Domain Entity (core)"/>
 </div>
 
-### 📐 Part 1.b - Domain.repository
+### Part 1.b - Domain.repository
 
 The repository defines how the interface for the `post` entity access is laid out, making sure that the methods
 arguments and return types are strongly specified. In other words, the repository acts as a layer of abstraction between
@@ -442,7 +444,7 @@ Our Project Tree currently looks like this:
   <img src="../domain_with_interface.png" alt="Domain Entity with Interface"/>
 </div>
 
-### 🏙️ Part 2 - Infrastructure.Repository
+### Part 2 - Infrastructure.Repository
 
 The infrastructure repository is responsible for implementing the behavior defined in the interface, making it the
 lowest layer of the system that interacts with the `post` entity. This approach ensures that the repository closely
@@ -548,7 +550,7 @@ Our Project Tree currently looks like this:
 Overall, the `PostRepository` class provides an implementation of the `IPostRepository` interface, allowing the
 application to interact with `post` entities in a standardized way.
 
-### 🚀 Part 3 - The implementation of the Post-Service
+### Part 3 - The implementation of the Post-Service
 
 The `PostService` implementation is located at the application layer and serves as an intermediary between the
 presentation layer (views or api) and the lower-level data access layers. Its purpose is to aggregate multiple
@@ -648,7 +650,7 @@ Our Project Tree currently looks like this:
   <img src="../application.svg" alt="Application Layer"/>
 </div>
 
-### 💻 Presentation Layer
+### Presentation Layer
 
 The presentation layer is the topmost layer in our architecture. The views layer is a part of the presentation layer and
 is responsible for rendering HTML pages that are returned to the user's browser. The URLs are mapped to views in the
@@ -739,7 +741,7 @@ responsible for processing requests, retrieving data, and creating responses. Th
 the appropriate views or API services, allowing for a clear separation of concerns within the application.
 
 
-### 🗿 To summarize
+### To summarize
 
 The repository pattern helped us to separate the data access logic from the business logic. The
 Project tree has significantly changed since the beginning of the chapter, both in size and complexity, but the
@@ -751,45 +753,45 @@ decoupling of the layers has made the application more maintainable and easier t
 
 ###### Chapter 4
 
-## 🧊 SOLID Principles 
+## SOLID Principles 
 
 In this chapter, we will explore how we refactored our code to improve adherence to the SOLID principles. By applying
 these principles, we aimed to make our codebase more maintainable, flexible, and understandable.
 
-- **🎯 Single Responsibility Principle (S)**
+- **Single Responsibility Principle (S)**
 
   To adhere to the SRP, we focused on separating concerns and reducing the responsibilities of our classes. In the
   previous version, the Profile class was responsible for both user profile management and image manipulation, which
   violated the SRP. We refactored the code and moved the image processing logic into a separate class or module,
   ensuring that each class has a single responsibility.
 
-- **🔒 Open/Closed Principle (O)**
+- **Open/Closed Principle (O)**
 
   To align with the OCP, we made our code more extensible by allowing for easy additions or modifications without
   modifying existing code. In the updated version, the Post class can be extended with new properties or behaviors
   without modifying its existing implementation. Similarly, the PostRepository and PostService classes can be extended
   or replaced without impacting their clients.
 
-- **🧩 Liskov Substitution Principle (L)**
+- **Liskov Substitution Principle (L)**
 
   As our code did not involve any inheritance or subclassing, the LSP was not directly applicable. Therefore, we did not
   encounter violations or adherence to this principle during the refactoring process.
 
-- **📚 Interface Segregation Principle (I)**
+- **Interface Segregation Principle (I)**
 
   To follow the ISP, we focused on defining interfaces or interface contracts that are specific and focused on the needs
   of clients. In our refactored code, we introduced the IPostRepository interface, which abstracts the methods related
   to post repository functionality. This allows clients of the repository to depend only on the methods they require,
   avoiding unnecessary dependencies.
 
-- **🔄 Dependency Inversion Principle (D)**
+- **Dependency Inversion Principle (D)**
 
   We aimed to apply the DIP by depending on abstractions rather than concrete implementations. In the updated code, the
   PostRepository and PostService classes depend on the IPostRepository interface, promoting flexibility and easier
   substitution of implementations. However, we could further improve the application of DIP by utilizing dependency
   injection to provide dependencies from external sources.
 
-## ✊ GRASP principles, especially 🔗 Coupling and 🧩 Cohesion
+## GRASP principles, especially Coupling and Cohesion
 
 Coupling refers to the level of interdependence between classes or modules within a codebase. High coupling can lead to
 rigid code that is challenging to maintain. To address this, we refactored our project to make improvements in reducing
@@ -809,7 +811,7 @@ responsibility of a repository.
 In conclusion, I would say our refactoring efforts aligned with the GRASP principles of coupling and cohesion, and helped
 contribute to the project's overall quality and pave the way for easier maintenance and future enhancements.
 
-## 🏜️ DRY principle
+## DRY principle
 
 Can you see the difference between these two code blocks?
 
@@ -845,7 +847,7 @@ to the function to get the desired result of retrieving additional information a
 
 This is the code that we had before the refactoring:
 
-## 🤢 Bad Code
+## Smelly Code
 
 ```python
 # blog/views.py
@@ -864,7 +866,7 @@ def index(request, page=1):
             p.author.total_likes = Like.objects.filter(author=p.author).count()
 ```
 
-## 😎 Good Code
+## Good Code
 
 ```python
 # presentation/views/post_view.py
@@ -884,11 +886,11 @@ def get_post_by_id(self, post_id: int, beautify: bool = False) -> Optional[Post]
 
 ###### Chapter 5
 
-## 💽 Implementation of the persistence layer
+## Implementation of the persistence layer
 
 Let's compare the usage of the Repository pattern and the Active Record pattern in the context of your code.
 
-### 🗄️ Repository pattern
+### Repository pattern
 
 In the Repository pattern, we define an interface `IPostRepository` (`domain/repository/post_repository.py`) that
 abstracts the operations related to posts. We then implement the `PostRepository` class (
@@ -915,7 +917,7 @@ post_service.create_post(author='John', title='My Post', body='Lorem ipsum...')
 all_posts = post_service.get_all_posts()
 ```
 
-### 💼 Active record pattern
+### Active record pattern
 
 In the Active Record pattern, the Django ORM provides a convenient and integrated way to interact with the database.
 Each model class (e.g., `Post`) directly extends the Django `models.Model` class and encapsulates both the data and the
@@ -937,7 +939,7 @@ post.save()  # Save the post directly through the Django ORM
 all_posts = Post.objects.all()  # Retrieve all posts directly through the Django ORM
 ```
 
-## 💡 Explanation of the approach and benefits
+## Explanation of the approach and benefits
 
 In the Repository pattern, the repository class acts as an intermediary between the application/business logic and the
 data access layer. It provides a separation of concerns and allows for flexibility and testability. However, it adds a
@@ -957,7 +959,7 @@ complexity of the data access layer, and the desired level of abstraction and fl
 
 ###### Chapter 6
 
-## 🕹️ Manually testing
+## Manually testing
 
 visit: https://mkrabs.de or run it locally, via:
 ```bash
@@ -984,15 +986,15 @@ docker run -p my-django-app
 
 Open: http://localhost:8000
 
-## 🧫 Unit tests
+## Unit tests
 
-## 🧱 Integration tests
+## Integration tests
 
-## 🚬 Smoke tests
+## Smoke tests
 
-## 🃏 Use of mocks in testing
+## Use of mocks in testing
 
-## 📏 Adherence to ATRIP rules
+## Adherence to ATRIP rules
 
 - Automatic
 - Thorough (Vollständig)
@@ -1000,7 +1002,7 @@ Open: http://localhost:8000
 - Independent
 - Professional
 
-## 📊 Explanation of the approach and benefits
+## Explanation of the approach and benefits
 
 ###### Back to top [▲](#sperrvermerk)
 
@@ -1009,11 +1011,11 @@ Open: http://localhost:8000
 
 ###### and or summary
 
-## 📋 Summary of the work done
+## Summary of the work done
 
-## 🫠 Review of the benefits of using DDD principles
+## Review of the benefits of using DDD principles
 
-## 🔮 Future work and improvements
+## Future work and improvements
 
 ###### Back to top [▲](#sperrvermerk)
 
