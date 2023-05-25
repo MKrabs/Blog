@@ -973,18 +973,19 @@ pip install -r requirements.txt
 ```
 
 ```bash
+# Create a super user
+DJANGO_SUPERUSER_USERNAME=testuser \
+DJANGO_SUPERUSER_PASSWORD=testpass \
+DJANGO_SUPERUSER_EMAIL="admin@admin.com" \
+python manage.py createsuperuser --noinput
+```
+
+```bash
 # Run server
 python manage.py runserver
 ```
 
-or via docker: TODO
-
-```bash
-docker build -t my-django-app .
-docker run -p my-django-app
-```
-
-Open: http://localhost:8000
+Open: http://localhost:8000 and login as `testuser` + `testpass`
 
 ## Unit tests
 

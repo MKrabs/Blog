@@ -3,12 +3,15 @@ from django.http import JsonResponse
 from blog.application.comment_service import CommentService
 from blog.application.post_service import PostService
 from blog.application.profile_service import ProfileService
+from blog.domain.entities.post import Post
+from blog.infrastructure.repositories.post_repository import PostRepository
 from blog.infrastructure.serializers.comment_serializer import CommentSerializer
 from blog.infrastructure.serializers.post_serializer import PostSerializer
 
 
 class PostAPI:
     post_service = PostService()
+    post_repository = PostRepository()
     profile_service = ProfileService()
     comment_service = CommentService()
 
@@ -46,6 +49,49 @@ class PostAPI:
         }
 
         return JsonResponse(context)
+
+    @classmethod
+    def create_post(cls, request):
+        if request.method != 'POST':
+            return JsonResponse({
+                'code': '405',
+                'note': 'Only post through secure channel! POST or nothing.'
+            })
+
+        if request.user.is_authenticated:
+            return JsonResponse({
+                'code': '403',
+                'note': 'User not permitted to post!'
+            })
+
+        try:
+            post = Post(
+                title=request.POST['post_title'],
+                author_id=request.user.id,
+                image_type=request.POST['post_image_type'],
+                image=request.POST['post_image'],
+                short=request.POST['post_short'],
+                body=request.POST['post_body'],
+            )
+
+            post.save()
+
+            return JsonResponse({
+                'code': '201',
+                'note': 'Post created.',
+                'post': {
+                    'id': post.id,
+                    'title': post.title,
+                },
+            })
+
+        except Exception:
+            return JsonResponse({
+                'code': 'FAILURE',
+                'note': 'Something when wrong! Make sure to include the following types',
+                'required': ["title", "short", "body"],
+                'optional': ["image_type", "image"],
+            })
 
 
 def get_param(request, param_name, default_value):
