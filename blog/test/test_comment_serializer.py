@@ -42,6 +42,6 @@ class CommentSerializerTest(TestCase):
             }
         ]
 
-        print(serialized_comments)
+        # print(serialized_comments)
 
         self.assertEqual(serialized_comments, expected_result)
