@@ -1026,7 +1026,9 @@ python manage.py createsuperuser --noinput
 python manage.py runserver
 ```
 
-Open: http://localhost:8000 and login as `testuser` + `testpass`
+Open: http://localhost:8000 and login as `testuser` + `testpass`.
+If there are no posts, it might be because the running the tests deleted them. You can create a post by going to:
+http://localhost:8000/admin/ and under `Posts` click `Add Post`, fill out the form and click `Save`.
 
 ## Automatic testing
 
