@@ -27,7 +27,7 @@
    1. Domain Terms
    2. Use Cases Diagrams
    3. Explanation of the approach
-3. [Domain Model](#domain-model)
+3. [Clean Architecture](#clean-architecture)
    1. Definition of the entities, repositories and services
    2. Refactoring the Codebase
 4. [Programming Principles](#programming-principles)
@@ -37,7 +37,10 @@
 5. [Persistence Layer](#persistence-layer)
    1. Implementation of the persistence layer
    2. Explanation of the approach and benefits
-6. [Testing](#testing)
+6. [Design Patterns](#design-patterns)
+   1. Implementation of the design patterns
+   2. Explanation of the approach and benefits
+7. [Testing](#testing)
    1. Manually testing
    2. Unit tests
    3. Integration tests
@@ -45,11 +48,11 @@
    5. Use of mocks in testing
    6. Adherence to ATRIP rules
    7. Explanation of the approach and benefits
-7. [Conclusion](#conclusion)
+8. [Conclusion](#conclusion)
    1. Summary of the work done
    2. Review of the benefits of using DDD principles
    3. Future work and improvements
-8. [References](#references)
+9. [References](#references)
 
 ---
 
@@ -188,7 +191,7 @@ as it existed before the start of this project.
 ###### Back to top [▲](#sperrvermerk)
 
 
-# Domain Model
+# Clean Architecture
 
 ###### Chapter 3
 
@@ -955,9 +958,53 @@ complexity of the data access layer, and the desired level of abstraction and fl
 ###### Back to top [▲](#sperrvermerk)
 
 
-# Testing
+# Design Patterns
 
 ###### Chapter 6
+
+## Implementation of the observer design patterns
+
+The Observer pattern is a behavioral design pattern that establishes a one-to-many dependency between objects. In this
+pattern, there is a subject (also known as a publisher or observable) that maintains a list of observers (also known as
+subscribers or listeners). When the subject's state changes, it automatically notifies and updates all its observers.
+This pattern promotes loose coupling between the subject and the observers, allowing for flexibility and extensibility
+in the system.
+
+In the context of our blog project, we have incorporated the Observer pattern to handle profanity censorship in
+comments. When a comment is about to be saved, we utilize Django's `pre_save` signal as the publisher. The `save` method
+acts as the observer and listens for the pre-save event of a `Comment` object. If the comment's body contains profanity,
+we automatically censor it before persisting it to the database. By implementing the Observer pattern, we can easily
+introduce and modify additional behaviors related to comment processing without directly modifying the core logic of
+saving comments. This enhances maintainability, as new functionalities can be added or removed without impacting the
+overall structure of the system.
+
+## Explanation of the approach and benefits
+
+In our project, we implemented the Observer pattern using Django's `@receiver` decorator and the pre_save signal.
+The `save` method is decorated with `@staticmethod` and `@receiver(pre_save, sender=Comment)` to indicate that it should
+be invoked when a `Comment` object is about to be saved. Inside the `save` method, we check if the comment's body
+contains profanity by calling the `profanity.contains_profanity` function. If profanity is detected, we replace the
+comment's body with a censored version using `profanity.censor`. This implementation ensures that the `save` method acts
+as an observer, automatically modifying the comment's body before it gets persisted to the database.
+
+```python
+# infrastructure/repositories/comment_repository.py
+
+@staticmethod
+@receiver(pre_save, sender=Comment)
+def save(sender, instance, **kwargs) -> None:
+    if profanity.contains_profanity(instance.body):
+        instance.body = profanity.censor(instance.body)
+```
+
+By leveraging Django's signals and the Observer pattern, we maintain a separation of concerns and allow for the easy
+addition of future functionalities related to comment processing.
+
+###### Back to top [▲](#sperrvermerk)
+
+# Testing
+
+###### Chapter 7
 
 ## Manually testing
 
