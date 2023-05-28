@@ -42,16 +42,10 @@
    2. Explanation of the approach and benefits
 7. [Testing](#testing)
    1. Manually testing
-   2. Unit tests
-   3. Integration tests
-   4. Smoke tests
-   5. Use of mocks in testing
-   6. Adherence to ATRIP rules
-   7. Explanation of the approach and benefits
+   2. Automated testing
 8. [Conclusion](#conclusion)
    1. Summary of the work done
-   2. Review of the benefits of using DDD principles
-   3. Future work and improvements
+   2. Future work and improvements
 9. [References](#references)
 
 ---
