@@ -1034,23 +1034,45 @@ python manage.py runserver
 
 Open: http://localhost:8000 and login as `testuser` + `testpass`
 
-## Unit tests
+## Automatic testing
 
-## Integration tests
+In our blog/project, we take testing seriously to ensure the robustness and reliability of our features. We have
+implemented a comprehensive suite of tests that cover various functionalities and components.
 
-## Smoke tests
+### Test Coverage
 
-## Use of mocks in testing
+Our test suite includes the following areas:
 
-## Adherence to ATRIP rules
+1. Entity Creation and Persistence: We have meticulously tested the creation and saving of entities to ensure data
+   integrity and consistency. `test_post_repository.py` and `test_comment_repository.py`
 
-- Automatic
-- Thorough (Vollständig)
-- Repeatable
-- Independent
-- Professional
+2. Comment Censorship: One of the standout features we've tested is our comment censorship functionality. We've
+   rigorously verified the effectiveness of the censorship mechanism to keep our platform squeaky clean. No
+   inappropriate comments will make it through our watchful eye! _Or the eyes of the library used_.
+   `test_comment_repository.py`
 
-## Explanation of the approach and benefits
+3. Object Serialization: We have extensively tested the serialization process to ensure that objects are properly
+   converted into serialized representations. This allows seamless data exchange and compatibility across different
+   components of our blog/project. `test_comment_serializer.py`
+
+4. API Functionality: We've thoroughly tested our API endpoints to guarantee seamless communication and proper data
+   handling. Our API tests ensure that everything works like a charm, allowing users to interact with our blog/project
+   effortlessly. `test_post_api.py` and `test_profile_api.py`
+
+All our tests are conveniently located in the `blog/test` directory. You can find individual test files corresponding to
+different components of our system. These tests are essential for maintaining code quality and preventing regressions.
+
+### Running Tests
+
+To execute the tests and validate the stability of our blog/project, we recommend using the following command:
+
+```
+python manage.py test
+```
+
+Remember kids, thorough testing is the secret ingredient that keeps our blog/project running smoothly. So, embrace the
+tests and let them guide us toward greatness! 💪🔬✨ #TestingMatters #QualityAssurance #TestDrivenDevelopment #BugSlayer
+#QualityCoding #CodeWarrior #TestingNinja 🚀🧪💻
 
 ###### Back to top [▲](#sperrvermerk)
 
